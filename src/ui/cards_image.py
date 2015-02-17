@@ -11,7 +11,7 @@ class UICards:
     """ return an instance of the cards image """
     @staticmethod
     def _get_cards_image():
-        cards_image = PhotoImage(file='../../data/classic_playing_cards.gif')
+        cards_image = PhotoImage(file='data/classic_playing_cards.gif')
         return cards_image
 
     # constant card width
