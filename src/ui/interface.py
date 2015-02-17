@@ -1,7 +1,7 @@
 from Tkinter import Frame, Button
 
 from src.ui.utils import subimage 
-from src.ui.cards_image import get_random_card_coord, Cards_image
+from src.ui.cards_image import UICards
 
 class UIHand:
     # number of cards in the hand
@@ -46,7 +46,7 @@ class UIHand:
             # display vertically or horizontally ?
             if vertical[self.position]:
                 row += i / 2 * vertical[self.position]            
-                if not i % 2:
+                if i % 2:
                     # side by side with the previous
                     column += 1
             else:
