@@ -1,5 +1,4 @@
 from Tkinter import Frame, Button
-
 from src.ui.utils import subimage 
 from src.ui.cards_image import UICards
 
@@ -24,20 +23,22 @@ class UIHand:
         self.buttons[len(self.buttons) - 1].destroy()
         self.buttons.pop()
 
-    #
-    def play_card(self):
+    # index correspond to the clicked card (from 0 to 7)
+    def play_card(self, index):
         self._remove_last_button()
-
+        #new_card = UICards.get_random_card()
+        #self.buttons[0].configure(image = new_card)
+        #self.cards_image[0] = new_card
+        
     # initialize the button for the cards
     def init_cards_button(self):
         # defines if the hand must be displayed vertically
         # or horizonthally 
         vertical = [0, 1, 0, 1]
         for i in xrange(0, self.max_cards):
-            self.cards_image[i] = UICards.get_random_card()
             # define the button
             self.buttons[i] = Button(self.frame, image=self.cards_image[i], 
-                                     command=self.play_card)
+                                     command=lambda : self.play_card(i))
             # which row
             row = self.return_first_card_row() 
 
@@ -71,7 +72,6 @@ class UIHand:
         # init button
         self.init_cards_button()
 
-
 class App:
     def __init__(self, master):
         frame = Frame(master)
@@ -84,5 +84,7 @@ class App:
 
         self.quit = Button(frame, text = "Quit",
                                      command=frame.quit)
+        
         self.quit.grid(row = 7, column = 13)
+
         
