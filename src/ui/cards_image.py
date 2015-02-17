@@ -71,4 +71,8 @@ class UICards:
     def get_random_card():
         return subimage(UICards._get_uicards(), UICards._get_random_card_coord())
 
+    # TO BE CHANGED
+    @staticmethod
+    def get_card(card):
+        return UICards.get_random_card()
     

@@ -26,10 +26,7 @@ class UIHand:
     # index correspond to the clicked card (from 0 to 7)
     def play_card(self, index):
         self._remove_last_button()
-        #new_card = UICards.get_random_card()
-        #self.buttons[0].configure(image = new_card)
-        #self.cards_image[0] = new_card
-        
+
     # initialize the button for the cards
     def init_cards_button(self):
         # defines if the hand must be displayed vertically
@@ -55,11 +52,29 @@ class UIHand:
                 column += i
             # place the button
             self.buttons[i].grid(row = row, column = column)
+
+    # refresh images for the buttons
+    def updateCardsImage(self):
+        for i in xrange(0, len(self.hand)):
+            new_card = UICards.get_card(self.hand[i])
+            self.buttons[i].configure(image = new_card)
+            self.cards_image[i] = new_card
+            
+    @property
+    def hand(self):
+        return self._hand
+
+    @hand.setter
+    def hand(self, value):
+        self._hand = value
+        self.updateCardsImage()
             
     # constructor
     def __init__(self, frame, position):
         self.frame = frame
         self.position = position
+        # list of cards in the hand
+        self._hand = [None]*self.max_cards
         # list for recording the images itself
         self.cards_image = [None]*self.max_cards
         # place corresponding buttons
