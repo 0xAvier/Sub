@@ -2,7 +2,7 @@ from Tkinter import *
 from utils import *
 from cards_image import *
 
-class HandDisplay:
+class UIHand:
     # number of cards in the hand
     # must be 8 for the Coinche
     nb_cards = 8
@@ -84,10 +84,10 @@ class App:
         frame = Frame(master)
         frame.pack()
 
-        self.hands = [HandDisplay(frame, 0),
-                      HandDisplay(frame, 1),
-                      HandDisplay(frame, 2),
-                      HandDisplay(frame, 3)]
+        self.hands = [UIHand(frame, 0),
+                      UIHand(frame, 1),
+                      UIHand(frame, 2),
+                      UIHand(frame, 3)]
 
 root = Tk()
 
