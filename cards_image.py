@@ -3,7 +3,8 @@ from Tkinter import *
 
 # return an instance of the cards image
 def get_cards_image():
-    return PhotoImage(file='classic_playing_cards.gif')       
+    cards_image = PhotoImage(file='classic_playing_cards.gif')       
+    return cards_image
 
 # constant card width
 def get_card_width():

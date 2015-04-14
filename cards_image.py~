@@ -32,18 +32,18 @@ def get_random_card_coord():
     # ... and translate it into coordinates
     return index_to_coordinates(x_index, y_index)
 
-class cards_image:
+class Cards_image:
     instance = 0
     
     @staticmethod
     def init_cards_image():
-        cards_image.instance = get_cards_image();
+        Cards_image.instance = get_cards_image();
 
     @staticmethod    
     def get_cards_image_instance():
-        if cards_image.instance == 0:
-            cards_image.init_cards_image()
-        return cards_image.instance
+        if Cards_image.instance == 0:
+            Cards_image.init_cards_image()
+        return Cards_image.instance
 
 
 
