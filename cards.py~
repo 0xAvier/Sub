@@ -1,0 +1,10 @@
+def get_card_width():
+    return 71
+
+def get_card_height():
+    return 96
+
+def get_random_card():
+    x = 71*4;
+    y = 96*2;
+    return 

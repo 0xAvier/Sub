@@ -1,0 +1,12 @@
+from Tkinter import *
+ 
+root = Tk()
+ 
+photo = PhotoImage(file='classic_playing_cards.gif')
+ 
+button = Button(root, image=photo)
+button.pack()
+ 
+Label(root, text="toto").pack()
+ 
+root.mainloop()
