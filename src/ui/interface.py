@@ -1,6 +1,8 @@
-from Tkinter import *
-from utils import *
-from cards_image import *
+
+from Tkinter import Frame, Button
+
+from src.ui.utils import subimage 
+from src.ui.cards_image import get_random_card_coord, Cards_image
 
 class HandDisplay:
     # number of cards in the hand
@@ -89,9 +91,3 @@ class App:
                       HandDisplay(frame, 2),
                       HandDisplay(frame, 3)]
 
-root = Tk()
-
-app = App(root)
-
-root.mainloop()
-#root.destroy() # optional; see description below
