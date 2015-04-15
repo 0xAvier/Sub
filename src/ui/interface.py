@@ -113,36 +113,45 @@ class UIHand(object):
         self.init_buttons_index()
         self.update_buttons_index()
 
-class App:
+class App(object):
 
-    def generate_new_hand(self):
-        # distribution
-        # test only, should be removed later
-        deck = Deck()
-        nb_card = randint(0, UIHand.max_cards)
-        for player in xrange(0, 4):
-            hand = [None] * nb_card
-            for i in xrange(0, nb_card):
-                hand[i] = deck.pop()
-            self.hands[player].hand = hand
-
-    def __init__(self, master):
-        frame = Frame(master)
-        frame.pack()
-
-        self.hands = [UIHand(frame, 0),
-                      UIHand(frame, 1),
-                      UIHand(frame, 2),
-                      UIHand(frame, 3)]
-
-        self.refresh = Button(frame, text = "New hand",
-                           command=self.generate_new_hand)
-        self.refresh.grid(row = 6, column = 13)
-                
-        self.quit = Button(frame, text = "Quit",
-                                     command=frame.quit)
-        
-        self.quit.grid(row = 7, column = 13)
+	def generate_new_hand(self):
+		# distribution	
+		# test only, should be removed later
+		deck = Deck()
+		nb_card = randint(0, UIHand.max_cards)
+		for player in xrange(0, 4):
+			hand = [None] * nb_card
+			for i in xrange(0, nb_card):
+				hand[i] = deck.pop()
+			self.hands[player].hand = hand
 
 
+	def __init__(self, master):
+		frame = Frame(master)
+		frame.pack()
+		self.hands = [UIHand(frame, 0),
+						UIHand(frame, 1),
+						UIHand(frame, 2),
+						UIHand(frame, 3)]
+
+		self.refresh = Button(frame, text = "New hand",
+								command=self.generate_new_hand)
+		self.refresh.grid(row = 6, column = 13)
+		self.quit = Button(frame, text = "Quit",
+								command=frame.quit)
+		self.quit.grid(row = 7, column = 13)
+
+	
+	def new_round(self):
+		pass
+
+
+	def new_hand(self, p, h):
+		"""
+			Set a new hand h for player p
+			Method called by an event engine to refresh display
+
+		"""
+		self.hands[p].hand = h
         

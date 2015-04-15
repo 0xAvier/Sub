@@ -1,13 +1,17 @@
 
 from random import choice, shuffle
 
+from src.event.event_engine import EVT_NEW_HAND
+
 class Round(object):
 
-	def __init__(self, deck, players):
+	def __init__(self, deck, players, events):
 		# To be set by the user later
 		self.max_pts = 2000
 		# Deck to use in this roud
 		self.deck = deck
+		# Notification to send to event manager
+		self.event = events
 		self.players = players
 		self.score = {'NS': 0, 'WE': 0}
 		self.dealer = choice(self.players)
@@ -22,8 +26,9 @@ class Round(object):
 			for p in self.players:
 				p.hand.give_cards([self.deck.pop() for i in xrange(n)])
 		assert self.deck.empty()
-		for p in self.players:
-			print p.hand.get_cards()
+		if EVT_NEW_HAND in self.event.keys():
+			for p in self.players:
+				self.event[EVT_NEW_HAND](p.id, p.hand.get_cards())
 		# Annonces
 		pass
 		# Jeu
