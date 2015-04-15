@@ -1,4 +1,7 @@
 
+from random import choice 
+
+from src.event.event_engine import EVT_UI_GET_CARD
 from src.game.hand import Hand
 
 class Player(object):
@@ -9,6 +12,39 @@ class Player(object):
 	def __init__(self, pos):
 		self.pos = pos
 		self.nick = ""
-	 	self.hand = Hand()
+	 	self._hand = Hand()
+		self.event = dict()
 		self.id = self.__class__.nb_p
 		self.__class__.nb_p += 1
+
+
+	def set_method(self, evt_id, method):
+		self.event[evt_id] = method
+
+
+	def get_cards(self):
+		return self._hand.get_cards()
+
+
+	def get_card(self, played, playable):
+		if EVT_UI_GET_CARD in self.event.keys():
+			return self.event[EVT_UI_GET_CARD](playable)
+		else:
+			return choice(playable)
+
+	
+	def played(self, card):
+		"""
+			Notification to the player that the card has indeed been
+			played, and therefore is no longer in the hand
+
+		"""
+		self._hand.remove(card)	
+
+	
+	def give_cards(self, cards):
+		"""
+			Add some cards to a hand
+
+		"""
+		self._hand.add(cards)

@@ -144,6 +144,42 @@ class App(object):
 
 	
 	def new_round(self):
+		"""
+			Notification for the beginning of a new round
+
+		"""
+		pass
+
+
+	def card_played(self, p, c):
+		"""
+			Notification that the card c has been played by player p
+			@param c	tuple (val, col) of the card played
+			@param p	id of the player that played the card
+
+		"""
+		pass
+
+
+	def end_of_trick(self, p):
+		"""
+			Notification that the current trick is finished 
+			(it should reasonnably mean that four cards have
+			been played since the beginning of the trick)
+			@param p	id of the player that wins the trick
+
+		"""
+		pass
+
+
+	def get_card(self, p, playable):
+		"""
+			Wait for the user p to choose a card between
+			the possible ones given in playable
+			@param p 			id of the player expected to play
+			@param playable		list of cards that can be played
+
+		"""
 		pass
 
 
@@ -151,6 +187,8 @@ class App(object):
 		"""
 			Set a new hand h for player p
 			Method called by an event engine to refresh display
+			@param p	id of the player that is given the hand
+			@param h	list of tuples (val, col) composing the hand
 
 		"""
 		self.hands[p].hand = h

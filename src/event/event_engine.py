@@ -2,6 +2,7 @@
 # Define global constants to identify events
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
+EVT_UI_GET_CARD = 2
 
 class EventEngine(object):
 	
@@ -24,6 +25,8 @@ class EventEngine(object):
 		"""
 		if ui not in [ui[0] for ui in self.ui]:
 			self.ui.append((ui, p))
+		for player in p:
+			self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
 
 
 	def new_round(self):

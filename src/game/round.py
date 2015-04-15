@@ -24,11 +24,11 @@ class Round(object):
 		shuffle(npr)
 		for n in npr:
 			for p in self.players:
-				p.hand.give_cards([self.deck.pop() for i in xrange(n)])
+				p.give_cards([self.deck.pop() for i in xrange(n)])
 		assert self.deck.empty()
 		if EVT_NEW_HAND in self.event.keys():
 			for p in self.players:
-				self.event[EVT_NEW_HAND](p.id, p.hand.get_cards())
+				self.event[EVT_NEW_HAND](p.id, p.get_cards())
 		# Annonces
 		pass
 		# Jeu
