@@ -1,8 +1,10 @@
 from Tkinter import Frame, Button
 from src.ui.utils import subimage 
 from src.ui.cards_image import UICards
+from src.game.deck import Deck
+from random import randint
 
-class UIHand:
+class UIHand(object):
     # number of cards in the hand
     # must be 8 for the Coinche
     max_cards = 8
@@ -19,16 +21,13 @@ class UIHand:
         # return the position
         return row[self.position]
 
-    def _remove_last_button(self):
-        self.buttons[len(self.buttons) - 1].destroy()
-        self.buttons.pop()
-
     # index correspond to the clicked card (from 0 to 7)
+    # nothing to be done now
     def play_card(self, index):
-        self._remove_last_button()
+        a = 0
 
-    # initialize the button for the cards
-    def init_cards_button(self):
+    # fill the buttons index
+    def init_buttons_index(self):
         # defines if the hand must be displayed vertically
         # or horizonthally 
         vertical = [0, 1, 0, 1]
@@ -51,15 +50,43 @@ class UIHand:
                 # horizontally
                 column += i
             # place the button
+            self.button_index[i] = [row, column]
             self.buttons[i].grid(row = row, column = column)
 
+    # place one button to its corresponding location
+    def update_button_index(self, i):
+        [row, column] = self.button_index[i]
+        # place the button
+        self.buttons[i].grid(row = row, column = column)
+
+    # place the buttons to their corresponding locations
+    def update_buttons_index(self):
+        for i in xrange(0, self.max_cards):
+            self.update_button_index(i)
+
+    # change one card image
+    def update_button_image(self, buttonNumber, card):
+        # get the card mage
+        new_card = UICards.get_card(card)
+        # display it
+        self.buttons[buttonNumber].configure(image = new_card)
+        # save it
+        self.cards_image[buttonNumber] = new_card
+        # be sure that the button is visible
+        self.update_button_index(buttonNumber)
+            
+    # modify a cards for 
     # refresh images for the buttons
     def updateCardsImage(self):
+        # update new cards
         for i in xrange(0, len(self.hand)):
-            new_card = UICards.get_card(self.hand[i])
-            self.buttons[i].configure(image = new_card)
-            self.cards_image[i] = new_card
+            self.update_button_image(i, self.hand[i])
+        # hide the remaining buttons
+        for i in xrange(len(self.hand), UIHand.max_cards):
+            self.buttons[i].grid_forget();
             
+    # The hand property contains the corresponding cards
+    # When modified, the 
     @property
     def hand(self):
         return self._hand
@@ -74,20 +101,31 @@ class UIHand:
         self.frame = frame
         self.position = position
         # list of cards in the hand
-        self._hand = [None]*self.max_cards
+        self._hand = []
         # list for recording the images itself
         self.cards_image = [None]*self.max_cards
-        # place corresponding buttons
+        # contains the index of the buttons in the grid layout
+        self.button_index = [None]*self.max_cards
+        # contains the buttons in the grid layout
         self.buttons = [None]*self.max_cards
 
-        # add random card
-        for i in xrange(0, UIHand.max_cards):
-            self.cards_image[i] = UICards.get_random_card()
-
         # init button
-        self.init_cards_button()
+        self.init_buttons_index()
+        self.update_buttons_index()
 
 class App:
+
+    def generate_new_hand(self):
+        # distribution
+        # test only, should be removed later
+        deck = Deck()
+        nb_card = randint(0, UIHand.max_cards)
+        for player in xrange(0, 4):
+            hand = [None] * nb_card
+            for i in xrange(0, nb_card):
+                hand[i] = deck.pop()
+            self.hands[player].hand = hand
+
     def __init__(self, master):
         frame = Frame(master)
         frame.pack()
@@ -97,9 +135,14 @@ class App:
                       UIHand(frame, 2),
                       UIHand(frame, 3)]
 
+        self.refresh = Button(frame, text = "New hand",
+                           command=self.generate_new_hand)
+        self.refresh.grid(row = 6, column = 13)
+                
         self.quit = Button(frame, text = "Quit",
                                      command=frame.quit)
         
         self.quit.grid(row = 7, column = 13)
+
 
         
