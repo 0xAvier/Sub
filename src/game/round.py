@@ -1,5 +1,5 @@
 
-from random import choice 
+from random import choice, shuffle
 
 class Round(object):
 
@@ -15,7 +15,15 @@ class Round(object):
 
 	def deal(self):
 		# Distribute hands
-		pass
+		# Distribution sequence generation
+		npr = [2, 3, 3]
+		shuffle(npr)
+		for n in npr:
+			for p in self.players:
+				p.hand.give_cards([self.deck.pop() for i in xrange(n)])
+		assert self.deck.empty()
+		for p in self.players:
+			print p.hand.get_cards()
 		# Annonces
 		pass
 		# Jeu

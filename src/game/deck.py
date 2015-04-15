@@ -18,6 +18,10 @@ class Deck(object):
 		shuffle(self.stack)
 
 
+	def empty(self):
+		return len(self.stack) == 0
+
+
 	def push(self, c):
 		"""
 			Add a card on the top of the deck
@@ -33,7 +37,7 @@ class Deck(object):
 
 		"""
 		# Check if the deck is empty
-		if len(self.stack) == 0:
+		if self.empty():
 			raise DeckTooSmall
 		# Internal convention: top of the stack at index -1
 		return self.stack.pop(-1)
@@ -56,14 +60,14 @@ class Deck(object):
 		"""
 		if len(deck) < 6:
 			raise DeckTooSmall
-		idx = randint(3, len(deck) - 3)
+		idx = randint(3, len(deck) - 4)
 		self.stack = self.stack[idx:] + self.stack[:idx]
 
 
 	def merge(self, a, b):
 		"""
 			Merge packs a and b (whether by putting a on b or b on a)
-			and put (a + b) on the top of the desk
+			and put (a + b) on the top of the deck
 
 		"""
 		if random() > 0.5:
