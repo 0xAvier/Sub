@@ -1,7 +1,7 @@
 
 from random import choice 
 
-from src.event.event_engine import EVT_UI_GET_CARD
+from src.event.event_engine import EVT_UI_GET_CARD, EVT_UI_CARD_PLAYED
 from src.game.hand import Hand
 
 class Player(object):
@@ -33,13 +33,18 @@ class Player(object):
 			return choice(playable)
 
 	
-	def played(self, card):
+	def played(self, pid, card):
 		"""
-			Notification to the player that the card has indeed been
-			played, and therefore is no longer in the hand
+			Notification to the player that a card has been
+			played.
+			If this player is himself (ie pid == self.id), then it 
+			must also remove the card from its hand
 
 		"""
-		self._hand.remove(card)	
+		if EVT_UI_CARD_PLAYED in self.event.keys():
+			self.event[EVT_UI_CARD_PLAYED](self.id, card)
+		if self.id == pid:
+			self._hand.remove(card)	
 
 	
 	def give_cards(self, cards):

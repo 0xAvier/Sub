@@ -3,6 +3,7 @@
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
 EVT_UI_GET_CARD = 2
+EVT_UI_CARD_PLAYED = 3
 
 class EventEngine(object):
 	
@@ -27,6 +28,7 @@ class EventEngine(object):
 			self.ui.append((ui, p))
 		for player in p:
 			self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
+			self.game.players[player].set_method(EVT_UI_CARD_PLAYED, ui.card_played)
 
 
 	def new_round(self):

@@ -66,7 +66,11 @@ class Round(object):
 			card = None
 			while card is None or not card in playable:
 				card = p.get_card(playable, played)
+			# Add the card to played cards
 			played.append(card)
+			# Notify users that a card has been played
+			for pl in self.players:
+				pl.played(p.id, card)
 			p = self.next_player(p)	
 		# todo return the player that wins the trick
 		return 0
