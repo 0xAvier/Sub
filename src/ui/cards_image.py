@@ -2,29 +2,29 @@ from random import randint
 from Tkinter import PhotoImage
 from utils import subimage
 
-"""
-Return card images on demand
-Coordinates : pixel Coordinates in the image file
-Index : assuming that the image file contains rows and columns, 
-       it give this position
-"""
 class UICards:
+    """
+        Return card images on demand
+        Coordinates: pixel Coordinates in the image file
+        Indeox: assuming that the image file contains rows and columns,
+                it give this position
+    """
     instance = 0
 
     @staticmethod
     def _get_cards_image():
         """ 
             Return an instance of the cards image 
-        
+
         """
-    	cards_image = PhotoImage(file='data/classic_playing_cards.gif')
-    	return cards_image
+        cards_image = PhotoImage(file='data/classic_playing_cards.gif')
+        return cards_image
 
     # constant card width
     card_width = 71
     # constant card height
     card_height = 96
-    
+
     @staticmethod
     def _index_to_coordinates((x_index, y_index)):
         """ 
@@ -46,7 +46,7 @@ class UICards:
         """
             return the coordinates of a random card
             the coordinates are in a 4-uplet in the following form (n, e, s, w)
-            
+
         """
         # get a random card ...
         x_index = randint(0, 12);
@@ -82,7 +82,6 @@ class UICards:
         return [UICards._index_x_dictionary[value], 
                 UICards._index_y_dictionary[color]]
 
-    # TO BE CHANGED
     @staticmethod
     def get_card(card):
         index = UICards.get_card_index(card)
