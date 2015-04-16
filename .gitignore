@@ -46,3 +46,4 @@ Temporary Items
 *.pyc
 src/ui/TODO
 *.swp
+*.swo

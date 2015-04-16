@@ -2,8 +2,9 @@ from random import randint
 from Tkinter import PhotoImage
 from utils import subimage
 
-# TODO : split into two classes
-# rename the files
+
+# TODO : split into two classes + rename files
+
 class UICards:
     """
         Returns cards images for the interface
@@ -17,7 +18,7 @@ class UICards:
     """
     
     # unique instance of the image
-    # will be initialized on demand 
+    # will be initialized on demand
     _instance = 0
 
 
@@ -38,7 +39,7 @@ class UICards:
         """
         # if the unique instance has not been initialized...
         if UICards._instance == 0:
-            # ... initialize it.
+            # ... initialize it
             UICards._init_uicards()
         return UICards._instance
 
@@ -101,7 +102,7 @@ class UICards:
 
     # Dictionnary for the row and column index
     #   Key: value (resp. color) of the card
-    #   Data: column index (resp. row index) in the tab
+    #   Data: column index (resp. row index) in the tab
     _index_x_dictionary = {'7': 6, '8': 7, '9': 8, 'T': 9, 'J': 10, \
                            'Q': 11, 'K': 12, 'A':0}
     _index_y_dictionary = {'S': 1, 'H':2, 'C':0, 'D':3}
