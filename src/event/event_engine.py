@@ -6,7 +6,7 @@ EVT_UI_GET_CARD = 2
 EVT_CARD_PLAYED = 3
 
 class EventEngine(object):
-	
+
 
 	def __init__(self, game):
 		self.game = game
@@ -34,12 +34,12 @@ class EventEngine(object):
 	def new_round(self):
 		"""
 			Notify all interfaces that a new round has begun
-			
+
 		"""
 		for ui in self.ui:
 			ui[0].new_round()
 
-	
+
 	def new_hand(self, p, h):
 		"""
 			Notify interfaces that a new hand has beend given to player p
@@ -51,7 +51,7 @@ class EventEngine(object):
 			if p in ui[1]:
 				ui[0].new_hand(p, h)
 
-		
+
 	def card_played(self, p, c):
 		for ui in self.ui:
 			ui.card_played(p, c)
