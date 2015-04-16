@@ -14,7 +14,7 @@ class UIHand(object):
         column = [2, 2 + self.max_cards, 2, 0]
         # return the position
         return column[self.position]
-
+    
     # define the first card row
     def return_first_card_row(self):
         row = [0, 1, 1 + self.max_cards, 1]
@@ -142,7 +142,7 @@ class App(object):
 								command=frame.quit)
 		self.quit.grid(row = 7, column = 13)
 
-	
+
     def new_round(self):
         """
             Notification for the beginning of a new round
@@ -159,7 +159,7 @@ class App(object):
 			@param p    id of the player that played the card
 
         """
-    pass
+        pass
 
 
 

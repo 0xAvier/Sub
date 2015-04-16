@@ -2,88 +2,130 @@ from random import randint
 from Tkinter import PhotoImage
 from utils import subimage
 
+# TODO : split into two classes
+# rename the files
 class UICards:
     """
-        Return card images on demand
-        Coordinates: pixel Coordinates in the image file
-        Indeox: assuming that the image file contains rows and columns,
-                it give this position
+        Returns cards images for the interface
+        Naming convention:
+            - Coordinates: pixel Coordinates in the image file
+            - Index: assuming that the image file is a table of cards, 
+                     it has also row and column index 
+
+
+        The coordinates are in a 4-uplet in the following format (n, e, s, w)
     """
-    instance = 0
+    
+    # unique instance of the image
+    # will be initialized on demand 
+    _instance = 0
+
+
+    @staticmethod
+    def _init_uicards():
+        """
+            Create the unique instance of the cards image
+
+        """
+        UICards._instance = UICards._get_cards_image();
+
+
+    @staticmethod    
+    def _get_uicards():
+        """
+            Return the image containing all the cards
+
+        """
+        # if the unique instance has not been initialized...
+        if UICards._instance == 0:
+            # ... initialize it.
+            UICards._init_uicards()
+        return UICards._instance
+
 
     @staticmethod
     def _get_cards_image():
         """ 
-            Return an instance of the cards image 
+            Return an instance of the cards image
 
         """
-        cards_image = PhotoImage(file='data/classic_playing_cards.gif')
-        return cards_image
+        return PhotoImage(file='data/classic_playing_cards.gif')
 
-    # constant card width
-    card_width = 71
-    # constant card height
-    card_height = 96
+
+    # card width in pixel
+    _card_width = 71
+    # card height in pixel
+    _card_height = 96
+
 
     @staticmethod
     def _index_to_coordinates((x_index, y_index)):
         """ 
-            Get the requested cards 
-            by translating an index into pixel coordinates  
+            Get the cards coordinates at the given index
+            @param x_index  index of the row in the file
+            @param y_index  index of the column in the file
 
         """
-        # number of pixel between cards
+        # number of pixel before each cards
         x_white_space = 2; 
         y_white_space = 2;
-        # compute coordinates taking into account the white space between cards
-        x = UICards.card_width * x_index + x_white_space * (x_index + 1)
-        y = UICards.card_height * y_index + y_white_space * (y_index + 1)
-        # return a 4-uplet in 
-        return x, y, x + UICards.card_width, y + UICards.card_height
+        # compute coordinates 
+        x = UICards._card_width * x_index + x_white_space * (x_index + 1)
+        y = UICards._card_height * y_index + y_white_space * (y_index + 1)
+        # return a 4-uplet  
+        return x, y, x + UICards._card_width, y + UICards._card_height
+
 
     @staticmethod
     def _get_random_card_coord():
         """
-            return the coordinates of a random card
-            the coordinates are in a 4-uplet in the following form (n, e, s, w)
+            Return the coordinates of a random card
 
         """
-        # get a random card ...
+        # get a random position for a card...
         x_index = randint(0, 12);
         y_index = randint(0, 3);
         # ... and translate it into coordinates
         return UICards._index_to_coordinates([x_index, y_index])
 
-    # if the instance does not exist, create it
-    @staticmethod
-    def _init_uicards():
-        UICards.instance = UICards._get_cards_image();
 
-    @staticmethod    
-    # return the image containing all the cards
-    def _get_uicards():
-        if UICards.instance == 0:
-            UICards._init_uicards()
-        return UICards.instance
-
-    # return a random card image
     @staticmethod
     def get_random_card():
-        return subimage(UICards._get_uicards(), UICards._get_random_card_coord())
+        """
+            Return a random card image
+
+        """
+        return subimage(UICards._get_uicards(), \
+                        UICards._get_random_card_coord())
 
 
-    # represent the index of the cards 
-    _index_x_dictionary = {'7': 6, '8': 7, '9': 8, 'T': 9, 'J': 10, 'Q': 11, 
-                           'K': 12, 'A':0}
+    # Dictionnary for the row and column index
+    #   Key: value (resp. color) of the card
+    #   Data: column index (resp. row index) in the tab
+    _index_x_dictionary = {'7': 6, '8': 7, '9': 8, 'T': 9, 'J': 10, \
+                           'Q': 11, 'K': 12, 'A':0}
     _index_y_dictionary = {'S': 1, 'H':2, 'C':0, 'D':3}
-    # get the index in the cards image for the given cards
+    
+
     @staticmethod
     def get_card_index((value, color)):
-        return [UICards._index_x_dictionary[value], 
+        """
+            Get the index of the given card
+            @param value    value of the given card
+            @param color    color of the given card
+        """
+        return [UICards._index_x_dictionary[value], \
                 UICards._index_y_dictionary[color]]
 
+
     @staticmethod
-    def get_card(card):
+    def get_card_image(card):
+        """
+            Get the card image of the given card 
+            
+            @param card     object containing the card 
+
+        """
         index = UICards.get_card_index(card)
         coordinates = UICards._index_to_coordinates(index)
         return subimage(UICards._get_uicards(), coordinates)
