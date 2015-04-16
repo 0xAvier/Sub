@@ -2,6 +2,7 @@
 from random import choice, shuffle
 
 from src.event.event_engine import EVT_NEW_HAND
+from src.game.card import Card
 
 
 MUST_UNDERCUT = False
@@ -67,7 +68,7 @@ class Round(object):
             playable = self.compute_playable(played, p.get_cards(), trump)
             card = None
             while card is None or not card in playable:
-                card = p.get_card(playable, played)
+                card = p.get_card(played, playable)
             # Add the card to played cards
             played.append(card)
             # Notify user that its card has been played
@@ -86,7 +87,7 @@ class Round(object):
             # Color that has been played first
             asked = played[0][1]
             # Compute the highest card played so far
-            highest = Card.highest(played, trump)
+            highest = Card.highest(played, asked, trump)
             # Compute the cards in the same color
             same_col = [c for c in cards if c[1] == played[0][1]]
             # If player has the asked color

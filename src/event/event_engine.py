@@ -54,4 +54,4 @@ class EventEngine(object):
 
     def card_played(self, p, c):
         for ui in self.ui:
-            ui.card_played(p, c)
+            ui[0].card_played(p, c)

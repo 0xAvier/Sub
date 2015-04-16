@@ -28,7 +28,9 @@ class Player(object):
 
     def get_card(self, played, playable):
         if EVT_UI_GET_CARD in self.event.keys():
-            return self.event[EVT_UI_GET_CARD](self.id, playable)
+            c = self.event[EVT_UI_GET_CARD](self.id, playable)
+            print "Card played: " + str(c)
+            return c
         else:
             return choice(playable)
 
@@ -41,9 +43,9 @@ class Player(object):
             must also remove the card from its hand
 
         """
-        if EVT_UI_CARD_PLAYED in self.event.keys():
+        if EVT_CARD_PLAYED in self.event.keys():
             self.event[EVT_CARD_PLAYED](self.id, card)
-        self._hand.remove(card)    
+        self._hand.remove([card])
 
     
     def give_cards(self, cards):

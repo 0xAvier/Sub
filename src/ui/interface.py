@@ -216,8 +216,9 @@ class App(threading.Thread):
         # wait to have a new card
         # it must be a playable card
         #while self.hands[p].last_card_played is None: 
+        print playable
         while self.hands[p].last_card_played is None or not self.hands[p].last_card_played in playable:
-                    pass
+            pass
         # finally
         print("Hey!")
         return self.hands[p].last_card_played

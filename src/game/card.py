@@ -52,6 +52,14 @@ class Card(object):
             Function used to sort a hand for example
 
         """
+        if self is None:
+            if card is None:
+                return True
+            else: 
+                return False
+        elif card is None:
+            return False
+
         # If the two cards have same color
         if self[1] == card[1]:
             # We compare the values 
