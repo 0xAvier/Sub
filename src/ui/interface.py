@@ -14,7 +14,7 @@ class UIHand(object):
         column = [2, 2 + self.max_cards, 2, 0]
         # return the position
         return column[self.position]
-    
+
     # define the first card row
     def return_first_card_row(self):
         row = [0, 1, 1 + self.max_cards, 1]
@@ -143,53 +143,55 @@ class App(object):
 		self.quit.grid(row = 7, column = 13)
 
 	
-	def new_round(self):
-		"""
-			Notification for the beginning of a new round
+    def new_round(self):
+        """
+            Notification for the beginning of a new round
 
-		"""
-		pass
-
-
-	def card_played(self, p, c):
-		"""
-			Notification that the card c has been played by player p
-			@param c	tuple (val, col) of the card played
-			@param p	id of the player that played the card
-
-		"""
-		pass
+        """
+        pass
 
 
-	def end_of_trick(self, p):
-		"""
-			Notification that the current trick is finished 
-			(it should reasonnably mean that four cards have
-			been played since the beginning of the trick)
-			@param p	id of the player that wins the trick
+    def card_played(self, p, c):
+        """
 
-		"""
-		pass
+            Notification that the card c has been played by player p
+            @param c    tuple (val, col) of the card played
+			@param p    id of the player that played the card
+
+        """
+    pass
+
+
+
+    def end_of_trick(self, p):
+        """
+            Notification that the current trick is finished 
+            (it should reasonnably mean that four cards have
+            been played since the beginning of the trick)
+            @param p    id of the player that wins the trick
+
+        """
+        pass
 
 
 	def get_card(self, p, playable):
-		"""
-			Wait for the user p to choose a card between
-			the possible ones given in playable
-			@param p 			id of the player expected to play
-			@param playable		list of cards that can be played
+        """
+            Wait for the user p to choose a card between
+            the possible ones given in playable
+            @param p        id of the player expected to play
+            @param playable	    list of cards that can be played
 
-		"""
-		pass
+        """
+        pass
 
 
-	def new_hand(self, p, h):
-		"""
-			Set a new hand h for player p
-			Method called by an event engine to refresh display
-			@param p	id of the player that is given the hand
-			@param h	list of tuples (val, col) composing the hand
+    def new_hand(self, p, h):
+        """
+            Set a new hand h for player p
+            Method called by an event engine to refresh display
+            @param p    id of the player that is given the hand
+            @param h    list of tuples (val, col) composing the hand
 
-		"""
-		self.hands[p].hand = h
+        """
+        self.hands[p].hand = h
         
