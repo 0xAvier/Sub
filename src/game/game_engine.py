@@ -1,5 +1,5 @@
 
-from src.event.event_engine import EVT_NEW_ROUND
+from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED
 from src.game.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
@@ -32,4 +32,12 @@ class GameEngine(object):
 			of event
 
 		"""
-		self.event[evt_id] = method
+		# If the event is relative to players
+		if evt_id == EVT_CARD_PLAYED:
+			for p in self.players:
+				# Set the method for each player
+				p.set_method(evt_id, method)
+		# Else set it for the Game Engine
+		else:
+			self.event[evt_id] = method
+

@@ -3,7 +3,7 @@
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
 EVT_UI_GET_CARD = 2
-EVT_UI_CARD_PLAYED = 3
+EVT_CARD_PLAYED = 3
 
 class EventEngine(object):
 	
@@ -14,6 +14,7 @@ class EventEngine(object):
 		# game engine should call at each new round
 		self.game.set_method(EVT_NEW_ROUND, self.new_round)
 		self.game.set_method(EVT_NEW_HAND, self.new_hand)
+		self.game.set_method(EVT_CARD_PLAYED, self.card_played)
 		self.ui = list()
 
 
@@ -28,7 +29,6 @@ class EventEngine(object):
 			self.ui.append((ui, p))
 		for player in p:
 			self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
-			self.game.players[player].set_method(EVT_UI_CARD_PLAYED, ui.card_played)
 
 
 	def new_round(self):
@@ -47,7 +47,11 @@ class EventEngine(object):
 			@param h new hand for player p
 
 		"""
-		print p, h
 		for ui in self.ui:
 			if p in ui[1]:
 				ui[0].new_hand(p, h)
+
+		
+	def card_played(self, p, c):
+		for ui in self.ui:
+			ui.card_played(p, c)
