@@ -5,7 +5,8 @@ import threading
 import time
 
 from src.ui.utils import subimage 
-from src.ui.cards_image import UICards
+from src.ui.ui_cards import UICards
+#from src.ui.cards_image import UICards
 from src.game.deck import Deck
 
 class UIHand(object):
