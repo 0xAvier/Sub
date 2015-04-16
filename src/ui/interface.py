@@ -115,34 +115,34 @@ class UIHand(object):
 
 class App(object):
 
-	def generate_new_hand(self):
-		# distribution	
-		# test only, should be removed later
-		deck = Deck()
-		nb_card = randint(0, UIHand.max_cards)
-		for player in xrange(0, 4):
-			hand = [None] * nb_card
-			for i in xrange(0, nb_card):
-				hand[i] = deck.pop()
-			self.hands[player].hand = hand
+    def generate_new_hand(self):
+        # distribution    
+        # test only, should be removed later
+        deck = Deck()
+        nb_card = randint(0, UIHand.max_cards)
+        for player in xrange(0, 4):
+            hand = [None] * nb_card
+            for i in xrange(0, nb_card):
+                hand[i] = deck.pop()
+            self.hands[player].hand = hand
 
 
-	def __init__(self, master):
-		frame = Frame(master)
-		frame.pack()
-		self.hands = [UIHand(frame, 0),
-						UIHand(frame, 1),
-						UIHand(frame, 2),
-						UIHand(frame, 3)]
+    def __init__(self, master):
+        frame = Frame(master)
+        frame.pack()
+        self.hands = [UIHand(frame, 0),
+                        UIHand(frame, 1),
+                        UIHand(frame, 2),
+                        UIHand(frame, 3)]
 
-		self.refresh = Button(frame, text = "New hand",
-								command=self.generate_new_hand)
-		self.refresh.grid(row = 6, column = 13)
-		self.quit = Button(frame, text = "Quit",
-								command=frame.quit)
-		self.quit.grid(row = 7, column = 13)
+        self.refresh = Button(frame, text = "New hand",
+                                command=self.generate_new_hand)
+        self.refresh.grid(row = 6, column = 13)
+        self.quit = Button(frame, text = "Quit",
+                                command=frame.quit)
+        self.quit.grid(row = 7, column = 13)
 
-	
+    
     def new_round(self):
         """
             Notification for the beginning of a new round
@@ -156,7 +156,7 @@ class App(object):
 
             Notification that the card c has been played by player p
             @param c    tuple (val, col) of the card played
-			@param p    id of the player that played the card
+            @param p    id of the player that played the card
 
         """
     pass
@@ -174,12 +174,12 @@ class App(object):
         pass
 
 
-	def get_card(self, p, playable):
+    def get_card(self, p, playable):
         """
             Wait for the user p to choose a card between
             the possible ones given in playable
-            @param p        id of the player expected to play
-            @param playable	    list of cards that can be played
+            @param p            id of the player expected to play
+            @param playable     list of cards that can be played
 
         """
         pass
