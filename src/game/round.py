@@ -18,8 +18,9 @@ class Round(object):
         self.event = events
         self.players = players
         self.score = {'NS': 0, 'WE': 0}
-        self.dealer = choice(self.players)
-
+        # TO MODIFY
+        #self.dealer = choice(self.players)
+        self.dealer = players[0]
 
     def next_player(self, p):
         return self.players[(p.id + 1) % len(self.players)]

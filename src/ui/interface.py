@@ -1,7 +1,8 @@
+# -*- coding:utf-8 -*-
 from Tkinter import Frame, Button, Tk
-import threading
-
 from random import randint
+import threading
+import time
 
 from src.ui.utils import subimage 
 from src.ui.cards_image import UICards
@@ -27,7 +28,8 @@ class UIHand(object):
     # index correspond to the clicked card (from 0 to 7)
     # nothing to be done now
     def play_card(self, index):
-        a = 0
+       self.last_card_played = self.hand[index]
+
 
     # fill the buttons index
     def init_buttons_index(self):
@@ -103,8 +105,14 @@ class UIHand(object):
     def __init__(self, frame, position):
         self.frame = frame
         self.position = position
+
         # list of cards in the hand
         self._hand = []
+
+        # last card clicked in this hand
+        # must be 0 if no card were clicked during this round
+        self.last_card_played = None 
+
         # list for recording the images itself
         self.cards_image = [None]*self.max_cards
         # contains the index of the buttons in the grid layout
@@ -135,10 +143,11 @@ class App(threading.Thread):
         frame.pack()
 
         # define the hands
+        # must difference player number from display position
         self.hands = [UIHand(frame, 0),
-                        UIHand(frame, 1),
-                        UIHand(frame, 2),
-                        UIHand(frame, 3)]
+                      UIHand(frame, 1),
+                      UIHand(frame, 2),
+                      UIHand(frame, 3)]
 
         # add some buttons
         self.refresh = Button(frame, text = "New hand",
@@ -184,8 +193,6 @@ class App(threading.Thread):
         """
         pass
 
-
-
     def end_of_trick(self, p):
         """
             Notification that the current trick is finished 
@@ -205,7 +212,15 @@ class App(threading.Thread):
             @param playable     list of cards that can be played
 
         """
-        pass
+        print("Interface.get_card")
+        # wait to have a new card
+        # it must be a playable card
+        #while self.hands[p].last_card_played is None: 
+        while self.hands[p].last_card_played is None or not self.hands[p].last_card_played in playable:
+                    pass
+        # finally
+        print("Hey!")
+        return self.hands[p].last_card_played
 
 
     def new_hand(self, p, h):
