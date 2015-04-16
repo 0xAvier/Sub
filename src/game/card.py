@@ -61,6 +61,10 @@ class Card(object):
             return cmp(Card.colors.index(self[1]), Card.colors.index(card[1]))
 
     
+    def __hash__(self):
+        return str(self)
+
+
     def higher(self, card, trump = None):
         """
             Compare two cards with trump consideration
