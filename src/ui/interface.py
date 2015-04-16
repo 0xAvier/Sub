@@ -1,8 +1,11 @@
-from Tkinter import Frame, Button
+from Tkinter import Frame, Button, Tk
+import threading
+
+from random import randint
+
 from src.ui.utils import subimage 
 from src.ui.cards_image import UICards
 from src.game.deck import Deck
-from random import randint
 
 class UIHand(object):
     # number of cards in the hand
@@ -113,8 +116,43 @@ class UIHand(object):
         self.init_buttons_index()
         self.update_buttons_index()
 
-class App(object):
+class App(threading.Thread):
 
+
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.start()
+        
+    def run(self):
+        # create the instance
+        self.root = Tk()
+        # resize the window
+        self.root.geometry("1000x700+1510+30") 
+        # ? 
+        self.root.protocol("WM_DELETE_WINDOW", self.quit_root)
+
+        frame = Frame(self.root)
+        frame.pack()
+
+        # define the hands
+        self.hands = [UIHand(frame, 0),
+                        UIHand(frame, 1),
+                        UIHand(frame, 2),
+                        UIHand(frame, 3)]
+
+        # add some buttons
+        self.refresh = Button(frame, text = "New hand",
+                                command=self.generate_new_hand)
+        self.refresh.grid(row = 6, column = 13)
+        self.quit = Button(frame, text = "Quit",
+                                command=frame.quit)
+        self.quit.grid(row = 7, column = 13)
+
+        self.root.mainloop()
+
+    # quit the TkInter instance   
+    def quit_root(self):
+        self.root.quit()
 
     def generate_new_hand(self):
         # distribution    
@@ -128,22 +166,6 @@ class App(object):
             self.hands[player].hand = hand
 
 
-    def __init__(self, master):
-        frame = Frame(master)
-        frame.pack()
-        self.hands = [UIHand(frame, 0),
-                        UIHand(frame, 1),
-                        UIHand(frame, 2),
-                        UIHand(frame, 3)]
-
-        self.refresh = Button(frame, text = "New hand",
-                                command=self.generate_new_hand)
-        self.refresh.grid(row = 6, column = 13)
-        self.quit = Button(frame, text = "Quit",
-                                command=frame.quit)
-        self.quit.grid(row = 7, column = 13)
-
-    
     def new_round(self):
         """
             Notification for the beginning of a new round

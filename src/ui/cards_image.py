@@ -3,8 +3,8 @@ from Tkinter import PhotoImage
 from utils import subimage
 
 
-# TODO : split into two classes + rename files
-
+# TODO :    split into two classes + rename files
+#           verify the privacy
 class UICards:
     """
         Returns cards images for the interface
@@ -26,10 +26,11 @@ class UICards:
     def _init_uicards():
         """
             Create the unique instance of the cards image
-
+            
         """
         UICards._instance = UICards._get_cards_image();
-
+        if UICards._instance == 0:
+            raise NameError('Unable to open image file')
 
     @staticmethod    
     def _get_uicards():
