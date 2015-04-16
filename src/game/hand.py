@@ -5,28 +5,28 @@ from src.game.card import Card
 
 class Hand(object):
 
-	def __init__(self):
-		self.__cards = list()
+    def __init__(self):
+        self.__cards = list()
 
-	
-	def get_cards(self):
-		"""
-			Getter for hand cards
-			Sort cards by color before
+    
+    def get_cards(self):
+        """
+            Getter for hand cards
+            Sort cards by color before
 
-		"""
-		return sorted(self.__cards)
+        """
+        return sorted(self.__cards)
 
-	
-	def remove(self, cards):
-		for card in cards:
-			self.__cards.remove(card)
+    
+    def remove(self, cards):
+        for card in cards:
+            self.__cards.remove(card)
 
-	
-	def add(self, cards):
-		"""
-			Add some cards to a hand
+    
+    def add(self, cards):
+        """
+            Add some cards to a hand
 
-		"""
-		self.__cards += cards
+        """
+        self.__cards += cards
 
