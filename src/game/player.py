@@ -28,7 +28,7 @@ class Player(object):
 
 	def get_card(self, played, playable):
 		if EVT_UI_GET_CARD in self.event.keys():
-			return self.event[EVT_UI_GET_CARD](playable)
+			return self.event[EVT_UI_GET_CARD](self.id, playable)
 		else:
 			return choice(playable)
 

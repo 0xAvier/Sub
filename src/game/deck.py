@@ -13,7 +13,7 @@ class Deck(object):
 		# Add all cards to the deck (ordered)
 		for val in Card.values:
 			for color in Card.colors:
-				self.push((val, color))
+				self.push(Card(val, color))
 		# Shuffle the order
 		shuffle(self.stack)
 

@@ -15,7 +15,7 @@ class Hand(object):
 			Sort cards by color before
 
 		"""
-		return sorted(self.__cards, cmp=Card.cmp)
+		return sorted(self.__cards)
 
 	
 	def remove(self, cards):
