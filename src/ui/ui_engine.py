@@ -2,7 +2,8 @@
 from Tkinter import Tk, Frame, Button
 import tkMessageBox
 from random import randint
-import threading
+
+from threading import Thread, Condition
 import time
 
 from src.ui.ui_cards import UICards
@@ -10,7 +11,8 @@ from src.ui.ui_hand import UIHand
 
 from src.game.deck import Deck
 
-class UIEngine(threading.Thread):
+#class UIEngine(threading.Thread):
+class UIEngine(Thread):
     """
         Handle a Tk Interface
     """
@@ -20,9 +22,15 @@ class UIEngine(threading.Thread):
         """
             Constructor
         """
-        threading.Thread.__init__(self)
+        Thread.__init__(self)
+        # this condition will notify the main thread when init is over
+        self._wait_for_init = Condition()
+        self._wait_for_init.acquire()
+        # run the UI thread
         self.start()
-        time.sleep(1)
+        # wait for the initialisation of the ui
+        # to continue
+        self._wait_for_init.wait(10)
 
 
     def _init_tk_window(self):
@@ -46,7 +54,7 @@ class UIEngine(threading.Thread):
             For the moment, only a "Quit" button is added.
         
         """
-        self._quit = Button(self.frame, text = "Quit",
+        self._quit = Button(self._frame, text = "Quit",
                                 command=self._quit_root)
         self._quit.grid(row = 7, column = 13)
         
@@ -76,10 +84,9 @@ class UIEngine(threading.Thread):
             self._hands.append(UIHand(self._frame, i)) 
 
 
-    def run(self):
+    def _init_ui(self):
         """
-            This method wll be called when the thread starts.
-            It sets the interface and enter the tk mainloop
+            Sets the interface and enter the tk mainloop
         """
         # init the interface
         self._init_tk_window()
@@ -87,8 +94,18 @@ class UIEngine(threading.Thread):
         self._init_hands()
         # add some buttons
         self._init_game_control_buttons()
+
+    def run(self):
+        """
+            This method will be called when the thread starts.
+        """
+        self._wait_for_init.acquire()
+        self._init_ui()
+        self._init = 1
+        self._wait_for_init.notify()
+        self._wait_for_init.release()
         # enter the infinite loop, see you lata
-        self.root.mainloop()
+        self._root.mainloop()
 
 
     def new_round(self):
@@ -129,11 +146,10 @@ class UIEngine(threading.Thread):
         """
         # wait to have a new card
         # it must be a playable card
-        print playable
-        while self.hands[p].last_card_played is None or not self.hands[p].last_card_played in playable:
+        while self._hands[p].last_card_played is None or not self._hands[p].last_card_played in playable:
             pass
         # finally, the user clicked on a good card
-        return self.hands[p].last_card_played
+        return self._hands[p].last_card_played
 
 
     def new_hand(self, p, h):
@@ -144,5 +160,4 @@ class UIEngine(threading.Thread):
             @param h    list of tuples (val, col) composing the hand
 
         """
-        self.hands[p].hand = h
-        
+        self._hands[p].hand = h
