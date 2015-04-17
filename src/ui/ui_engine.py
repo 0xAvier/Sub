@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Frame, Button, Tk
+from Tkinter import Tk, Frame, Button
+import tkMessageBox
 from random import randint
 import threading
 import time
@@ -10,54 +11,84 @@ from src.ui.ui_hand import UIHand
 from src.game.deck import Deck
 
 class UIEngine(threading.Thread):
+    """
+        Handle a Tk Interface
+    """
 
 
     def __init__(self):
+        """
+            Constructor
+        """
         threading.Thread.__init__(self)
         self.start()
-        
-    def run(self):
+        time.sleep(1)
+
+
+    def _init_tk_window(self):
+        """
+            Initialize the window for the Tk Interface
+        """
         # create the instance
-        self.root = Tk()
+        self._root = Tk()
         # resize the window
-        self.root.geometry("1000x700+1510+30") 
-        # ? 
-        self.root.protocol("WM_DELETE_WINDOW", self.quit_root)
+        self._root.geometry("1000x700+1510+30") 
+        # bind the close action with our own callback 
+        self._root.protocol("WM_DELETE_WINDOW", self._quit_root)
+        # memorise the frame of the app
+        self._frame = Frame(self._root)
+        self._frame.pack()
 
-        frame = Frame(self.root)
-        frame.pack()
 
-        # define the hands
-        # must difference player number from display position
-        self.hands = [UIHand(frame, 0),
-                      UIHand(frame, 1),
-                      UIHand(frame, 2),
-                      UIHand(frame, 3)]
+    def _init_game_control_buttons(self):
+        """
+            Add buttons to control the game proceedings
+            For the moment, only a "Quit" button is added.
+        
+        """
+        self._quit = Button(self.frame, text = "Quit",
+                                command=self._quit_root)
+        self._quit.grid(row = 7, column = 13)
+        
 
+    def _quit_root(self):
+        """ 
+            Own callback to handle "close window" event 
+        """
+        # Double check the user intentions
+        if tkMessageBox.askokcancel("Quit", "Do you really wish to quit?"):
+            # If he's sure (at least twice in a row), quit
+            self._root.destroy()
+
+
+    def _init_hands(self):
+        """
+            Initialise the ui hands object of the players
+        """
+        # index of the tab: the id of the player owning the hands
+        # value of the tab: the position of the player
+        # will be updated during the game 
+        #   to place the (first) active player south
+        self._hands_id_to_position = ['N', 'E', 'S', 'W']
+        # add a hand for each ids 
+        self._hands = []
+        for i in self._hands_id_to_position:
+            self._hands.append(UIHand(self._frame, i)) 
+
+
+    def run(self):
+        """
+            This method wll be called when the thread starts.
+            It sets the interface and enter the tk mainloop
+        """
+        # init the interface
+        self._init_tk_window()
+        # init the hands
+        self._init_hands()
         # add some buttons
-        self.refresh = Button(frame, text = "New hand",
-                                command=self.generate_new_hand)
-        self.refresh.grid(row = 6, column = 13)
-        self.quit = Button(frame, text = "Quit",
-                                command=frame.quit)
-        self.quit.grid(row = 7, column = 13)
-
+        self._init_game_control_buttons()
+        # enter the infinite loop, see you lata
         self.root.mainloop()
-
-    # quit the TkInter instance   
-    def quit_root(self):
-        self.root.quit()
-
-    def generate_new_hand(self):
-        # distribution    
-        # test only, should be removed later
-        deck = Deck()
-        nb_card = randint(0, UIHand.max_cards)
-        for player in xrange(0, 4):
-            hand = [None] * nb_card
-            for i in xrange(0, nb_card):
-                hand[i] = deck.pop()
-            self.hands[player].hand = hand
 
 
     def new_round(self):
@@ -65,7 +96,7 @@ class UIEngine(threading.Thread):
             Notification for the beginning of a new round
 
         """
-        pass
+        print("Not implemented")
 
 
     def card_played(self, p, c):
@@ -76,7 +107,7 @@ class UIEngine(threading.Thread):
             @param p    id of the player that played the card
 
         """
-        pass
+        print("Not implemented")
 
     def end_of_trick(self, p):
         """
@@ -86,8 +117,7 @@ class UIEngine(threading.Thread):
             @param p    id of the player that wins the trick
 
         """
-        pass
-
+        print("Not implemented")
 
     def get_card(self, p, playable):
         """
@@ -97,15 +127,12 @@ class UIEngine(threading.Thread):
             @param playable     list of cards that can be played
 
         """
-        print("Interface.get_card")
         # wait to have a new card
         # it must be a playable card
-        #while self.hands[p].last_card_played is None: 
         print playable
         while self.hands[p].last_card_played is None or not self.hands[p].last_card_played in playable:
             pass
-        # finally
-        print("Hey!")
+        # finally, the user clicked on a good card
         return self.hands[p].last_card_played
 
 
