@@ -8,10 +8,10 @@ import time
 
 from src.ui.ui_cards import UICards
 from src.ui.ui_hand import UIHand
-
 from src.game.deck import Deck
+from src.event.event_engine import EVT_UI_PLAYER_LEFT 
 
-#class UIEngine(threading.Thread):
+# TODO : modify all hard coded 4 values (max players)
 class UIEngine(Thread):
     """
         Handle a Tk Interface
@@ -23,27 +23,29 @@ class UIEngine(Thread):
             Constructor
         """
         Thread.__init__(self)
-        # this condition will notify the main thread when init is over
+        # This condition will notify the main thread when init is over
         self._wait_for_init = Condition()
         self._wait_for_init.acquire()
-        # run the UI thread
+        # Run the UI thread
         self.start()
-        # wait for the initialisation of the ui
-        # to continue
+        # Wait for the initialisation of the ui
+        #   to continue
         self._wait_for_init.wait(10)
+        # Event notification methods
+        self._event = dict()
 
 
     def _init_tk_window(self):
         """
             Initialize the window for the Tk Interface
         """
-        # create the instance
+        # Create the instance
         self._root = Tk()
-        # resize the window
+        # Resize the window
         self._root.geometry("1000x700+1510+30") 
-        # bind the close action with our own callback 
+        # Bind the close action with our own callback 
         self._root.protocol("WM_DELETE_WINDOW", self._quit_root)
-        # memorise the frame of the app
+        # Memorise the frame of the app
         self._frame = Frame(self._root)
         self._frame.pack()
 
@@ -67,46 +69,77 @@ class UIEngine(Thread):
         if tkMessageBox.askokcancel("Quit", "Do you really wish to quit?"):
             # If he's sure (at least twice in a row), quit
             self._root.destroy()
+            # Notify the event_engine
+            self._event[EVT_UI_PLAYER_LEFT]( \
+                    self._hands_id_to_position.index("S"))
+            exit(0)
 
 
     def _init_hands(self):
         """
             Initialise the ui hands object of the players
         """
-        # index of the tab: the id of the player owning the hands
-        # value of the tab: the position of the player
-        # will be updated during the game 
-        #   to place the (first) active player south
-        self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # add a hand for each ids 
         self._hands = []
         for i in self._hands_id_to_position:
             self._hands.append(UIHand(self._frame, i)) 
 
+    def _init_game_logic(self):
+        # Index of the tab: the id of the player owning the hands
+        # Value of the tab: the position of the player
+        # Will be updated during the game 
+        #   to place the (first) active player south
+        self._hands_id_to_position = ['N', 'E', 'S', 'W']
+        # Init the hands
+        self._init_hands()
 
     def _init_ui(self):
         """
             Sets the interface and enter the tk mainloop
         """
-        # init the interface
+        # Init the interface
         self._init_tk_window()
-        # init the hands
-        self._init_hands()
-        # add some buttons
+        # Init the game parts 
+        self._init_game_logic()
+        # Add some buttons
         self._init_game_control_buttons()
+
 
     def run(self):
         """
-            This method will be called when the thread starts.
+            This method will be called when the UI thread starts.
+            It initialise and launch the UI. 
         """
+        # Acquire the lock
         self._wait_for_init.acquire()
+        # Launch the initialisation
         self._init_ui()
-        self._init = 1
+        # Notify the end of the initialisation 
         self._wait_for_init.notify()
+        # Release the condition, now useless
         self._wait_for_init.release()
-        # enter the infinite loop, see you lata
+        # Enter the infinite loop, see you lata
         self._root.mainloop()
 
+    
+    def set_reference_player(self, p):
+        for i in xrange(0, 4):
+            self._hands_id_to_position[(p + i) % 4] = \
+                    ['S', 'W', 'N', 'E'][i]
+
+    def set_method(self, evt_id, method):
+        """
+            Set a new method to be called on a certain type
+            of event
+            @param evt_id   id of the event
+            @param method   method that must be called on event occurence
+        """ 
+        self._event[evt_id] = method
+
+    def add_event_engine(self):
+        """
+            Add an event engine to 
+        """
 
     def new_round(self):
         """
@@ -144,11 +177,11 @@ class UIEngine(Thread):
             @param playable     list of cards that can be played
 
         """
-        # wait to have a new card
-        # it must be a playable card
+        # Wait to have a new card
+        # It must be a playable card
         while self._hands[p].last_card_played is None or not self._hands[p].last_card_played in playable:
             pass
-        # finally, the user clicked on a good card
+        # Finally, the user clicked on a good card
         return self._hands[p].last_card_played
 
 

@@ -4,6 +4,7 @@ EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
 EVT_UI_GET_CARD = 2
 EVT_CARD_PLAYED = 3
+EVT_UI_PLAYER_LEFT = 4
 
 class EventEngine(object):
 
@@ -27,6 +28,11 @@ class EventEngine(object):
         """
         if ui not in [ui[0] for ui in self.ui]:
             self.ui.append((ui, p))
+            # Define the reference player
+            if not p is None:
+                ui.set_reference_player(p[0])
+            # Set the event methods
+            ui.set_method(EVT_UI_PLAYER_LEFT, self.player_left)
         for player in p:
             self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
 
@@ -57,11 +63,9 @@ class EventEngine(object):
             ui[0].card_played(p, c)
 
 
-    def left_game(self, p):
+    def player_left(self, p):
         """
             Notify game that a player has left the game
             @param p    played who left
         """
-        # should really notify, not just quitting the process
         pass
-        exit(0)
