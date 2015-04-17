@@ -1,18 +1,17 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Button
-import tkMessageBox
-from random import randint
-
 from threading import Thread, Condition
-import time
+
+from src.game.deck import Deck
+from src.event.event_engine import EVT_UI_PLAYER_LEFT 
+from src.utils.notify import Notify
 
 from src.ui.ui_cards import UICards
 from src.ui.ui_hand import UIHand
-from src.game.deck import Deck
-from src.event.event_engine import EVT_UI_PLAYER_LEFT 
+from src.ui.ui_controllers import UIControllers
 
 # TODO : modify all hard coded 4 values (max players)
-class UIEngine(Thread):
+class UIEngine(Thread, Notify):
     """
         Handle a Tk Interface
     """
@@ -43,36 +42,9 @@ class UIEngine(Thread):
         self._root = Tk()
         # Resize the window
         self._root.geometry("1000x700+1510+30") 
-        # Bind the close action with our own callback 
-        self._root.protocol("WM_DELETE_WINDOW", self._quit_root)
         # Memorise the frame of the app
         self._frame = Frame(self._root)
         self._frame.pack()
-
-
-    def _init_game_control_buttons(self):
-        """
-            Add buttons to control the game proceedings
-            For the moment, only a "Quit" button is added.
-        
-        """
-        self._quit = Button(self._frame, text = "Quit",
-                                command=self._quit_root)
-        self._quit.grid(row = 7, column = 13)
-        
-
-    def _quit_root(self):
-        """ 
-            Own callback to handle "close window" event 
-        """
-        # Double check the user intentions
-        if tkMessageBox.askokcancel("Quit", "Do you really wish to quit?"):
-            # If he's sure (at least twice in a row), quit
-            self._root.destroy()
-            # Notify the event_engine
-            self._event[EVT_UI_PLAYER_LEFT]( \
-                    self._hands_id_to_position.index("S"))
-            exit(0)
 
 
     def _init_hands(self):
@@ -84,6 +56,7 @@ class UIEngine(Thread):
         for i in self._hands_id_to_position:
             self._hands.append(UIHand(self._frame, i)) 
 
+
     def _init_game_logic(self):
         # Index of the tab: the id of the player owning the hands
         # Value of the tab: the position of the player
@@ -92,6 +65,7 @@ class UIEngine(Thread):
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # Init the hands
         self._init_hands()
+
 
     def _init_ui(self):
         """
@@ -102,7 +76,7 @@ class UIEngine(Thread):
         # Init the game parts 
         self._init_game_logic()
         # Add some buttons
-        self._init_game_control_buttons()
+        self._controllers = UIControllers(self._root)
 
 
     def run(self):
@@ -127,6 +101,7 @@ class UIEngine(Thread):
             self._hands_id_to_position[(p + i) % 4] = \
                     ['S', 'W', 'N', 'E'][i]
 
+
     def set_method(self, evt_id, method):
         """
             Set a new method to be called on a certain type
@@ -136,10 +111,6 @@ class UIEngine(Thread):
         """ 
         self._event[evt_id] = method
 
-    def add_event_engine(self):
-        """
-            Add an event engine to 
-        """
 
     def new_round(self):
         """
@@ -159,6 +130,7 @@ class UIEngine(Thread):
         """
         print("Not implemented")
 
+
     def end_of_trick(self, p):
         """
             Notification that the current trick is finished 
@@ -168,6 +140,7 @@ class UIEngine(Thread):
 
         """
         print("Not implemented")
+
 
     def get_card(self, p, playable):
         """
