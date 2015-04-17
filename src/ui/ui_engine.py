@@ -21,6 +21,7 @@ class UIEngine(Thread, Notify):
         """
             Constructor
         """
+        Notify.__init__(self)
         Thread.__init__(self)
         # This condition will notify the main thread when init is over
         self._wait_for_init = Condition()
@@ -30,8 +31,6 @@ class UIEngine(Thread, Notify):
         # Wait for the initialisation of the ui
         #   to continue
         self._wait_for_init.wait(10)
-        # Event notification methods
-        self._event = dict()
 
 
     def _init_tk_window(self):
@@ -100,16 +99,6 @@ class UIEngine(Thread, Notify):
         for i in xrange(0, 4):
             self._hands_id_to_position[(p + i) % 4] = \
                     ['S', 'W', 'N', 'E'][i]
-
-
-    def set_method(self, evt_id, method):
-        """
-            Set a new method to be called on a certain type
-            of event
-            @param evt_id   id of the event
-            @param method   method that must be called on event occurence
-        """ 
-        self._event[evt_id] = method
 
 
     def new_round(self):
