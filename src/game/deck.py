@@ -10,6 +10,8 @@ class DeckTooSmall(Exception):
 
 class Deck(object):
 
+    NB_CARD = 32
+
     def __init__(self):
         self.stack = list()
         # Add all cards to the deck (ordered)

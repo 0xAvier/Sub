@@ -6,13 +6,17 @@ from src.game.round import Round
 
 class GameEngine(object):
 
-    pos = ['N', 'W', 'S', 'E']
+    # Number of players of the game
+    # (included IA and real players)
+    NB_PLAYER = 4
+    # Max number of cards that one can have in its hand
+    MAX_CARD = Deck.NB_CARD / NB_PLAYER
 
     def __init__(self):
         # Creation of a deck of cards to play
         self.deck = Deck()
         # Creation of a set of players
-        self.players = [Player(p) for p in self.pos]
+        self.players = [Player(p) for p in xrange(self.NB_PLAYER)]
         # Event notication methods
         self.event = dict()
 
