@@ -2,15 +2,13 @@
 from Tkinter import Tk, Frame, Button
 from threading import Thread, Condition
 
-from src.game.deck import Deck
+from src.game.game_engine import GameEngine 
 from src.event.event_engine import EVT_UI_PLAYER_LEFT 
 from src.utils.notify import Notify
 
-from src.ui.ui_cards import UICards
-from src.ui.ui_hand import UIHand
-from src.ui.ui_controllers import UIControllers
+from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
+from src.ui.ui_table import UITable
 
-# TODO : modify all hard coded 4 values (max players)
 class UIEngine(Thread, Notify):
     """
         Handle a Tk Interface
@@ -18,9 +16,6 @@ class UIEngine(Thread, Notify):
 
 
     def __init__(self):
-        """
-            Constructor
-        """
         Notify.__init__(self)
         Thread.__init__(self)
         # This condition will notify the main thread when init is over
@@ -41,29 +36,17 @@ class UIEngine(Thread, Notify):
         self._root = Tk()
         # Resize the window
         self._root.geometry("1000x700+1510+30") 
-        # Memorise the frame of the app
-        self._frame = Frame(self._root)
-        self._frame.pack()
 
 
-    def _init_hands(self):
-        """
-            Initialise the ui hands object of the players
-        """
-        # add a hand for each ids 
-        self._hands = []
-        for i in self._hands_id_to_position:
-            self._hands.append(UIHand(self._frame, i)) 
+    def _init_table(self):
+        self._table = UITable(self._root)
 
 
-    def _init_game_logic(self):
-        # Index of the tab: the id of the player owning the hands
-        # Value of the tab: the position of the player
-        # Will be updated during the game 
-        #   to place the (first) active player south
-        self._hands_id_to_position = ['N', 'E', 'S', 'W']
-        # Init the hands
-        self._init_hands()
+    def _init_controllers(self):
+        self._controllers = UIControllers(self._root)
+        quit_callback = lambda: self._event[EVT_UI_PLAYER_LEFT]( \
+                                 self._table.interface_player())
+        self._controllers.set_method(EVT_CONTROL_QUIT, quit_callback) 
 
 
     def _init_ui(self):
@@ -73,10 +56,9 @@ class UIEngine(Thread, Notify):
         # Init the interface
         self._init_tk_window()
         # Init the game parts 
-        self._init_game_logic()
-        # Add some buttons
-        self._controllers = UIControllers(self._root)
-
+        self._init_table()
+        # Add some controllers 
+        self._init_controllers()
 
     def run(self):
         """
@@ -96,17 +78,15 @@ class UIEngine(Thread, Notify):
 
     
     def set_reference_player(self, p):
-        for i in xrange(0, 4):
-            self._hands_id_to_position[(p + i) % 4] = \
-                    ['S', 'W', 'N', 'E'][i]
-
+        self._table.set_interface_player(p)
 
     def new_round(self):
         """
             Notification for the beginning of a new round
 
         """
-        print("Not implemented")
+        # Reset score board
+        pass
 
 
     def card_played(self, p, c):
@@ -117,7 +97,10 @@ class UIEngine(Thread, Notify):
             @param p    id of the player that played the card
 
         """
-        print("Not implemented")
+        # Remove the card in the hand
+        pass
+        # Place it into the central heap
+        pass
 
 
     def end_of_trick(self, p):
@@ -128,7 +111,10 @@ class UIEngine(Thread, Notify):
             @param p    id of the player that wins the trick
 
         """
-        print("Not implemented")
+        # Reset the heap 
+        pass
+        # Reset last_played for all hands
+        self._table.reset_last_played()
 
 
     def get_card(self, p, playable):
@@ -141,10 +127,11 @@ class UIEngine(Thread, Notify):
         """
         # Wait to have a new card
         # It must be a playable card
-        while self._hands[p].last_card_played is None or not self._hands[p].last_card_played in playable:
+        while self._table._hands[p].last_card_played is None or \
+                not self._table.last_card_played(p) in playable:
             pass
         # Finally, the user clicked on a good card
-        return self._hands[p].last_card_played
+        return self._table.last_card_played(p)
 
 
     def new_hand(self, p, h):
@@ -155,4 +142,4 @@ class UIEngine(Thread, Notify):
             @param h    list of tuples (val, col) composing the hand
 
         """
-        self._hands[p].hand = h
+        self._table._hands[p].hand = h

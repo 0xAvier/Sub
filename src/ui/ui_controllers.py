@@ -4,9 +4,11 @@ import tkMessageBox
 # TODO: remove to keep only "right"
 from Tkinter import *
 
+from src.utils.notify import Notify
+
 EVT_CONTROL_QUIT = 0
 
-class UIControllers(object):
+class UIControllers(Notify):
     """
         Add buttons to control the game proceedings
         For the moment, only a "Quit" button is added.
@@ -15,6 +17,8 @@ class UIControllers(object):
 
 
     def __init__(self, root):
+        # Init the base class
+        Notify.__init__(self)
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
@@ -43,6 +47,5 @@ class UIControllers(object):
             # If he's sure (at least twice in a row), quit
             self._root.destroy()
             # Notify the event_engine
-            self._event[EVT_UI_PLAYER_LEFT]( \
-                    self._hands_id_to_position.index("S"))
+            self._event[EVT_CONTROL_QUIT]()
             exit(0)

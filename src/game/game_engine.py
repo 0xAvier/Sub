@@ -1,8 +1,9 @@
-
+# -*- coding:utf-8 -*-
 from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED
 from src.game.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
+
 
 class GameEngine(object):
 

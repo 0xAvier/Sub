@@ -1,24 +1,24 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Button
 
-from src.ui.ui_cards import UICards
 from src.game.deck import Deck
+from src.game.game_engine import GameEngine
+
+from src.ui.ui_cards import UICards
 
 class UIHand(object):
-    # number of cards in the hand
-    # must be 8 for the Coinche
-    max_cards = 8
+
 
     # define the first card column
     def return_first_card_column(self):
-        column = [2, 2 + self.max_cards, 2, 0]
+        column = [2, 2 + GameEngine.MAX_CARD, 2, 0]
         # return the position
         return column[self.position]
 
 
     # define the first card row
     def return_first_card_row(self):
-        row = [0, 1, 1 + self.max_cards, 1]
+        row = [0, 1, 1 + GameEngine.MAX_CARD, 1]
         # return the position
         return row[self.position]
 
@@ -34,7 +34,7 @@ class UIHand(object):
         # defines if the hand must be displayed vertically
         # or horizonthally 
         vertical = [0, 1, 0, 1]
-        for i in xrange(0, self.max_cards):
+        for i in xrange(0, GameEngine.MAX_CARD):
             # define the button
             self.buttons[i] = Button(self.frame, image=self.cards_image[i], 
                                         command=lambda i=i: self.click_card(i))
@@ -64,7 +64,7 @@ class UIHand(object):
 
     # place the buttons to their corresponding locations
     def update_buttons_index(self):
-        for i in xrange(0, self.max_cards):
+        for i in xrange(0, GameEngine.MAX_CARD):
             self.update_button_index(i)
 
     # change one card image
@@ -85,7 +85,7 @@ class UIHand(object):
         for i in xrange(0, len(self.hand)):
             self.update_button_image(i, self.hand[i])
         # hide the remaining buttons
-        for i in xrange(len(self.hand), UIHand.max_cards):
+        for i in xrange(len(self.hand), GameEngine.MAX_CARD):
             self.buttons[i].grid_forget();
             
     # The hand property contains the corresponding cards
@@ -114,11 +114,11 @@ class UIHand(object):
         self.last_card_played = None 
 
         # list for recording the images itself
-        self.cards_image = [None]*self.max_cards
+        self.cards_image = [None]*GameEngine.MAX_CARD
         # contains the index of the buttons in the grid layout
-        self.button_index = [None]*self.max_cards
+        self.button_index = [None]*GameEngine.MAX_CARD
         # contains the buttons in the grid layout
-        self.buttons = [None]*self.max_cards
+        self.buttons = [None]*GameEngine.MAX_CARD
 
         # init button
         self.init_buttons_index()
