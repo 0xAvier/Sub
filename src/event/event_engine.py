@@ -55,3 +55,13 @@ class EventEngine(object):
     def card_played(self, p, c):
         for ui in self.ui:
             ui[0].card_played(p, c)
+
+
+    def left_game(self, p):
+        """
+            Notify game that a player has left the game
+            @param p    played who left
+        """
+        # should really notify, not just quitting the process
+        pass
+        exit(0)

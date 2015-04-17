@@ -14,17 +14,19 @@ class UIHand(object):
         column = [2, 2 + self.max_cards, 2, 0]
         # return the position
         return column[self.position]
-    
+
+
     # define the first card row
     def return_first_card_row(self):
         row = [0, 1, 1 + self.max_cards, 1]
         # return the position
         return row[self.position]
 
+
     # index correspond to the clicked card (from 0 to 7)
     # nothing to be done now
-    def play_card(self, index):
-       self.last_card_played = self.hand[index]
+    def click_card(self, index):
+        self.last_card_played = self.hand[index]
 
 
     # fill the buttons index
@@ -35,7 +37,7 @@ class UIHand(object):
         for i in xrange(0, self.max_cards):
             # define the button
             self.buttons[i] = Button(self.frame, image=self.cards_image[i], 
-                                     command=lambda : self.play_card(i))
+                                        command=lambda i=i: self.click_card(i))
             # which row
             row = self.return_first_card_row() 
 
@@ -100,7 +102,9 @@ class UIHand(object):
     # constructor
     def __init__(self, frame, position):
         self.frame = frame
-        self.position = position
+        # translate to a more usable index
+        pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
+        self.position = pos_to_index[position]
 
         # list of cards in the hand
         self._hand = []
