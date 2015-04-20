@@ -1,8 +1,6 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Frame, Button, Pack
+from Tkinter import Frame, Button, Pack, RIGHT, TOP
 import tkMessageBox
-# TODO: remove to keep only "right"
-from Tkinter import *
 
 from src.utils.notify import Notify
 
@@ -35,7 +33,7 @@ class UIControllers(Notify):
         """
         self._quit = Button(self._frame, text = "Quit",
                                 command=self._quit_root)
-        self._quit.grid(row = 7, column = 13)
+        self._quit.pack(side = TOP)
 
 
     def _quit_root(self):

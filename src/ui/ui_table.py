@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Tk, Frame, Button
-# TODO: remove to keep only "right"
-from Tkinter import *
+from Tkinter import Tk, Frame, Button, LEFT
 
 from src.game.game_engine import GameEngine 
 
@@ -20,9 +18,6 @@ class UITable(object):
         # Create a new frame only for controllers
         self._frame = Frame(self._root) 
         self._frame.pack(side = LEFT)
-        # Memorise the frame of the app
-        self._frame = Frame(self._root)
-        self._frame.pack()
 
         # Index of the tab: the id of the player owning the hands
         # Value of the tab: the position of the player
@@ -31,6 +26,7 @@ class UITable(object):
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # Init the hands
         self._init_hands()
+
 
 
     def _init_hands(self):
@@ -69,5 +65,42 @@ class UITable(object):
 
 
     def reset_last_played(self):
+        """
+            last_played are the last card played during this trick by the
+            players.
+            Reset it to None to notify that the players haven't played during
+            this trick.
+        """
         for h in self._hands:
             h.last_card_played = None
+
+
+    def get_card(self, p, playable):
+        """
+            Wait for the user p to choose a card between
+            the possible ones given in playable
+            @param p            id of the player expected to play
+            @param playable     list of cards that can be played
+
+        """
+        # Wait to have a new card
+        # It must be a playable card
+        while self._hands[p].last_card_played is None or \
+                not self.last_card_played(p) in playable:
+            self._hands[p].card_count.acquire()
+            self._hands[p].missing_card_count.release()
+        # Finally, the user clicked on a good card
+        return self.last_card_played(p)
+
+
+    def new_hand(self, player, hand):
+        """
+            Set a new hand hand for player player
+            @param player   id of the player that is given the hand
+            @param hand list of tuples (val, col) composing the hand
+
+        """
+        self._hands[player].hand = hand
+
+        
+
