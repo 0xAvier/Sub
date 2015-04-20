@@ -83,11 +83,12 @@ class UITable(object):
             @param playable     list of cards that can be played
 
         """
+        self._hands[p].last_card_played = None
         # Wait to have a new card
         # It must be a playable card
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
-            self._hands[p].card_played_event.wait()
+            self._hands[p].card_played_event.wait(5)
         # Finally, the user clicked on a good card
         return self.last_card_played(p)
 
@@ -100,6 +101,21 @@ class UITable(object):
 
         """
         self._hands[player].hand = hand
-
         
 
+    def card_played(self, p, c):
+        """
+
+            Notification that the card c has been played by player p
+            @param c    tuple (val, col) of the card played
+            @param p    id of the player that played the card
+
+        """
+        # Remove the card in the hand
+        # Copy the list
+        new_hand = list(self._hands[p].hand)
+        # Remove the card from the copy
+        new_hand.remove(c)
+        self.new_hand(p, new_hand)
+        # Place it into the central heap
+        pass
