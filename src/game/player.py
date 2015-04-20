@@ -54,3 +54,11 @@ class Player(object):
 
         """
         self._hand.add(cards)
+
+
+    def team(self):
+        """
+            Return the id of the team of the player
+
+        """
+        return self.id % 2

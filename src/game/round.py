@@ -1,8 +1,10 @@
+#-*- coding: utf-8 -*-
 
 from random import choice, shuffle
 
 from src.event.event_engine import EVT_NEW_HAND
 from src.game.card import Card
+from src.game.score import Score
 
 
 MUST_UNDERCUT = False
@@ -18,10 +20,11 @@ class Round(object):
         # Notification to send to event manager
         self.event = events
         self.players = players
-        self.score = {'NS': 0, 'WE': 0}
+        self.score = Score()
         # TO MODIFY
         #self.dealer = choice(self.players)
         self.dealer = players[0]
+        self.__deal_cards = list()
 
     def next_player(self, p):
         return self.players[(p.id + 1) % len(self.players)]
@@ -33,6 +36,8 @@ class Round(object):
             of cards to the last card played
 
         """
+        # Reset deal cards
+        self.__deal_cards = list()
         # Distribution sequence generation
         npr = [2, 3, 3]
         shuffle(npr)
@@ -46,21 +51,25 @@ class Round(object):
             for p in self.players:
                 self.event[EVT_NEW_HAND](p.id, p.get_cards())
         # Annonces
-        trump = None
-        pass
+        trump = None #SA
+        #Team that takes the contract
+        taker = self.players[0] 
+        # Value of the contract
+        pt_to_do = 80
+        # Coefficient (coinché/surcoinché ?)
+        coef = 1
+        contract = (trump, pt_to_do, coef, taker)
         # Jeu
         p = self.dealer
         # Updating next dealer for next deal
         self.dealer = self.next_player(self.dealer)
         
-        # To be removed
-        self.score['NS'] = 2000
-
         while len(self.players[0].get_cards()) > 0:
             # p = self.next_player(p)
-            p = self.trick(trump, p)
+            p = self.trick(contract[0], p)
             
-
+        self.score.deal_score(self.__deal_cards, contract)
+        print self.score.get_score(0), self.score.get_score(1)
     
     def trick(self, trump, p):
         played = list()
@@ -81,6 +90,7 @@ class Round(object):
                 best_card = card
                 wins = p
             p = self.next_player(p)    
+        self.__deal_cards.append((played, wins))
         # return the player that wins the trick
         return wins
 
@@ -144,5 +154,5 @@ class Round(object):
                             return cards
 
     def over(self):
-        return self.score['NS'] >= self.max_pts \
-                or self.score['WE'] >= self.max_pts 
+        return self.score.get_score(0) >= self.max_pts \
+                or self.score.get_score(1) >= self.max_pts 
