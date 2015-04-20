@@ -132,7 +132,7 @@ class UIEngine(Thread, Notify):
             @param playable     list of cards that can be played
 
         """
-        self._table.get_card(p, playable)
+        return self._table.get_card(p, playable)
 
 
     def new_hand(self, player, hand):

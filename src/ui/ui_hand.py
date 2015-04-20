@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Button
-from threading import Semaphore 
+from threading import Event 
 
 from src.game.deck import Deck
 from src.game.game_engine import GameEngine
@@ -23,9 +23,8 @@ class UIHand(object):
         # last card clicked in this hand
         # must be None if no card were clicked during this round
         self.last_card_played = None 
-        # Semaphore used to solve the publishir / consumer problem
-        self.card_count = Semaphore(0) 
-        self.missing_card_count = Semaphore(1) 
+        # Will be used to notify the main thread when waiting for a card
+        self.card_played_event = Event() 
 
         # list for recording the images itself
         self.cards_image = [None]*GameEngine.MAX_CARD
@@ -56,9 +55,9 @@ class UIHand(object):
     # index correspond to the clicked card (from 0 to 7)
     # nothing to be done now
     def click_card(self, index):
-        self.missing_card_count.acquire()
         self.last_card_played = self.hand[index]
-        self.card_count.release()
+        self.card_played_event.set()
+        self.card_played_event.clear()
 
 
     # fill the buttons index

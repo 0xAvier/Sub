@@ -87,8 +87,7 @@ class UITable(object):
         # It must be a playable card
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
-            self._hands[p].card_count.acquire()
-            self._hands[p].missing_card_count.release()
+            self._hands[p].card_played_event.wait()
         # Finally, the user clicked on a good card
         return self.last_card_played(p)
 
