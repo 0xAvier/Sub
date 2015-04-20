@@ -104,10 +104,7 @@ class UIEngine(Thread, Notify):
             @param p    id of the player that played the card
 
         """
-        # Remove the card in the hand
-        pass
-        # Place it into the central heap
-        pass
+        self._table.card_played(p, c)
 
 
     def end_of_trick(self, p):
