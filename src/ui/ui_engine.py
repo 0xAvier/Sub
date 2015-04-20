@@ -19,14 +19,11 @@ class UIEngine(Thread, Notify):
         Notify.__init__(self)
         Thread.__init__(self)
         # This condition will notify the main thread when init is over
-        #self._wait_for_init = Condition()
-        #self._wait_for_init.acquire()
         self._wait_init_event = Event()
         # Run the UI thread
         self.start()
         # Wait for the initialisation of the ui
         #   to continue
-        #self._wait_for_init.wait(10)
         self._wait_init_event.wait(10)
 
 
@@ -77,15 +74,11 @@ class UIEngine(Thread, Notify):
             This method will be called when the UI thread starts.
             It initialise and launch the UI. 
         """
-        # Acquire the lock
-        #self._wait_for_init.acquire()
         # Launch the initialisation
         self._init_ui()
         # Notify the end of the initialisation 
-        #self._wait_for_init.notify()
         self._wait_init_event.set()
         # Release the condition, now useless
-        #self._wait_for_init.release()
         self._wait_init_event.clear()
         # Enter the infinite loop, see you lata
         self._root.mainloop()
