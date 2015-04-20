@@ -12,14 +12,27 @@ COVERING = 1.0 / 3
 
 class UIHand(object):
     """
-       Handle the interface for the hand of a player 
+       Interface object for the hand of a player 
        Contains as few logic as possible
     """
 
+    # the hand width in pixel
+    HAND_WIDTH = (GameEngine.MAX_CARD-1)*(ImageLoader.card_width*COVERING) + \
+                    ImageLoader.card_width 
+    # the hand height in pixel
+    HAND_HEIGHT = ImageLoader.card_height
+    # offset between each hands (horizontally)
+    HAND_OFFSET = 50
+    # width in pixel between two cards
+    CARD_SHIFTING = ImageLoader.card_width * COVERING
+
+    # Table for hands position
+    first_card_column = [None] * GameEngine.NB_PLAYER
+    first_card_row = [None] * GameEngine.NB_PLAYER
 
     def __init__(self, frame, position):
         # Memorise the frame
-        self.frame = frame
+        self._frame = frame
 
         # Translate to a more usable index
         pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
@@ -35,33 +48,34 @@ class UIHand(object):
 
         # List for recording the images itself
         self.cards_image = [None] * GameEngine.MAX_CARD
-        # Contains the index of the buttons in the layout
-        self.button_index = [None] * GameEngine.MAX_CARD
         # Contains the buttons 
-        self.buttons = [None] * GameEngine.MAX_CARD
-        # Init button
-        self.init_buttons_index()
-        self.update_buttons_index()
+        self._buttons = [None] * GameEngine.MAX_CARD
+        # Init buttons
+        self._init_buttons()
+        self._update_buttons_position()
 
 
-    def return_first_card_column(self):
+    def _update_first_card_column(self):
         """
             Define the column of the first card for each hand
         """
+        # keep the hand centered
+        nb_cards_missing = GameEngine.MAX_CARD - len(self._hand)
+        missing_offset = nb_cards_missing / 2.0 * ImageLoader.card_width 
+        # don't forget covering
+        missing_offset *= COVERING
         # magical formula
-        hand_width = (GameEngine.MAX_CARD - 1) * COVERING  + 10
-        # less magical formula
-        column = [hand_width, hand_width * 2, hand_width, 0]
-        return column[self.position]
+        UIHand.first_card_column = [self.HAND_WIDTH + self.HAND_OFFSET + missing_offset, 
+                  (self.HAND_WIDTH + self.HAND_OFFSET) * 2 + missing_offset, 
+                  self.HAND_WIDTH + self.HAND_OFFSET + missing_offset, 
+                  missing_offset]
 
 
-    def return_first_card_row(self):
+    def _update_first_card_row(self):
         """
             Define the row of the first card for each hand
         """
-        row = [0, 2, 4, 2]
-        # Return the position
-        return row[self.position]
+        UIHand.first_card_row = [0, self.HAND_HEIGHT*2, self.HAND_HEIGHT*4, self.HAND_HEIGHT*2] 
 
 
     def click_card(self, index):
@@ -77,43 +91,35 @@ class UIHand(object):
         self.card_played_event.clear()
 
 
-    def init_buttons_index(self):
+    def _init_buttons(self):
         """
-            Fill the buttons layout index 
+            Init the buttons that will be used to modelise the cards
         """
-        # Defines if the hand must be displayed vertically
-        #   or horizonthally 
         for i in xrange(0, GameEngine.MAX_CARD):
             # Define the button
-            self.buttons[i] = Button(self.frame, image=self.cards_image[i], 
-                                        command=lambda i=i: self.click_card(i))
-            # Which row
-            row = self.return_first_card_row() 
-            # Which column
-            column = self.return_first_card_column() 
-            column += i
-            # Place the button
-            self.button_index[i] = [row, column]
+            self._buttons[i] = Button(self._frame, image = self.cards_image[i],
+                                      command=lambda i=i: self.click_card(i))
 
-
-    def update_button_index(self, i):
+    def _update_button_position(self, i):
         """
             Place one button to its corresponding location
             @param i    index of the button
         """
-        row, column = self.button_index[i]
+        # Compute new positions
+        self._update_first_card_column()
+        self._update_first_card_row()
         # Place the button
-        x = row * ImageLoader.card_height 
-        y = column * ImageLoader.card_width * COVERING 
-        self.buttons[i].place(x = y, y = x)
+        x = self.first_card_column[self.position] + i * self.CARD_SHIFTING
+        y = self.first_card_row[self.position]
+        self._buttons[i].place(x = x, y = y)
 
 
-    def update_buttons_index(self):
+    def _update_buttons_position(self):
         """
             Place the buttons to their corresponding locations
         """
         for i in xrange(0, GameEngine.MAX_CARD):
-            self.update_button_index(i)
+            self._update_button_position(i)
 
 
     def update_button_image(self, buttonNumber, card):
@@ -125,11 +131,11 @@ class UIHand(object):
         # Get the card mage
         new_card = UICards.get_card_image(card)
         # Display it
-        self.buttons[buttonNumber].configure(image = new_card)
+        self._buttons[buttonNumber].configure(image = new_card)
         # Save it
         self.cards_image[buttonNumber] = new_card
         # Be sure that the button is visible
-        self.update_button_index(buttonNumber)
+        self._update_button_position(buttonNumber)
             
 
     def updateCardsImage(self):
@@ -143,7 +149,7 @@ class UIHand(object):
             self.update_button_image(i, self.hand[i])
         # Hide the remaining buttons
         for i in xrange(len(self.hand), GameEngine.MAX_CARD):
-            self.buttons[i].place_forget();
+            self._buttons[i].place_forget();
             
 
     @property

@@ -91,7 +91,10 @@ class UIEngine(Thread, Notify):
 
     
     def set_reference_player(self, p):
+        """
+        """
         self._table.set_interface_player(p)
+
 
     def new_round(self):
         """
@@ -121,10 +124,7 @@ class UIEngine(Thread, Notify):
             @param p    id of the player that wins the trick
 
         """
-        # Reset the heap 
-        pass
-        # Reset last_played for all hands
-        self._table.reset_last_played()
+        self._table.end_of_trick(p)
 
 
     def get_card(self, p, playable):

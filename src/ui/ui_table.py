@@ -88,12 +88,35 @@ class UITable(object):
     def reset_last_played(self):
         """
             last_played are the last card played during this trick by the
-            players.
+            players
             Reset it to None to notify that the players haven't played during
-            this trick.
+            this trick
         """
         for h in self._hands:
             h.last_card_played = None
+
+
+    def reset_heap(self):
+        """
+            heap are placed when a player plays a card
+            Reset it to None to visualise the end of a trick
+        """
+        for h in self._heaps:
+            h.heap = None
+
+
+    def end_of_trick(self, p):
+        """
+            Notification that the current trick is finished 
+            (it should reasonnably mean that four cards have
+            been played since the beginning of the trick)
+            @param p    id of the player that wins the trick
+
+        """
+        # Reset the heap 
+        self.reset_heap()
+        # Reset last_played for all hands
+        self.reset_last_played()
 
 
     def get_card(self, p, playable):

@@ -46,10 +46,10 @@ class UIHeap(object):
             h_shift = 60 
             if self.position == 1:
                 # shift it to the right 
-                column -= h_shift
+                column += h_shift
             elif self.position == 3:
                 # shift it to the left
-                column += h_shift
+                column -= h_shift
             # don't forget to center it
         column -= ImageLoader.card_width / 2
         return column 
@@ -75,26 +75,38 @@ class UIHeap(object):
         return row 
         
 
-    def _init_label(self):
-        self.heap_image = UICards.get_card_image(Card('7', 'S'))
-        self._label = Label(self.frame, image=self.heap_image) 
+    def _place_label(self):
+        """
+        """
         self._label.place(x = self.label_column(), y = self.label_row())
+
+
+    def _init_label(self):
+        """
+        """
+        self._label = Label(self.frame)
+        self._place_label()
+
 
     def updateHeapImage(self):
         """
         """
-        if self.heap == None:
+        if self.heap is None:
             self._label.place_forget()
-            print("Bug")
+            self.heap_image = None
         else:
             new_card = UICards.get_card_image(self.heap)
+            self.heap_image = new_card
             self._label.configure(image = new_card)
+            self._place_label()
+
 
     @property
     def heap(self):
         """
         """
         return self._heap
+
 
     @heap.setter
     def heap(self, value):
