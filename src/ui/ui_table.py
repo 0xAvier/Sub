@@ -4,6 +4,7 @@ from Tkinter import Tk, Frame, Button, LEFT
 from src.game.game_engine import GameEngine 
 
 from src.ui.ui_hand import UIHand
+from src.ui.image_loader import ImageLoader
 
 class UITable(object):
     """
@@ -16,7 +17,8 @@ class UITable(object):
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame(self._root) 
+        self._frame = Frame(self._root, width = ImageLoader.card_width * 12, \
+                                        height = ImageLoader.card_height * 6) 
         self._frame.pack(side = LEFT)
 
         # Index of the tab: the id of the player owning the hands
@@ -101,8 +103,8 @@ class UITable(object):
 
         """
         self._hands[player].hand = hand
-        
 
+    
     def card_played(self, p, c):
         """
 
@@ -111,11 +113,13 @@ class UITable(object):
             @param p    id of the player that played the card
 
         """
-        # Remove the card in the hand
+        # Remove the card in the hand
         # Copy the list
         new_hand = list(self._hands[p].hand)
-        # Remove the card from the copy
+        # Remove the card from the copy
         new_hand.remove(c)
+        # Refresh the hand
         self.new_hand(p, new_hand)
         # Place it into the central heap
         pass
+

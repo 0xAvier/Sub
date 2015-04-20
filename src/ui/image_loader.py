@@ -48,9 +48,9 @@ class ImageLoader:
 
 
     # card width in pixel
-    _card_width = 71
+    card_width = 71
     # card height in pixel
-    _card_height = 96
+    card_height = 96
 
 
     @staticmethod
@@ -64,10 +64,10 @@ class ImageLoader:
         x_white_space = 2; 
         y_white_space = 2;
         # compute coordinates 
-        x = ImageLoader._card_width * x_index + x_white_space * (x_index + 1)
-        y = ImageLoader._card_height * y_index + y_white_space * (y_index + 1)
+        x = ImageLoader.card_width * x_index + x_white_space * (x_index + 1)
+        y = ImageLoader.card_height * y_index + y_white_space * (y_index + 1)
         # return a 4-uplet  
-        return x, y, x + ImageLoader._card_width, y + ImageLoader._card_height
+        return x, y, x + ImageLoader.card_width, y + ImageLoader.card_height
 
     @staticmethod
     def get_card_image(index):

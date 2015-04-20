@@ -1,134 +1,164 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Button
+from Tkinter import Button, CENTER
 from threading import Event 
 
 from src.game.deck import Deck
 from src.game.game_engine import GameEngine
 
 from src.ui.ui_cards import UICards
+from src.ui.image_loader import ImageLoader  
+
+COVERING = 1.0 / 3 
 
 class UIHand(object):
+    """
+       Handle the interface for the hand of a player 
+       Contains as few logic as possible
+    """
 
 
-    # constructor
     def __init__(self, frame, position):
+        # Memorise the frame
         self.frame = frame
-        # translate to a more usable index
+
+        # Translate to a more usable index
         pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
         self.position = pos_to_index[position]
 
-        # list of cards in the hand
+        # List of cards in the hand
         self._hand = []
-
-        # last card clicked in this hand
-        # must be None if no card were clicked during this round
+        # Last card clicked in this hand
+        # Must be None if no card were clicked during this round
         self.last_card_played = None 
         # Will be used to notify the main thread when waiting for a card
         self.card_played_event = Event() 
 
-        # list for recording the images itself
-        self.cards_image = [None]*GameEngine.MAX_CARD
-        # contains the index of the buttons in the grid layout
-        self.button_index = [None]*GameEngine.MAX_CARD
-        # contains the buttons in the grid layout
-        self.buttons = [None]*GameEngine.MAX_CARD
-
-        # init button
+        # List for recording the images itself
+        self.cards_image = [None] * GameEngine.MAX_CARD
+        # Contains the index of the buttons in the layout
+        self.button_index = [None] * GameEngine.MAX_CARD
+        # Contains the buttons 
+        self.buttons = [None] * GameEngine.MAX_CARD
+        # Init button
         self.init_buttons_index()
         self.update_buttons_index()
 
 
-    # define the first card column
     def return_first_card_column(self):
-        column = [2, 2 + GameEngine.MAX_CARD, 2, 0]
-        # return the position
+        """
+            Define the column of the first card for each hand
+        """
+        # magical formula
+        hand_width = (GameEngine.MAX_CARD - 1) * COVERING  + 10
+        # less magical formula
+        column = [hand_width, hand_width * 2, hand_width, 0]
         return column[self.position]
 
 
-    # define the first card row
     def return_first_card_row(self):
-        row = [0, 1, 1 + GameEngine.MAX_CARD, 1]
-        # return the position
+        """
+            Define the row of the first card for each hand
+        """
+        row = [0, 2, 4, 2]
+        # Return the position
         return row[self.position]
 
 
-    # index correspond to the clicked card (from 0 to 7)
-    # nothing to be done now
     def click_card(self, index):
+        """
+            Callback function for the card selection
+            @param index    the clicked card (from 0 to 7)
+        """
+        # Set the last played card
         self.last_card_played = self.hand[index]
+        # Notify the consumer (main thread)
         self.card_played_event.set()
+        # Reset the event
         self.card_played_event.clear()
 
 
-    # fill the buttons index
     def init_buttons_index(self):
-        # defines if the hand must be displayed vertically
-        # or horizonthally 
-        vertical = [0, 1, 0, 1]
+        """
+            Fill the buttons layout index 
+        """
+        # Defines if the hand must be displayed vertically
+        #   or horizonthally 
         for i in xrange(0, GameEngine.MAX_CARD):
-            # define the button
+            # Define the button
             self.buttons[i] = Button(self.frame, image=self.cards_image[i], 
                                         command=lambda i=i: self.click_card(i))
-            # which row
+            # Which row
             row = self.return_first_card_row() 
-
-            # which column
+            # Which column
             column = self.return_first_card_column() 
-            # display vertically or horizontally ?
-            if vertical[self.position]:
-                row += i / 2 * vertical[self.position]            
-                if i % 2:
-                    # side by side with the previous
-                    column += 1
-            else:
-                # horizontally
-                column += i
-            # place the button
+            column += i
+            # Place the button
             self.button_index[i] = [row, column]
-            self.buttons[i].grid(row = row, column = column)
 
-    # place one button to its corresponding location
+
     def update_button_index(self, i):
-        [row, column] = self.button_index[i]
-        # place the button
-        self.buttons[i].grid(row = row, column = column)
+        """
+            Place one button to its corresponding location
+            @param i    index of the button
+        """
+        row, column = self.button_index[i]
+        # Place the button
+        x = row * ImageLoader.card_height 
+        y = column * ImageLoader.card_width * COVERING 
+        self.buttons[i].place(x = y, y = x)
 
-    # place the buttons to their corresponding locations
+
     def update_buttons_index(self):
+        """
+            Place the buttons to their corresponding locations
+        """
         for i in xrange(0, GameEngine.MAX_CARD):
             self.update_button_index(i)
 
-    # change one card image
+
     def update_button_image(self, buttonNumber, card):
-        # get the card mage
+        """
+            Change one card image
+            @param buttonNumber index of the button
+            @param card         card to display
+        """
+        # Get the card mage
         new_card = UICards.get_card_image(card)
-        # display it
+        # Display it
         self.buttons[buttonNumber].configure(image = new_card)
-        # save it
+        # Save it
         self.cards_image[buttonNumber] = new_card
-        # be sure that the button is visible
+        # Be sure that the button is visible
         self.update_button_index(buttonNumber)
             
 
-    # modify a cards for 
-    # refresh images for the buttons
     def updateCardsImage(self):
-        # update new cards
+        """
+            Modify a cards for 
+            Refresh images for the buttons
+
+        """
+        # Update new cards
         for i in xrange(0, len(self.hand)):
             self.update_button_image(i, self.hand[i])
-        # hide the remaining buttons
+        # Hide the remaining buttons
         for i in xrange(len(self.hand), GameEngine.MAX_CARD):
-            self.buttons[i].grid_forget();
+            self.buttons[i].place_forget();
             
 
-    # The hand property contains the corresponding cards
-    # When modified, the 
     @property
     def hand(self):
+        """
+            The hand property contains the corresponding cards
+        """
         return self._hand
 
     @hand.setter
     def hand(self, value):
+        """
+            When modified, the button are automatically updated 
+            @param value    new hand
+        """
         self._hand = value
         self.updateCardsImage()
             

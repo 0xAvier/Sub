@@ -34,7 +34,7 @@ class UIEngine(Thread, Notify):
         # Create the instance
         self._root = Tk()
         # Resize the window
-        self._root.geometry("1000x700+1510+30") 
+        self._root.geometry("900x600") 
 
 
     def _init_table(self):

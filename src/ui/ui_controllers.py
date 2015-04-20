@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Frame, Button, Pack, RIGHT, TOP
+from Tkinter import Frame, Button, Pack, RIGHT, TOP, BOTTOM
 import tkMessageBox
 
 from src.utils.notify import Notify
@@ -33,7 +33,7 @@ class UIControllers(Notify):
         """
         self._quit = Button(self._frame, text = "Quit",
                                 command=self._quit_root)
-        self._quit.pack(side = TOP)
+        self._quit.pack(side = BOTTOM)
 
 
     def _quit_root(self):
