@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from random import choice, shuffle
+from random import choice, shuffle, randint
 
 from src.event.event_engine import EVT_NEW_HAND
 from src.game.card import Card
@@ -15,7 +15,7 @@ class Round(object):
     def __init__(self, deck, players, events):
         # To be set by the user later
         self.max_pts = 2000
-        # Deck to use in this roud
+        # Deck to use in this round
         self.deck = deck
         # Notification to send to event manager
         self.event = events
@@ -24,7 +24,8 @@ class Round(object):
         # TO MODIFY
         #self.dealer = choice(self.players)
         self.dealer = players[0]
-        self.__deal_cards = list()
+        # List of played cards by trick and by team
+        self.__tricks = [list(), list()]
 
     def next_player(self, p):
         return self.players[(p.id + 1) % len(self.players)]
@@ -68,9 +69,33 @@ class Round(object):
             # p = self.next_player(p)
             p = self.trick(contract[0], p)
             
-        self.score.deal_score(self.__deal_cards, contract)
-        print self.score.get_score(0), self.score.get_score(1)
+        self.score.deal_score(self.__tricks, p.team(), contract)
+        self.end_of_deal()
+
+
+    def end_of_deal(self):
+        """
+            Handler of each end of deal
+            In charge of putting back cards into the deck, 
+            notify the event manager of the update of score 
     
+        """
+        # Random if we reconstruct the deck by putting deck 1 on deck 2
+        # or the opposite
+        rdm = randint(0, 1)
+        # Adding one by one the cards of one subdeck eto the deck
+        while len(self.__tricks[rdm]) != 0:
+            trick = self.__tricks[rdm].pop(0)
+            while len(trick[0]) != 0:
+                self.deck.push(trick[0].pop(0))
+        rdm = 1 - rdm
+        # Adding the cards of the other subdeck to the deck
+        while len(self.__tricks[rdm]) != 0:
+            trick = self.__tricks[rdm].pop(0)
+            while len(trick[0]) != 0:
+                self.deck.push(trick[0].pop(0))
+    
+
     def trick(self, trump, p):
         played = list()
         best_card = None
@@ -90,7 +115,7 @@ class Round(object):
                 best_card = card
                 wins = p
             p = self.next_player(p)    
-        self.__deal_cards.append((played, wins))
+        self.__tricks[wins.team()].append((played, wins))
         # return the player that wins the trick
         return wins
 

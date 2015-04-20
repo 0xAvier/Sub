@@ -56,24 +56,26 @@ class Score(object):
         return self.__score[team]
 
 
-    def deal_points(self, deal, trump):
+    def deal_points(self, deal, trump, last):
         """
 
-            @param deal     list of tuples (trick, team), where:
+            @param deal     two lists of tuples (trick, player), where:
                                 - trick is the set of played cards
-                                - team is the winning team of the trick
+                                - player is the winning player of the trick
             @param trump    color of trump for this deal
+            @param last     team that won the last trick
                             
         """
         # Score of each team from tricks
         pts = [0] * len(deal)
-        for trick, p in deal:
-            pts[p.team()] += self.evaluate(trick, trump)
+        for team, tricks in enumerate(deal):
+            for trick in tricks:
+                pts[team] += self.evaluate(trick[0], trump)
         # todo belotte / rebelotte
 
         # 10-der ?
         if trump != "TA":
-            pts[deal[-1][1].team()] += 10
+            pts[last] += 10
         return pts 
 
 
@@ -85,23 +87,25 @@ class Score(object):
         return int(round(float(pts) / 10.) * 10)
 
 
-    def deal_score(self, deal, (trump, pts_to_do, coef, taker)):
+    def deal_score(self, deal, last, (trump, pts_to_do, coef, taker)):
         """
-            @param deal     list of tuples (trick, team), where:
+            @param deal     two lists of tuples (trick, player), where:
                                 - trick is the set of played cards
-                                - team is the winning team of the trick
+                                - player is the winning player of the trick
             @param contract Tuple of (color of trump, points to do, mult coef, taker ot the contract)
             @param taker    Team (0 or 1) that is supposed to realise the contract
+            @param last     team that won the last trick
 
         """
         team_taker = taker.team()
         #todo belotte/rebelotte
+        pts = [0] * 2
         # Special case : the taker team did win all tricks
-        if len([d for d in deal if d[1].team() == team_taker]) == len(deal):
+        if len(deal[1 - team_taker]) == 0:
             pts[team_taker] = 250
             pts[1 - team_taker] = 0
         else:
-            pts = self.deal_points(deal, trump)
+            pts = self.deal_points(deal, trump, last)
         score_inc = [0, 0]
         if pts[team_taker] >= pts_to_do:
             # Contract is done

@@ -68,14 +68,13 @@ class Deck(object):
         self.stack = self.stack[idx:] + self.stack[:idx]
 
 
-    def merge(self, a, b):
+    def merge(self, a):
         """
-            Merge packs a and b (whether by putting a on b or b on a)
-            and put (a + b) on the top of the deck
+            Merge self with deck a (whether by putting a on self or self on a)
 
         """
         if random() > 0.5:
-            self.stack += a + b
+            self.stack += a.stack
         else:
-            self.stack += b + a
+            self.stack = a.stack + self.stack
 
