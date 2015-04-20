@@ -64,6 +64,8 @@ class Round(object):
     
     def trick(self, trump, p):
         played = list()
+        best_card = None
+        wins = None
         for i in xrange(len(self.players)):
             playable = self.compute_playable(played, p.get_cards(), trump)
             card = None
@@ -73,9 +75,14 @@ class Round(object):
             played.append(card)
             # Notify user that its card has been played
             p.played(card)
+            # Check if the card is the best played until now
+            if best_card is None or Card.highest([card, best_card], 
+                    played[0][1], trump) == card:
+                best_card = card
+                wins = p
             p = self.next_player(p)    
-        # todo return the player that wins the trick
-        return 0
+        # return the player that wins the trick
+        return wins
 
 
     def compute_playable(self, played, cards, trump):

@@ -63,7 +63,7 @@ class Card(object):
         # If the two cards have same color
         if self[1] == card[1]:
             # We compare the values 
-            return -cmp(Card.values.index(self[0]), Card.values.index(card[0]))
+            return cmp(Card.values.index(self[0]), Card.values.index(card[0]))
         else:
             # Else we sort by color with a custom order
             return cmp(Card.colors.index(self[1]), Card.colors.index(card[1]))
