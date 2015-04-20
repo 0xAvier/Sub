@@ -7,7 +7,7 @@ from src.event.event_engine import EVT_UI_PLAYER_LEFT
 from src.utils.notify import Notify
 
 from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
-from src.ui.ui_table import UITable
+from src.ui.ui_table import UITable, TABLE_HEIGHT
 
 class UIEngine(Thread, Notify):
     """
@@ -34,7 +34,13 @@ class UIEngine(Thread, Notify):
         # Create the instance
         self._root = Tk()
         # Resize the window
-        self._root.geometry("900x600") 
+        # compute h according to the table
+        h = TABLE_HEIGHT + 100
+        # fixed size for the width
+        w = 900
+        # translate it in string
+        dim = str(w) + "x" + str(h)
+        self._root.geometry(dim)
 
 
     def _init_table(self):

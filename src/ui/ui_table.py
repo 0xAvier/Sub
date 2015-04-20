@@ -3,7 +3,14 @@ from Tkinter import Tk, Frame, Button, LEFT
 
 from src.game.game_engine import GameEngine 
 
+
 from src.ui.ui_hand import UIHand
+# width of the table
+TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
+# height of the table
+TABLE_HEIGHT = UIHand.HAND_HEIGHT * 5 
+
+from src.ui.ui_heap import UIHeap
 from src.ui.image_loader import ImageLoader
 
 class UITable(object):
@@ -17,8 +24,8 @@ class UITable(object):
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame(self._root, width = ImageLoader.card_width * 12, \
-                                        height = ImageLoader.card_height * 6) 
+        self._frame = Frame(self._root, width = TABLE_WIDTH, 
+                                        height = TABLE_HEIGHT)
         self._frame.pack(side = LEFT)
 
         # Index of the tab: the id of the player owning the hands
@@ -28,6 +35,8 @@ class UITable(object):
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # Init the hands
         self._init_hands()
+        # Init the central heaps
+        self._init_heap()
 
 
 
@@ -39,6 +48,16 @@ class UITable(object):
         self._hands = []
         for i in self._hands_id_to_position:
             self._hands.append(UIHand(self._frame, i)) 
+
+
+    def _init_heap(self):
+        """
+            Initialise the ui hands object of the players
+        """
+        # add a hand for each ids 
+        self._heaps = []
+        for i in self._hands_id_to_position:
+            self._heaps.append(UIHeap(self._frame, i)) 
 
 
     def last_card_played(self, p):
@@ -121,5 +140,5 @@ class UITable(object):
         # Refresh the hand
         self.new_hand(p, new_hand)
         # Place it into the central heap
-        pass
+        self._heaps[p].heap = c 
 
