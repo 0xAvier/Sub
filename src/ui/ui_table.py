@@ -4,14 +4,7 @@ from Tkinter import Tk, Frame, Button, LEFT
 from src.game.game_engine import GameEngine 
 
 
-from src.ui.ui_hand import UIHand, HAND_WIDTH, HAND_OFFSET, HAND_HEIGHT
-
-# TODO cyclic import ? Not very pretty
-# width of the table
-TABLE_WIDTH = (HAND_WIDTH + HAND_OFFSET) * 3 
-# height of the table
-TABLE_HEIGHT = HAND_HEIGHT * 5 
-
+from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
 from src.ui.image_loader import ImageLoader
 
@@ -23,13 +16,17 @@ class UITable(object):
 
     """
 
+    # Width of the table
+    TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
+    # Height of the table
+    TABLE_HEIGHT = UIHand.HAND_HEIGHT * 5 
 
     def __init__(self, root):
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame(self._root, width = TABLE_WIDTH, 
-                                        height = TABLE_HEIGHT)
+        self._frame = Frame(self._root, width = self.TABLE_WIDTH, 
+                                        height = self.TABLE_HEIGHT)
         self._frame.pack(side = LEFT)
 
         # Index of the tab: the id of the player owning the hands
@@ -64,7 +61,8 @@ class UITable(object):
         # Add a hand for each ids 
         self._heaps = []
         for i in self._hands_id_to_position:
-            self._heaps.append(UIHeap(self._frame, i)) 
+            self._heaps.append(UIHeap(self._frame, i, self.TABLE_WIDTH / 2, \
+                                                      self.TABLE_HEIGHT / 2)) 
 
 
     def last_card_played(self, p):

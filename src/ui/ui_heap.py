@@ -6,7 +6,7 @@ from src.game.card import Card
 from src.ui.image_loader import ImageLoader  
 from src.ui.ui_card import UICard
 from src.ui.ui_hand import UIHand
-from src.ui.ui_table import TABLE_WIDTH, TABLE_HEIGHT 
+
 
 class UIHeap(object):
     """
@@ -14,7 +14,9 @@ class UIHeap(object):
 
     """
 
-    def __init__(self, frame, position):
+    def __init__(self, frame, position, h_center, v_center):
+        self._h_center = h_center
+        self._v_center = v_center
         # Memorise the frame
         self.frame = frame
 
@@ -38,10 +40,10 @@ class UIHeap(object):
         """
         if self._position == 0 or self._position == 2:
             # Base
-            column = TABLE_WIDTH / 2    
+            column = self._h_center 
         elif self._position == 1 or self._position == 3:
             # Base 
-            column = TABLE_WIDTH / 2 
+            column = self._h_center
             # Small shifting 
             h_shift = 60 
             if self._position == 1:

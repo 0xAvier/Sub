@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Button
 from threading import Thread, Condition, Event
+from time import sleep
 
 from src.game.game_engine import GameEngine 
 from src.event.event_engine import EVT_UI_PLAYER_LEFT 
 from src.utils.notify import Notify
 
 from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
-from src.ui.ui_table import UITable, TABLE_HEIGHT
+from src.ui.ui_table import UITable
 
 class UIEngine(Thread, Notify):
     """
@@ -37,7 +38,7 @@ class UIEngine(Thread, Notify):
         self._root = Tk()
         # Resize the window
         # compute h according to the table
-        h = TABLE_HEIGHT + 100
+        h = UITable.TABLE_HEIGHT + 100
         # fixed size for the width
         w = 900
         # translate it in string
