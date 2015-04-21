@@ -5,6 +5,7 @@ EVT_NEW_HAND = 1
 EVT_UI_GET_CARD = 2
 EVT_CARD_PLAYED = 3
 EVT_UI_PLAYER_LEFT = 4
+EVT_END_OF_TRICK = 5
 
 class EventEngine(object):
 
@@ -16,6 +17,7 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_ROUND, self.new_round)
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
+        self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
         self.ui = list()
 
 
@@ -46,6 +48,16 @@ class EventEngine(object):
             ui[0].new_round()
 
 
+    def end_of_trick(self, p):
+        """
+            Notify all interfaces that the current trick is over
+            @param p    player that wins the trick
+
+        """
+        for ui in self.ui:
+            ui[0].end_of_trick(p)
+
+
     def new_hand(self, p, h):
         """
             Notify interfaces that a new hand has beend given to player p
@@ -67,5 +79,7 @@ class EventEngine(object):
         """
             Notify game that a player has left the game
             @param p    played who left
+
         """
         pass
+

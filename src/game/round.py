@@ -2,7 +2,7 @@
 
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK
 from src.game.card import Card
 from src.game.score import Score
 
@@ -66,8 +66,10 @@ class Round(object):
         self.dealer = self.next_player(self.dealer)
         
         while len(self.players[0].get_cards()) > 0:
-            # p = self.next_player(p)
             p = self.trick(contract[0], p)
+            if EVT_END_OF_TRICK in self.event.keys():
+                # Notify the event manager that the trick is over
+                self.event[EVT_END_OF_TRICK](p)
             
         self.score.deal_score(self.__tricks, p.team(), contract)
         self.end_of_deal()
