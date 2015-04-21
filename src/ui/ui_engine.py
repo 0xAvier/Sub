@@ -158,3 +158,13 @@ class UIEngine(Thread, Notify):
 
         """
         self._table.new_hand(player, hand)
+
+
+    def add_player(self, p):
+        """
+            Add a player handled by the UI
+            @param p    player handled  
+
+        """
+        self._table.add_player(p)
+

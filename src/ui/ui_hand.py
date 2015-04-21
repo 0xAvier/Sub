@@ -2,8 +2,8 @@
 from Tkinter import Button, CENTER
 from threading import Event 
 
-from src.game.deck import Deck
 from src.game.game_engine import GameEngine
+from src.game.card import Card 
 
 from src.ui.ui_card import UICard
 from src.ui.image_loader import ImageLoader  
@@ -47,16 +47,21 @@ class UIHand(object):
 
         # List of cards in the hand
         self._hand = []
+        # Size of the hand
+        self.size = GameEngine.MAX_CARD
         # Last card clicked in this hand
         # Must be None if no card were clicked during this round
         self.last_card_played = None 
         # Will be used to notify the main thread when waiting for a card
         self.card_played_event = Event() 
 
+        # Indicates wheter the hand is displayed or not
+        self.hidden = True 
+
         # List for recording the images itself
-        self.cards_image = [None] * GameEngine.MAX_CARD
+        self.cards_image = [None] * self.size 
         # Contains the buttons 
-        self._buttons = [None] * GameEngine.MAX_CARD
+        self._buttons = [None] * self.size 
         # Init buttons
         self._init_buttons()
         self._update_buttons_position()
@@ -145,7 +150,10 @@ class UIHand(object):
 
         """
         # Get the card mage
-        new_card = UICard.get_card_image(card)
+        if self.hidden:
+            new_card = UICard.get_card_image(Card('7', 'S'))
+        else:
+            new_card = UICard.get_card_image(card)
         # Display it
         self._buttons[buttonNumber].configure(image = new_card)
         # Save it

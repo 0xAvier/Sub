@@ -30,6 +30,9 @@ class EventEngine(object):
         """
         if ui not in [ui[0] for ui in self.ui]:
             self.ui.append((ui, p))
+            # Players handled by the ui
+            for player in p:
+                ui.add_player(player)
             # Define the reference player
             if not p is None:
                 ui.set_reference_player(p[0])

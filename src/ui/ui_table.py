@@ -35,6 +35,10 @@ class UITable(object):
         #   to place the (first) active player south
         self._interface_player = 3
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
+        # Player that are handled by this UI
+        self._handled_players = []
+
+
         # Init the hands
         self._init_hands()
         # Init the central heaps
@@ -139,6 +143,12 @@ class UITable(object):
             @param playable     list of cards that can be played
 
         """
+        # The player must be handled by the interface
+        if not p in self._handled_players:
+            raise Exception("Player " + str(p) + " not handled.")
+        # If he is handled, process as normal
+
+        # Forgot the last_card_played
         self._hands[p].last_card_played = None
         # Wait to have a new card
         # It must be a playable card
@@ -169,6 +179,13 @@ class UITable(object):
             @param p    id of the player that played the card
 
         """
+        # If the player is not handled ...
+        if not p in self._handled_players:
+            # ... only change its hand size
+            self._hands[p].size -= 1
+            return
+        # Otherwise, process as normal
+
         # Remove the card in the hand
         # Copy the list
         new_hand = list(self._hands[p].hand)
@@ -178,4 +195,13 @@ class UITable(object):
         self.new_hand(p, new_hand)
         # Place it into the central heap
         self._heaps[p].heap = c 
+
+    def add_player(self, p):
+        """
+            Add a player handled by the UI
+            @param p    player handled  
+
+        """
+        self._handled_players.append(p)
+        self._hands[p].hidden = False 
 
