@@ -1,4 +1,4 @@
-
+# -*- coding:utf-8 -*-
 # Define global constants to identify events
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
