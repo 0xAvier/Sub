@@ -31,7 +31,7 @@ class ImageLoader:
             Return the image containing all the cards
 
         """
-        # if the unique instance has not been initialized...
+        # If the unique instance has not been initialized...
         if ImageLoader._instance == 0:
             # ... initialize it
             ImageLoader._init_uicards()
@@ -47,10 +47,10 @@ class ImageLoader:
         return PhotoImage(file='data/classic_playing_cards.gif')
 
 
-    # card width in pixel
-    card_width = 71
-    # card height in pixel
-    card_height = 96
+    # Card width in pixel
+    CARD_WIDTH = 71
+    # Card height in pixel
+    CARD_HEIGHT = 96
 
 
     @staticmethod
@@ -59,21 +59,23 @@ class ImageLoader:
             Get the cards coordinates at the given index
             @param x_index  index of the row in the file
             @param y_index  index of the column in the file
+
         """
-        # number of pixel before each cards
+        # Number of pixel before each cards
         x_white_space = 2; 
         y_white_space = 2;
-        # compute coordinates 
-        x = ImageLoader.card_width * x_index + x_white_space * (x_index + 1)
-        y = ImageLoader.card_height * y_index + y_white_space * (y_index + 1)
-        # return a 4-uplet  
-        return x, y, x + ImageLoader.card_width, y + ImageLoader.card_height
+        # Compute coordinates 
+        x = ImageLoader.CARD_WIDTH * x_index + x_white_space * (x_index + 1)
+        y = ImageLoader.CARD_HEIGHT * y_index + y_white_space * (y_index + 1)
+        # Return a 4-uplet  
+        return x, y, x + ImageLoader.CARD_WIDTH, y + ImageLoader.CARD_HEIGHT
 
     @staticmethod
     def get_card_image(index):
         """
             Get the cards at the given index
             @param index    tupple in the following format [x_index, y_index]
+
         """
         coordinates = ImageLoader._index_to_coordinates(index)
         return subimage(ImageLoader._get_uicards(), coordinates)

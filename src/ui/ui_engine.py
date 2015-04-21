@@ -12,6 +12,7 @@ from src.ui.ui_table import UITable, TABLE_HEIGHT
 class UIEngine(Thread, Notify):
     """
         Handle a Tk Interface
+
     """
 
 
@@ -30,6 +31,7 @@ class UIEngine(Thread, Notify):
     def _init_tk_window(self):
         """
             Initialize the window for the Tk Interface
+
         """
         # Create the instance
         self._root = Tk()
@@ -47,6 +49,7 @@ class UIEngine(Thread, Notify):
         """
             Init the table frame
             This part is responsible for all
+
         """
         self._table = UITable(self._root)
 
@@ -55,18 +58,20 @@ class UIEngine(Thread, Notify):
         """
             Init the controllers frame
             This part is responsible for all the non-game stuff
+
         """
         # Add the frame
         self._controllers = UIControllers(self._root)
         # Initialize the quit callback
         quit_callback = lambda: self._event[EVT_UI_PLAYER_LEFT]( \
-                                 self._table.interface_player())
+                                 self._table.interface_player)
         self._controllers.set_method(EVT_CONTROL_QUIT, quit_callback) 
 
 
     def _init_ui(self):
         """
             Sets the interface and enter the tk mainloop
+
         """
         # Init the interface
         self._init_tk_window()
@@ -79,6 +84,7 @@ class UIEngine(Thread, Notify):
         """
             This method will be called when the UI thread starts.
             It initialise and launch the UI. 
+
         """
         # Launch the initialisation
         self._init_ui()
@@ -92,8 +98,12 @@ class UIEngine(Thread, Notify):
     
     def set_reference_player(self, p):
         """
+            Reference player is the player who manage the interface
+            Will be positioned South
+            @param p    future reference player 
+            
         """
-        self._table.set_interface_player(p)
+        self._table.interface_player = p
 
 
     def new_round(self):

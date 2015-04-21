@@ -30,6 +30,7 @@ class UIControllers(Notify):
     def _add_quit_button(self):
         """
             Add a button to quit the game
+
         """
         self._quit = Button(self._frame, text = "Quit",
                                 command=self._quit_root)
@@ -39,6 +40,7 @@ class UIControllers(Notify):
     def _quit_root(self):
         """ 
             Own callback to handle "close window" event 
+
         """
         # Double check the user intentions
         if tkMessageBox.askokcancel("Quit", "Do you really wish to quit?"):

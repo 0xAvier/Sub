@@ -4,19 +4,23 @@ from Tkinter import Tk, Frame, Button, LEFT
 from src.game.game_engine import GameEngine 
 
 
-from src.ui.ui_hand import UIHand
+from src.ui.ui_hand import UIHand, HAND_WIDTH, HAND_OFFSET, HAND_HEIGHT
+
+# TODO cyclic import ? Not very pretty
 # width of the table
-TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
+TABLE_WIDTH = (HAND_WIDTH + HAND_OFFSET) * 3 
 # height of the table
-TABLE_HEIGHT = UIHand.HAND_HEIGHT * 5 
+TABLE_HEIGHT = HAND_HEIGHT * 5 
 
 from src.ui.ui_heap import UIHeap
 from src.ui.image_loader import ImageLoader
+
 
 class UITable(object):
     """
         Handle all the table parts for the interface.
         Contains hands, central heaps & score board
+
     """
 
 
@@ -32,6 +36,7 @@ class UITable(object):
         # Value of the tab: the position of the player
         # Will be updated during the game 
         #   to place the (first) active player south
+        self._interface_player = 3
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # Init the hands
         self._init_hands()
@@ -43,8 +48,9 @@ class UITable(object):
     def _init_hands(self):
         """
             Initialise the ui hands object of the players
+
         """
-        # add a hand for each ids 
+        # Add a hand for each ids 
         self._hands = []
         for i in self._hands_id_to_position:
             self._hands.append(UIHand(self._frame, i)) 
@@ -53,8 +59,9 @@ class UITable(object):
     def _init_heap(self):
         """
             Initialise the ui hands object of the players
+
         """
-        # add a hand for each ids 
+        # Add a hand for each ids 
         self._heaps = []
         for i in self._hands_id_to_position:
             self._heaps.append(UIHeap(self._frame, i)) 
@@ -64,25 +71,30 @@ class UITable(object):
         """
             Return the last card played by a specific palyer
             @param p    player from whom the last card played is requested
+
         """
         return self._hands[p].last_card_played
 
-
+    @property
     def interface_player(self):
         """
             Return the id of the player who managed the interface
+
         """
-        self._hands_id_to_position.index("S")
+        return self._interface_player
 
 
-    # TODO : make it in a more pythonic way ?
-    def set_interface_player(self, p):  
+    @interface_player.setter
+    def interface_player(self, p):  
         """
             Set the id of the player who managed the interface
+
         """
         for i in xrange(0, GameEngine.NB_PLAYER):
+            # interface player get the south position
             self._hands_id_to_position[(p + i) % GameEngine.NB_PLAYER] = \
                     ['S', 'W', 'N', 'E'][i]
+        self._interface_player = p
 
 
     def reset_last_played(self):
@@ -91,6 +103,7 @@ class UITable(object):
             players
             Reset it to None to notify that the players haven't played during
             this trick
+
         """
         for h in self._hands:
             h.last_card_played = None
@@ -100,6 +113,7 @@ class UITable(object):
         """
             heap are placed when a player plays a card
             Reset it to None to visualise the end of a trick
+
         """
         for h in self._heaps:
             h.heap = None
@@ -132,6 +146,8 @@ class UITable(object):
         # It must be a playable card
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
+            # Wait for a click (notified by ui_hand)
+            # Time out of 5 seconds to avoid deadlock
             self._hands[p].card_played_event.wait(5)
         # Finally, the user clicked on a good card
         return self.last_card_played(p)

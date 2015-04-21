@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from image_loader import ImageLoader
 
-class UICards:
+class UICard:
     """
         Provides cards image 
 
@@ -14,11 +14,11 @@ class UICards:
             Return the coordinates of a random card
 
         """
-        # get a random position for a card...
+        # Get a random position for a card...
         x_index = randint(0, 12);
         y_index = randint(0, 3);
         # ... and translate it into coordinates
-        return UICards._index_to_coordinates([x_index, y_index])
+        return UICard._index_to_coordinates([x_index, y_index])
 
 
     # Dictionnary for the row and column index
@@ -35,9 +35,10 @@ class UICards:
             Get the index of the given card
             @param value    value of the given card
             @param color    color of the given card
+
         """
-        return [UICards._index_x_dictionary[value], \
-                UICards._index_y_dictionary[color]]
+        return [UICard._index_x_dictionary[value], \
+                UICard._index_y_dictionary[color]]
 
 
     @staticmethod
@@ -47,5 +48,5 @@ class UICards:
             @param card     object containing the card 
 
         """
-        index = UICards._get_card_index(card)
+        index = UICard._get_card_index(card)
         return ImageLoader.get_card_image(index) 

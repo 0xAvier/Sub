@@ -4,13 +4,14 @@ from Tkinter import Label
 from src.game.card import Card
 
 from src.ui.image_loader import ImageLoader  
-from src.ui.ui_cards import UICards
+from src.ui.ui_card import UICard
 from src.ui.ui_hand import UIHand
 from src.ui.ui_table import TABLE_WIDTH, TABLE_HEIGHT 
 
 class UIHeap(object):
     """
        Interface object for a heap 
+
     """
 
     def __init__(self, frame, position):
@@ -19,12 +20,12 @@ class UIHeap(object):
 
         # Translate to a more usable index
         pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
-        self.position = pos_to_index[position]
+        self._position = pos_to_index[position]
 
         # Memorise the card in the heap
         self._heap = None
         # The image itself 
-        self.heap_image = None 
+        self._heap_image = None 
         # The label index
         self._label_index = None
         self._init_label()
@@ -33,43 +34,43 @@ class UIHeap(object):
     def label_column(self):
         """ 
             Define the position for the heap
+
         """
-        if self.position == 0 or self.position == 2:
-            # base column
-            column = UIHand.first_card_column[self.position];
-            # base
+        if self._position == 0 or self._position == 2:
+            # Base
             column = TABLE_WIDTH / 2    
-        elif self.position == 1 or self.position == 3:
-            # base 
+        elif self._position == 1 or self._position == 3:
+            # Base 
             column = TABLE_WIDTH / 2 
-            # small shifting 
+            # Small shifting 
             h_shift = 60 
-            if self.position == 1:
-                # shift it to the right 
+            if self._position == 1:
+                # Shift it to the right 
                 column += h_shift
-            elif self.position == 3:
-                # shift it to the left
+            elif self._position == 3:
+                # Shift it to the left
                 column -= h_shift
-            # don't forget to center it
-        column -= ImageLoader.card_width / 2
+            # Don't forget to center it
+        column -= ImageLoader.CARD_WIDTH / 2
         return column 
 
 
     def label_row(self):
         """
-            
+            Return the row (pixel) of the heap according to its player position
+
         """
-        row = UIHand.first_card_row[self.position] 
+        row = UIHand.first_card_row[self._position] 
         vert_shift = 15 
-        if self.position == 0:
-            # shift it down
-            row += 1.5*ImageLoader.card_height
-            # a little higher
+        if self._position == 0:
+            # Shift it down
+            row += 1.5*ImageLoader.CARD_HEIGHT
+            # A little higher
             row -= vert_shift
-        elif self.position == 2:
-            # shift it up
-            row -= 1.5 * ImageLoader.card_height
-            # down down down
+        elif self._position == 2:
+            # Shift it up
+            row -= 1.5 * ImageLoader.CARD_HEIGHT
+            # Down down down
             row += vert_shift
 
         return row 
@@ -77,40 +78,45 @@ class UIHeap(object):
 
     def _place_label(self):
         """
+            Place the label to its position
+
         """
         self._label.place(x = self.label_column(), y = self.label_row())
 
 
     def _init_label(self):
         """
+            Init the label 
         """
         self._label = Label(self.frame)
-        self._place_label()
 
 
-    def updateHeapImage(self):
+    def _update_heap_image(self):
         """
+            Update the card image 
         """
+        # Remove or update the image ?
         if self.heap is None:
+            # Remove the image
             self._label.place_forget()
-            self.heap_image = None
+            self._heap_image = None
         else:
-            new_card = UICards.get_card_image(self.heap)
-            self.heap_image = new_card
+            # Get a new card
+            new_card = UICard.get_card_image(self.heap)
+            # Save it
+            self._heap_image = new_card
+            # Configure the label
             self._label.configure(image = new_card)
+            # Replace it
             self._place_label()
 
 
     @property
     def heap(self):
-        """
-        """
         return self._heap
 
 
     @heap.setter
     def heap(self, value):
-        """
-        """
         self._heap = value
-        self.updateHeapImage()
+        self._update_heap_image()
