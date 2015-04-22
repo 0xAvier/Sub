@@ -6,8 +6,8 @@ EVT_UI_GET_CARD = 2
 EVT_CARD_PLAYED = 3
 EVT_UI_PLAYER_LEFT = 4
 EVT_END_OF_TRICK = 5
+EVT_NEW_DEAL = 6
 CONSOLE = 7
-
 
 class EventEngine(object):
 
@@ -17,6 +17,7 @@ class EventEngine(object):
         # Define the function of the event manager that the 
         # game engine should call at each new round
         self.game.set_method(EVT_NEW_ROUND, self.new_round)
+        self.game.set_method(EVT_NEW_DEAL, self.new_deal)
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
@@ -52,6 +53,15 @@ class EventEngine(object):
         """
         for ui in self.ui:
             ui[0].new_round()
+
+
+    def new_round(self):
+        """
+            Notify all interfaces that a new deal has begun
+
+        """
+        for ui in self.ui:
+            ui[0].new_deal()
 
 
     def end_of_trick(self, p):

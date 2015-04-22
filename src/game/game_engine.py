@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, CONSOLE
+from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL, CONSOLE
 from src.game.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
@@ -33,6 +33,9 @@ class GameEngine(object):
         self.rd = Round(self.deck, self.players, self.event, self.log)
         while not self.rd.over():
             self.log("New deal")
+            if EVT_NEW_DEAL in self.event.keys():
+                # Notify the event manager that a new deal has begun
+                self.event[EVT_NEW_DEAL]()
             self.rd.deal()
 
     def set_method(self, evt_id, method):

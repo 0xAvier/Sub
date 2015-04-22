@@ -101,7 +101,7 @@ class Round(object):
             trick = self.__tricks[rdm].pop(0)
             while len(trick[0]) != 0:
                 self.deck.push(trick[0].pop(0))
-    
+
 
     def trick(self, trump, p):
         played = list()

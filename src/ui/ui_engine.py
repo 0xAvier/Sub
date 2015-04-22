@@ -115,7 +115,7 @@ class UIEngine(Thread, Notify):
         self._table.new_round()
 
 
-    def new_deal(self:
+    def new_deal(self):
         """
             Notification for the beginning of a deal 
 
