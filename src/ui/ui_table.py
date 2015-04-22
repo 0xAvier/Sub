@@ -19,7 +19,7 @@ class UITable(object):
     # Width of the table
     TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
     # Height of the table
-    TABLE_HEIGHT = UIHand.HAND_HEIGHT * 5 
+    TABLE_HEIGHT = UIHand.HAND_HEIGHT * 6 
     # Translate a position index to a number
     POS_TO_INDEX = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
 
@@ -27,8 +27,9 @@ class UITable(object):
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame(self._root, width = self.TABLE_WIDTH, 
-                                        height = self.TABLE_HEIGHT)
+        self._frame = Frame(root, width = self.TABLE_WIDTH, 
+                                  height = self.TABLE_HEIGHT,
+                                  background = "#000fff000")
         self._frame.pack(side = LEFT)
 
         # Index of the tab: the id of the player owning the hands
@@ -39,7 +40,6 @@ class UITable(object):
         self._hands_id_to_position = ['N', 'E', 'S', 'W']
         # Player that are handled by this UI
         self._handled_players = []
-
 
         # Init the hands
         self._init_hands()
