@@ -29,7 +29,7 @@ class UITable(object):
         # Create a new frame only for controllers
         self._frame = Frame(root, width = self.TABLE_WIDTH, 
                                   height = self.TABLE_HEIGHT,
-                                  background = "#000fff000")
+                                  background = "#27ae60")
         self._frame.pack(side = LEFT)
 
         # Index of the tab: the id of the player owning the hands
