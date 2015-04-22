@@ -1,7 +1,10 @@
 # -*- coding:utf-8 -*-
+
 from Tkinter import Tk, Frame, Text, RIGHT, END, TOP, Scrollbar, Y
 
-class UIConsole(object):
+from src.console.console import IConsole
+
+class UIConsole(IConsole):
     """
         Add a console for login and discussion
 
@@ -25,9 +28,6 @@ class UIConsole(object):
         self._scrollbar.pack(side = RIGHT, fill = Y)
         self._scrollbar.config(command=self._console.yview)
 
-        for i in xrange(0, 1000):
-            self.write(str(i))
-    
 
     def write(self, msg):
         """
@@ -38,7 +38,7 @@ class UIConsole(object):
         self._console.insert(END, msg)
 
 
-    def clean(self):
+    def clear(self):
         """
             I want a fair task sharing
             Screw you
