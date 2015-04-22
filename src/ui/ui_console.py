@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Tk, Frame, Text, RIGHT, END, TOP, Scrollbar, Y
+from Tkinter import Tk, Frame, Text, TOP, LEFT, RIGHT, END, Scrollbar, Y
 
 class UIConsole(object):
     """
@@ -15,16 +15,19 @@ class UIConsole(object):
         self._frame = Frame()
         self._frame.pack(in_=frame, side = TOP)
         
-        # Init the text widget
+        # Add a text widget
         self._console = Text(self._frame, height = 100)
-        self._console.pack()
-        self._console.insert(END, "Initialisation of log console")
-        
         # Add a scrollbar
         self._scrollbar = Scrollbar(self._frame)
+
+        # Init the scrollbar 
         self._scrollbar.pack(side = RIGHT, fill = Y)
         self._scrollbar.config(command=self._console.yview)
+        # Init the text widget
+        self._console.pack(side = LEFT)
+        self._console.config(yscrollcommand=self._scrollbar.set)
 
+        # Some noise to test
         for i in xrange(0, 1000):
             self.write(str(i))
     
