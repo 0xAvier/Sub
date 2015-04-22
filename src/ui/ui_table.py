@@ -17,7 +17,7 @@ class UITable(object):
     """
 
     # Width of the table
-    TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
+    TABLE_WIDTH = UIHand.HAND_WIDTH * 3 + UIHand.HAND_OFFSET * 3
     # Height of the table
     TABLE_HEIGHT = UIHand.HAND_HEIGHT * 6 
     # Translate a position index to a number

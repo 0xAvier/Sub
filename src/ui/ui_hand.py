@@ -82,6 +82,9 @@ class UIHand(object):
                                     space_taken * 2 + missing_offset, 
                                     space_taken + missing_offset, 
                                     missing_offset]
+        # Add horizontal offset
+        UIHand.first_card_column = [x + UIHand.HAND_OFFSET / 2 \
+                                            for x in UIHand.first_card_column]
 
 
     def _update_first_card_row(self):
@@ -92,7 +95,7 @@ class UIHand(object):
         height = UIHand.HAND_HEIGHT
         UIHand.first_card_row = [0, height * 2, height * 4, height * 2] 
         # Add vertical offset
-        UIHand.first_card_row = [x + height for x in UIHand.first_card_row]
+        UIHand.first_card_row = [x + height / 2 for x in UIHand.first_card_row]
 
 
     def click_card(self, index):
