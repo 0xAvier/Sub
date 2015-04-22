@@ -112,8 +112,7 @@ class UIEngine(Thread, Notify):
             Notification for the beginning of a new round
 
         """
-        # Reset score board
-        pass
+        self._table.new_round()
 
 
     def card_played(self, p, c):

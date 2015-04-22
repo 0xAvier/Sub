@@ -49,7 +49,7 @@ class UIHand(object):
         # List of cards in the hand
         self._hand = []
         # Size of the hand
-        self.size = GameEngine.MAX_CARD
+        self._size = GameEngine.MAX_CARD
         # Last card clicked in this hand
         # Must be None if no card were clicked during this round
         self.last_card_played = None 
@@ -60,9 +60,9 @@ class UIHand(object):
         self.hidden = True 
 
         # List for recording the images itself
-        self.cards_image = [None] * self.size 
+        self.cards_image = [None] * self._size 
         # Contains the buttons 
-        self._buttons = [None] * self.size 
+        self._buttons = [None] * self._size 
         # Init buttons
         self._init_buttons()
         self._update_buttons_position()
@@ -163,7 +163,7 @@ class UIHand(object):
         self._update_button_position(buttonNumber)
             
 
-    def updateCardsImage(self):
+    def update_cards_image(self):
         """
             Modify a cards for 
             Refresh images for the buttons
@@ -193,4 +193,23 @@ class UIHand(object):
 
         """
         self._hand = value
-        self.updateCardsImage()
+        self.update_cards_image()
+
+    @property
+    def size(self):
+        """
+            Return the number of card in the hand
+        
+        """
+        return self._size
+
+    @size.setter
+    def size(self, value):
+        """
+            When modified, the button are automatically updated
+            Used only for not handled players
+            @param value    number of cards in the new hand
+        """
+        self._size = value
+        self._hand = [None] * self._size
+        self.update_cards_image()
