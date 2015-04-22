@@ -42,9 +42,7 @@ class UIHand(object):
         # Memorise the frame
         self._frame = frame
 
-        # Translate to a more usable index
-        pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
-        self._position = pos_to_index[position]
+        self.position = position
 
         # List of cards in the hand
         self._hand = []
@@ -129,8 +127,8 @@ class UIHand(object):
         self._update_first_card_column()
         self._update_first_card_row()
         # Place the button
-        x = self.first_card_column[self._position] + i * UIHand.CARD_SHIFTING
-        y = self.first_card_row[self._position]
+        x = self.first_card_column[self.position] + i * UIHand.CARD_SHIFTING
+        y = self.first_card_row[self.position]
         self._buttons[i].place(x = x, y = y)
 
 
@@ -176,6 +174,7 @@ class UIHand(object):
         for i in xrange(len(self.hand), GameEngine.MAX_CARD):
             self._buttons[i].place_forget();
             
+
 
     @property
     def hand(self):

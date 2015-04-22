@@ -20,9 +20,7 @@ class UIHeap(object):
         # Memorise the frame
         self.frame = frame
 
-        # Translate to a more usable index
-        pos_to_index = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
-        self._position = pos_to_index[position]
+        self.position = position
 
         # Memorise the card in the heap
         self._heap = None
@@ -38,18 +36,18 @@ class UIHeap(object):
             Define the position for the heap
 
         """
-        if self._position == 0 or self._position == 2:
+        if self.position == 0 or self.position == 2:
             # Base
             column = self._h_center 
-        elif self._position == 1 or self._position == 3:
+        elif self.position == 1 or self.position == 3:
             # Base 
             column = self._h_center
             # Small shifting 
             h_shift = 60 
-            if self._position == 1:
+            if self.position == 1:
                 # Shift it to the right 
                 column += h_shift
-            elif self._position == 3:
+            elif self.position == 3:
                 # Shift it to the left
                 column -= h_shift
             # Don't forget to center it
@@ -62,14 +60,14 @@ class UIHeap(object):
             Return the row (pixel) of the heap according to its player position
 
         """
-        row = UIHand.first_card_row[self._position] 
+        row = UIHand.first_card_row[self.position] 
         vert_shift = 15 
-        if self._position == 0:
+        if self.position == 0:
             # Shift it down
             row += 1.5*ImageLoader.CARD_HEIGHT
             # A little higher
             row -= vert_shift
-        elif self._position == 2:
+        elif self.position == 2:
             # Shift it up
             row -= 1.5 * ImageLoader.CARD_HEIGHT
             # Down down down

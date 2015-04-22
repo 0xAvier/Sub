@@ -10,6 +10,6 @@ import time
 game = GameEngine()
 evt = EventEngine(game)
 app = UIEngine()
-evt.add_ui(app, [0])
+evt.add_ui(app, [1])
 game.new_round()
 

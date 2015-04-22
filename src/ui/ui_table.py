@@ -20,6 +20,8 @@ class UITable(object):
     TABLE_WIDTH = (UIHand.HAND_WIDTH + UIHand.HAND_OFFSET) * 3 
     # Height of the table
     TABLE_HEIGHT = UIHand.HAND_HEIGHT * 5 
+    # Translate a position index to a number
+    POS_TO_INDEX = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
 
     def __init__(self, root):
         # Memorise the root
@@ -54,7 +56,8 @@ class UITable(object):
         # Add a hand for each ids 
         self._hands = []
         for i in self._hands_id_to_position:
-            self._hands.append(UIHand(self._frame, i)) 
+            nb_position = UITable.POS_TO_INDEX[i]
+            self._hands.append(UIHand(self._frame, nb_position)) 
 
 
     def _init_heap(self):
@@ -65,8 +68,10 @@ class UITable(object):
         # Add a hand for each ids 
         self._heaps = []
         for i in self._hands_id_to_position:
-            self._heaps.append(UIHeap(self._frame, i, self.TABLE_WIDTH / 2, \
-                                                      self.TABLE_HEIGHT / 2)) 
+            nb_position = UITable.POS_TO_INDEX[i]
+            self._heaps.append(UIHeap(self._frame, nb_position, 
+                                                   self.TABLE_WIDTH / 2, \
+                                                   self.TABLE_HEIGHT / 2)) 
 
 
     def last_card_played(self, p):
@@ -96,6 +101,11 @@ class UITable(object):
             # interface player get the south position
             self._hands_id_to_position[(p + i) % GameEngine.NB_PLAYER] = \
                     ['S', 'W', 'N', 'E'][i]
+        # Refresh the position for the player
+        for i in xrange(0, GameEngine.NB_PLAYER):
+            nb_position = UITable.POS_TO_INDEX[self._hands_id_to_position[i]]
+            self._hands[i].position = nb_position 
+            self._heaps[i].position = nb_position 
         self._interface_player = p
 
 
