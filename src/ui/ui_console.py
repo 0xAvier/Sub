@@ -29,6 +29,9 @@ class UIConsole(IConsole):
         self._console.pack(side = LEFT)
         self._console.config(yscrollcommand=self._scrollbar.set)
 
+        # Add text
+        self._console.insert(END, "Initialisation of the log")
+
 
     def write(self, msg):
         """
