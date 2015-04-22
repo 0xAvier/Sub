@@ -62,6 +62,10 @@ class UIEngine(Thread, Notify):
         
         """
         self._side_pannel = UISidePannel(self._root)
+        # Initialize the quit callback
+        quit_callback = lambda: self._event[EVT_UI_PLAYER_LEFT]( \
+                                 self._table.interface_player)
+        self._side_pannel.set_method(EVT_CONTROL_QUIT, quit_callback) 
 
 
     def _init_ui(self):
@@ -186,3 +190,13 @@ class UIEngine(Thread, Notify):
 
         """
         return [self._side_pannel._console]
+
+    def set_method(self, evt_id, method):
+        """
+            Overwrite set_method
+            Because UIEngine is only an entry-point, set_method need
+                to be called on every child of UIEngine
+
+        """
+        self._event[evt_id] = method
+        self._side_pannel.set_method(evt_id, method)
