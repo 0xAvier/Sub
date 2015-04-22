@@ -39,6 +39,7 @@ class UIConsole(object):
         """
         self._console.insert(END, "\n")
         self._console.insert(END, msg)
+        self._console.see(END)
 
 
     def clean(self):
