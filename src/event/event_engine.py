@@ -6,6 +6,8 @@ EVT_UI_GET_CARD = 2
 EVT_CARD_PLAYED = 3
 EVT_UI_PLAYER_LEFT = 4
 EVT_END_OF_TRICK = 5
+CONSOLE = 7
+
 
 class EventEngine(object):
 
@@ -18,6 +20,7 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
+        self.game.set_method(CONSOLE, self.console)
         self.ui = list()
 
 
@@ -85,4 +88,13 @@ class EventEngine(object):
 
         """
         pass
+
+
+    def console(self, msg):
+        """
+            Display message in all console objects set
+
+        """
+        # todo
+        print "[log] " + msg
 

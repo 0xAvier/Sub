@@ -17,10 +17,12 @@ class Score(object):
             }
 
 
-    def __init__(self):
+    def __init__(self, log):
         # score[0] is the score of players 0-2
         # score[1] is the score of players 1-3
         self.__score = [0, 0]
+        # Logger
+        self.log = log
 
 
     @staticmethod
@@ -114,10 +116,19 @@ class Score(object):
             if coef == 1:
                 # Then the defensive team scores its points
                 score_inc[1 - team_taker] = self.around(pts[1 - team_taker])
+            # Log score
+            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - pts_to_do, 
+                                                                            pts[team_taker],
+                                                                            pts[1 - team_taker]))
         else:
             # Contract is not done
             score_inc[1 - team_taker] = coef * pts_to_do + 160
+            # Log score
+            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + pts_to_do, 
+                                                                            pts[team_taker],
+                                                                            pts[1 - team_taker]))
         for team in xrange(len(self.__score)):
             self.update_score(team, score_inc[team])
+        self.log("Score: (02) {0} - {1} (13)".format(self.__score[0], self.__score[1]))
         #todo notify event manager
 

@@ -29,7 +29,6 @@ class Player(object):
     def get_card(self, played, playable):
         if EVT_UI_GET_CARD in self.event.keys():
             c = self.event[EVT_UI_GET_CARD](self.id, playable)
-            print "Card played: " + str(c)
             return c
         else:
             return choice(playable)
