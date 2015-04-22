@@ -201,3 +201,9 @@ class UIEngine(Thread, Notify):
         """
         self._table.add_player(p)
 
+    def add_message(self, msg):
+        """
+            Add a message to the UIConsole
+
+        """
+        self._console.add_message(msg)
