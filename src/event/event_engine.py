@@ -14,6 +14,10 @@ class EventEngine(object):
 
     def __init__(self, game):
         self.game = game
+        # List of UIs to be notified
+        self.ui = list()
+        # List of consoles to log messages 
+        self.console = list()
         # Define the function of the event manager that the 
         # game engine should call at each new round
         self.game.set_method(EVT_NEW_ROUND, self.new_round)
@@ -21,8 +25,7 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
-        self.game.set_method(CONSOLE, self.console)
-        self.ui = list()
+        self.game.set_method(CONSOLE, self.log)
 
 
     def add_ui(self, ui, p = None):
@@ -42,8 +45,20 @@ class EventEngine(object):
                 ui.set_reference_player(p[0])
             # Set the event methods
             ui.set_method(EVT_UI_PLAYER_LEFT, self.player_left)
+            # add consoles if any
+            for c in ui.get_consoles():
+                self.add_console(c)
         for player in p:
             self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
+
+
+    def add_console(self, console):
+        """
+            Add a console to log information messages
+
+        """
+        if console not in self.console:
+            self.console.append(console)
 
 
     def new_round(self):
@@ -100,11 +115,12 @@ class EventEngine(object):
         pass
 
 
-    def console(self, msg):
+    def log(self, msg):
         """
             Display message in all console objects set
 
         """
-        # todo
+        for con in self.console:
+            con.write(msg)
         print "[log] " + msg
 
