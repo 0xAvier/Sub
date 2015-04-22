@@ -83,7 +83,9 @@ class UIEngine(Thread, Notify):
             The side pannel 
         
         """
-        self._side_pannel_frame = Frame(self._root, width = 100, height = 800,
+        w = 100
+        h = UITable.TABLE_HEIGHT
+        self._side_pannel_frame = Frame(self._root, width = w, height = h, 
                                         bd=10)
         # Add some controllers 
         self._init_controllers(self._root, self._side_pannel_frame)

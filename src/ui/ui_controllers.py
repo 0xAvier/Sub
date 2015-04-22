@@ -20,7 +20,7 @@ class UIControllers(Notify):
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame() 
+        self._frame = Frame(height = 10) 
         self._frame.pack(in_=frame, side = BOTTOM)
         # Bind the close action with our own callback 
         self._root.protocol("WM_DELETE_WINDOW", self._quit_root)
