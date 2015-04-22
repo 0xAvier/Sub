@@ -14,14 +14,14 @@ class UIControllers(Notify):
     """
 
 
-    def __init__(self, root):
+    def __init__(self, root, frame):
         # Init the base class
         Notify.__init__(self)
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
-        self._frame = Frame(self._root) 
-        self._frame.pack(side = RIGHT)
+        self._frame = Frame() 
+        self._frame.pack(in_=frame, side = BOTTOM)
         # Bind the close action with our own callback 
         self._root.protocol("WM_DELETE_WINDOW", self._quit_root)
         self._add_quit_button()
