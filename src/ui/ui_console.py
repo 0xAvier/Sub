@@ -1,10 +1,5 @@
 # -*- coding:utf-8 -*-
-<<<<<<< HEAD
 from Tkinter import Tk, Frame, Text, TOP, LEFT, RIGHT, END, Scrollbar, Y
-=======
-
-from Tkinter import Tk, Frame, Text, RIGHT, END, TOP, Scrollbar, Y
->>>>>>> origin/master
 
 from src.console.console import IConsole
 
