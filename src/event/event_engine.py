@@ -55,7 +55,7 @@ class EventEngine(object):
             ui[0].new_round()
 
 
-    def new_round(self):
+    def new_deal(self):
         """
             Notify all interfaces that a new deal has begun
 
