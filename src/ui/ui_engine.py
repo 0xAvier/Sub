@@ -8,8 +8,8 @@ from src.event.event_engine import EVT_UI_PLAYER_LEFT
 from src.utils.notify import Notify
 
 from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
-from src.ui.ui_table import UITable
-from src.ui.ui_console import UIConsole
+from src.ui.ui_table import UITable 
+from src.ui.ui_side_pannel import UISidePannel
 
 class UIEngine(Thread, Notify):
     """
@@ -56,42 +56,12 @@ class UIEngine(Thread, Notify):
         self._table = UITable(self._root)
 
 
-    def _init_controllers(self, root, frame):
-        """
-            Init the controllers frame
-            This part is responsible for all the non-game stuff
-
-        """
-        # Add the frame
-        self._controllers = UIControllers(root, frame)
-        # Initialize the quit callback
-        quit_callback = lambda: self._event[EVT_UI_PLAYER_LEFT]( \
-                                 self._table.interface_player)
-        self._controllers.set_method(EVT_CONTROL_QUIT, quit_callback) 
-
-
-    def _init_console(self, root, frame):
-        """
-            Init the console
-
-        """
-        self._console = UIConsole(root, frame)
-
-
     def _init_side_pannel(self):
         """
             The side pannel 
         
         """
-        w = 100
-        h = UITable.TABLE_HEIGHT
-        self._side_pannel_frame = Frame(self._root, width = w, height = h, 
-                                        bd=10)
-        # Add some controllers 
-        self._init_controllers(self._root, self._side_pannel_frame)
-        # Add a console
-        self._init_console(self._root, self._side_pannel_frame)
-        self._side_pannel_frame.pack(side = RIGHT)
+        self._side_pannel = UISidePannel(self._root)
 
 
     def _init_ui(self):
@@ -207,7 +177,7 @@ class UIEngine(Thread, Notify):
             Add a message to the UIConsole
 
         """
-        self._console.add_message(msg)
+        self._side_pannel.add_message(msg)
 
 
     def get_consoles(self):
@@ -215,4 +185,4 @@ class UIEngine(Thread, Notify):
             Return the list of the consoles for this UI
 
         """
-        return [self._console]
+        return [self._side_pannel._console]

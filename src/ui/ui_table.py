@@ -47,7 +47,6 @@ class UITable(object):
         self._init_heap()
 
 
-
     def _init_hands(self):
         """
             Initialise the ui hands object of the players
