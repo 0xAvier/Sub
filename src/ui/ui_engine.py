@@ -86,12 +86,8 @@ class UIEngine(Thread, Notify):
         self._side_pannel_frame = Frame(self._root, width = 100, height = 800,
                                         bd=10)
         # Add some controllers 
-        #self._init_controllers(self._side_pannel_frame)
-        #self._init_controllers(self._root)
         self._init_controllers(self._root, self._side_pannel_frame)
         # Add a console
-        #self._init_console(self._side_pannel_frame)
-        #self._init_console(self._root)
         self._init_console(self._root, self._side_pannel_frame)
         self._side_pannel_frame.pack(side = RIGHT)
 
