@@ -27,10 +27,6 @@ class UIConsole(object):
         self._console.pack(side = LEFT)
         self._console.config(yscrollcommand=self._scrollbar.set)
 
-        # Some noise to test
-        for i in xrange(0, 1000):
-            self.write(str(i))
-    
 
     def write(self, msg):
         """
