@@ -181,10 +181,10 @@ class UITable(object):
         """
         self._hands[player].hand = hand
 
-    
-    def new_round(self):
+     
+    def new_deal(self):
         """
-            Notification for the beginning of a new round
+            Notification for the beginning of a deal
 
         """
         # New hand for everybody
@@ -192,6 +192,13 @@ class UITable(object):
             # Well, in fact only for not handled player
             if not i in self._handled_players:
                 self._hands[i].size = GameEngine.MAX_CARD
+
+
+    def new_round(self):
+        """
+            Notification for the beginning of a new round
+
+        """
         # Reset score board
         pass
 
