@@ -117,8 +117,7 @@ class Card(object):
             # The highest card is the highest trump
             high = tr[0]
             for c in tr:
-                if self.values_trump.index(c[0]) > self.values_trump.index(high[0]):
+                if Card.values_trump.index(c[0]) > Card.values_trump.index(high[0]):
                     high = c
-            return c
-
+            return high
 

@@ -55,7 +55,7 @@ class Round(object):
             for p in self.players:
                 self.event[EVT_NEW_HAND](p.id, p.get_cards())
         # Annonces
-        trump = None #SA
+        trump = "H" #SA
         #Team that takes the contract
         taker = self.players[0] 
         # Value of the contract
@@ -124,6 +124,7 @@ class Round(object):
                 best_card = card
                 wins = p
             p = self.next_player(p)    
+        self.log("Points: " + str(Score.evaluate(played, trump)))
         self.__tricks[wins.team()].append((played, wins))
         # return the player that wins the trick
         return wins

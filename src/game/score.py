@@ -2,8 +2,8 @@
 
 class Score(object):
 
-    value = {'SA': 
-                {
+    value = {
+                'SA': {
                     '7': 0,
                     '8': 0,
                     '9': 0,
@@ -13,7 +13,31 @@ class Score(object):
                     'T': 10,
                     'A': 19,
                     'DER': 10,
-                }
+                },
+
+                'AS': {
+                    '7': 0,
+                    '8': 0,
+                    '9': 0,
+                    'J': 2,
+                    'Q': 3,
+                    'K': 4,
+                    'T': 10,
+                    'A': 11,
+                    'DER': 10,
+                },
+
+                'AA': {
+                    '7': 0,
+                    '8': 0,
+                    '9': 14,
+                    'J': 20,
+                    'Q': 3,
+                    'K': 4,
+                    'T': 10,
+                    'A': 11,
+                    'DER': 10,
+                },
             }
 
 
@@ -32,10 +56,13 @@ class Score(object):
             if trump is not None
 
         """
-        if trump is None or card[1] != trump:
-            return Score.value["SA"][card[0]]
-        else:
-            raise NotImplemented
+        if trump is None:
+            s = Score.value["SA"][card[0]]
+        elif card[1] != trump:
+            s = Score.value["AS"][card[0]]
+        elif card[1] == trump:
+            s = Score.value["AA"][card[0]]
+        return s
 
 
     @staticmethod
