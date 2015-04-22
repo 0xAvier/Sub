@@ -196,9 +196,9 @@ class UITable(object):
         """
         # If the player is not handled ...
         if not p in self._handled_players:
+            sleep(1)
             # ... only change its hand size
             self._hands[p].size -= 1
-            sleep(1)
         # Otherwise, process as normal
         else:
             # Remove the card in the hand
