@@ -13,6 +13,7 @@ class UIHand(object):
     """
        Interface object for the hand of a player 
        Contains as few logic as possible
+
     """
 
     # Part of the card that will be visible

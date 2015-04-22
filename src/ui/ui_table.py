@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Button, LEFT
+from time import sleep
 
 from src.game.game_engine import GameEngine 
-
 
 from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
@@ -129,6 +129,7 @@ class UITable(object):
             @param p    id of the player that wins the trick
 
         """
+        sleep(1)
         # Reset the heap 
         self.reset_heap()
         # Reset last_played for all hands
@@ -183,16 +184,16 @@ class UITable(object):
         if not p in self._handled_players:
             # ... only change its hand size
             self._hands[p].size -= 1
-            return
+            sleep(1)
         # Otherwise, process as normal
-
-        # Remove the card in the hand
-        # Copy the list
-        new_hand = list(self._hands[p].hand)
-        # Remove the card from the copy
-        new_hand.remove(c)
-        # Refresh the hand
-        self.new_hand(p, new_hand)
+        else:
+            # Remove the card in the hand
+            # Copy the list
+            new_hand = list(self._hands[p].hand)
+            # Remove the card from the copy
+            new_hand.remove(c)
+            # Refresh the hand
+            self.new_hand(p, new_hand)
         # Place it into the central heap
         self._heaps[p].heap = c 
 
