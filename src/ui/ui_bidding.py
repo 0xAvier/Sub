@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 # TODO
-from Tkinter import Tk, Frame, Button, LEFT, BOTTOM, END
+from Tkinter import Tk, Frame, Button, LEFT, BOTTOM, END, X, RIGHT
 from ttk import Combobox 
 
 from threading import Event 
@@ -22,15 +22,21 @@ class UIBidding(object):
         # Will be used to notify the main thread when waiting for a call 
         self.need_call_event = Event() 
 
-        self._place()
-
      
-    def _place(self): 
+    def display(self): 
         """
             Display the widget on the table
 
         """
         self._frame.place(in_ = self._root, x = self._x, y = self._y)
+
+
+    def hide(self):
+        """
+            Hide the pannel when the biddings are closed for example
+
+        """
+        self._frame.place_forget()
 
 
     def _init_color_buttons(self):
@@ -67,9 +73,13 @@ class UIBidding(object):
         self._selected_value = "" 
         self._value_box = Combobox(self._frame, \
                                    textvariable = self._selected_value, \
-                                   values = availableValue, state = 'readonly')
+                                   values = availableValue, \
+                                   # TODO
+                                   # Only justify the selected value
+                                   #justify = RIGHT, \
+                                   state = 'readonly')
         self._value_box.set(availableValue[0])
-        self._value_box.pack(side = BOTTOM)
+        self._value_box.pack(fill = X)
 
 
     def _init_buttons(self):
@@ -77,5 +87,6 @@ class UIBidding(object):
             Init the buttons 
 
         """
-        self._init_color_buttons()
+        # Put the value box on top of the buttons
         self._init_value_box()
+        self._init_color_buttons()

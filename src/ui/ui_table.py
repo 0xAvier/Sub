@@ -201,6 +201,9 @@ class UITable(Notify):
             Notification for the beginning of a deal
 
         """
+        # Bidding phase
+        pass
+
         # New hand for everybody
         for i in xrange(0, GameEngine.NB_PLAYER):
             # Well, in fact only for not handled player
