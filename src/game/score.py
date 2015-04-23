@@ -1,5 +1,9 @@
 #-*- coding: utf-8 -*-
 
+from src.game.bidding import Bidding
+from src.event.event_engine import EVT_DEAL_SCORE, EVT_UPDATE_SCORE
+
+
 class Score(object):
 
     value = {
@@ -41,13 +45,11 @@ class Score(object):
             }
 
 
-    def __init__(self, log):
+    def __init__(self, event):
         # score[0] is the score of players 0-2
         # score[1] is the score of players 1-3
         self.__score = [0, 0]
-        # Logger
-        self.log = log
-
+        self.event = event
 
     @staticmethod
     def eval_card(card, trump=None):
@@ -116,17 +118,17 @@ class Score(object):
         return int(round(float(pts) / 10.) * 10)
 
 
-    def deal_score(self, deal, last, (trump, pts_to_do, coef, taker)):
+    def deal_score(self, deal, last, bid):
         """
             @param deal     two lists of tuples (trick, player), where:
                                 - trick is the set of played cards
                                 - player is the winning player of the trick
-            @param contract Tuple of (color of trump, points to do, mult coef, taker ot the contract)
-            @param taker    Team (0 or 1) that is supposed to realise the contract
             @param last     team that won the last trick
+            @param bid      Object Bidding defining the contract to be done
 
         """
-        team_taker = taker.team()
+        trump = bid.col
+        team_taker = bid.taker.team()
         #todo belotte/rebelotte
         pts = [0] * 2
         # Special case : the taker team did win all tricks
@@ -136,26 +138,25 @@ class Score(object):
         else:
             pts = self.deal_points(deal, trump, last)
         score_inc = [0, 0]
-        if pts[team_taker] >= pts_to_do:
+        if pts[team_taker] >= bid.val:
             # Contract is done
-            score_inc[team_taker] = coef * pts_to_do + self.around(pts[team_taker])
+            score_inc[team_taker] = bid.coef * bid.val + self.around(pts[team_taker])
             # If the contract was not "coinché"
-            if coef == 1:
+            if not bid.is_coinched:
                 # Then the defensive team scores its points
                 score_inc[1 - team_taker] = self.around(pts[1 - team_taker])
-            # Log score
-            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - pts_to_do, 
-                                                                            pts[team_taker],
-                                                                            pts[1 - team_taker]))
+                bid.is_done(True)
         else:
             # Contract is not done
-            score_inc[1 - team_taker] = coef * pts_to_do + 160
-            # Log score
-            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + pts_to_do, 
-                                                                            pts[team_taker],
-                                                                            pts[1 - team_taker]))
+            score_inc[1 - team_taker] = bid.coef * bid.val + 160
+            bid.is_done(False)
+
+        if EVT_DEAL_SCORE in self.event.keys():
+            self.event[EVT_DEAL_SCORE](bid, pts)
+
         for team in xrange(len(self.__score)):
             self.update_score(team, score_inc[team])
-        self.log("Score: (02) {0} - {1} (13)".format(self.__score[0], self.__score[1]))
-        #todo notify event manager
+
+        if EVT_UPDATE_SCORE in self.event.keys():
+            self.event[EVT_UPDATE_SCORE](self.__score)
 

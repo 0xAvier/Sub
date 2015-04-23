@@ -2,9 +2,10 @@
 
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID
 from src.game.card import Card
 from src.game.score import Score
+from src.game.bidding import Bidding
 
 
 MUST_UNDERCUT = False
@@ -12,7 +13,7 @@ MUST_UNDERCUT = False
 
 class Round(object):
 
-    def __init__(self, deck, players, events, log):
+    def __init__(self, deck, players, events):
         # To be set by the user later
         self.max_pts = 2000
         # Deck to use in this round
@@ -20,14 +21,12 @@ class Round(object):
         # Notification to send to event manager
         self.event = events
         self.players = players
-        self.score = Score(log)
+        self.score = Score(self.event)
         # TO MODIFY
         #self.dealer = choice(self.players)
         self.dealer = players[0]
         # List of played cards by trick and by team
         self.__tricks = [list(), list()]
-        # Logger
-        self.log = log
 
 
     def next_player(self, p):
@@ -54,6 +53,7 @@ class Round(object):
         if EVT_NEW_HAND in self.event.keys():
             for p in self.players:
                 self.event[EVT_NEW_HAND](p.id, p.get_cards())
+
         # Annonces
         trump = "H" #SA
         #Team that takes the contract
@@ -62,21 +62,22 @@ class Round(object):
         pt_to_do = 80
         # Coefficient (coinché/surcoinché ?)
         coef = 1
-        contract = (trump, pt_to_do, coef, taker)
+        bid = Bidding(taker, pt_to_do, trump)
+        if EVT_NEW_BID in self.event.keys():
+            self.event[EVT_NEW_BID](bid)
+
         # Jeu
         p = self.dealer
         # Updating next dealer for next deal
         self.dealer = self.next_player(self.dealer)
         
         while len(self.players[0].get_cards()) > 0:
-            p = self.trick(contract[0], p)
-            # Log trick
-            self.log("-{0}- wins".format(p.id))
+            p = self.trick(bid.col, p)
             if EVT_END_OF_TRICK in self.event.keys():
                 # Notify the event manager that the trick is over
                 self.event[EVT_END_OF_TRICK](p)
             
-        self.score.deal_score(self.__tricks, p.team(), contract)
+        self.score.deal_score(self.__tricks, p.team(), bid)
         self.end_of_deal()
 
 
@@ -116,15 +117,12 @@ class Round(object):
             played.append(card)
             # Notify user that its card has been played
             p.played(card)
-            # Log played card
-            self.log("-" + str(p.id) + "- played " + str(card))
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:
                 best_card = card
                 wins = p
             p = self.next_player(p)    
-        self.log("Points: " + str(Score.evaluate(played, trump)))
         self.__tricks[wins.team()].append((played, wins))
         # return the player that wins the trick
         return wins

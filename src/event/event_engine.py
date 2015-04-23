@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+
 # Define global constants to identify events
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
@@ -8,6 +9,15 @@ EVT_UI_PLAYER_LEFT = 4
 EVT_END_OF_TRICK = 5
 EVT_NEW_DEAL = 6
 CONSOLE = 7
+EVT_NEW_BID = 8
+EVT_COINCHE = 9
+EVT_SURCOINCHE = 10
+EVT_UI_COINCHE = 11
+EVT_UI_SURCOINCHE = 12
+EVT_UI_GET_BID = 13
+EVT_DEAL_SCORE = 14
+EVT_UPDATE_SCORE = 15
+
 
 class EventEngine(object):
 
@@ -25,6 +35,9 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
+        self.game.set_method(EVT_NEW_BID, self.new_bid)
+        self.game.set_method(EVT_DEAL_SCORE, self.deal_score)
+
         self.game.set_method(CONSOLE, self.log)
 
 
@@ -66,6 +79,7 @@ class EventEngine(object):
             Notify all interfaces that a new round has begun
 
         """
+        self.log("New round")
         for ui in self.ui:
             ui[0].new_round()
 
@@ -75,6 +89,7 @@ class EventEngine(object):
             Notify all interfaces that a new deal has begun
 
         """
+        self.log("New deal")
         for ui in self.ui:
             ui[0].new_deal()
 
@@ -85,6 +100,8 @@ class EventEngine(object):
             @param p    player that wins the trick
 
         """
+        # Log trick
+        self.log("-{0}- wins".format(p.id))
         for ui in self.ui:
             ui[0].end_of_trick(p)
 
@@ -102,6 +119,8 @@ class EventEngine(object):
 
 
     def card_played(self, p, c):
+        # Log played card
+        self.log("-" + str(p) + "- played " + str(c))
         for ui in self.ui:
             ui[0].card_played(p, c)
 
@@ -123,4 +142,31 @@ class EventEngine(object):
         for con in self.console:
             con.write(msg)
         print "[log] " + msg
+
+    
+    def new_bid(self, bid):
+        """
+            Notify UIs that a new bid has been announced
+
+        """
+        for ui in self.ui:
+            ui[0].new_bid(bid)
+
+
+    def deal_score(self, bid, pts):
+        team_taker = bid.taker.team()
+        if bid.is_done():
+            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
+                                                                            pts[team_taker],
+                                                                            pts[1 - team_taker]))
+        else:
+            # Log score
+            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + bid.val, 
+                                                                            pts[team_taker],
+                                                                            pts[1 - team_taker]))
+
+
+    def update_score(self, score):
+        self.log("Score: (02) {0} - {1} (13)".format(score[0], score[1]))
+        # todo notify ui
 
