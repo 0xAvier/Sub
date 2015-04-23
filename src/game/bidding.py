@@ -1,17 +1,35 @@
 
 class Bidding(object):
 
-    color = [
+    values = [
+                0,
+                80,
+                90,
+                100,
+                110,
+                120,
+                130,
+                140,
+                150,
+                160,
+                170,
+                180,
+                250,
+            ]
+
+    colors = [
                 'SA', 
                 'S', 
                 'H', 
                 'C', 
                 'D', 
                 'TA',
+                'N',
             ]
 
-    def __init__(self, taker, val, col):
-        assert col in self.color
+    def __init__(self, taker, val=0, col='N'):
+        assert col in self.colors
+        assert val in self.values
         self.__val = val
         self.__col = col
         self.__coef = 1
@@ -20,6 +38,13 @@ class Bidding(object):
         self.__is_surcoinched = False
         self.__done = False
 
+
+    def __str__(self):
+        if self.is_pass():
+            return "pass"
+        else:
+            return str(self.val) + str(self.col)
+    
 
     def __getitem__(self, idx):
         assert 0 <= idx <= 3
@@ -72,4 +97,12 @@ class Bidding(object):
             return self.__done
         else:
             self.__done = done
+
+
+    def __cmp__(self, bid):
+        return self.val.__cmp__(bid.val)
+
+
+    def is_pass(self):
+        return self.val == 0
 

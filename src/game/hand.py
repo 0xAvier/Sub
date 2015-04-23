@@ -30,3 +30,15 @@ class Hand(object):
         """
         self.__cards += cards
 
+
+    def pop(self):
+        """
+            Pop a card from the hand (no matter which one)
+
+        """
+        return self.__cards.pop()
+
+
+    def is_empty(self):
+        return len(self.__cards) == 0
+

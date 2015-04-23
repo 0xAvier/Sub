@@ -149,6 +149,7 @@ class EventEngine(object):
             Notify UIs that a new bid has been announced
 
         """
+        self.log("[" + str(bid.taker.id) + "] " + str(bid))
         for ui in self.ui:
             ui[0].new_bid(bid)
 

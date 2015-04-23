@@ -33,6 +33,50 @@ class Round(object):
         return self.players[(p.id + 1) % len(self.players)]
 
 
+    def compute_biddable(self, p, bidded):
+        biddable = [Bidding(p)]
+        # Get max bid so far
+        highest_bid = max(bidded)
+        for val in Bidding.values:
+            if val <= highest_bid.val:
+                continue
+            for col in Bidding.colors:
+                # If the player to bid hold the last bidding, he must change color
+                if len([b for b in bidded if b.is_pass()]) == len(bidded) - 1 and col == highest_bid.col:
+                    continue
+                biddable.append(Bidding(p, val, col))
+        return biddable
+
+
+    def handle_biddings(self):
+        """
+            Handle the rounds of biddings, from 
+            the first one to the final one.
+            Return the highest bid.
+
+        """
+        bid = [Bidding(p) for p in self.players]
+        last_bid = None
+        passed = 0
+        # Starting player is the one after the dealer
+        p = self.next_player(self.dealer)
+        while passed != 4:
+            biddable = self.compute_biddable(p, bid)
+            while bid[p.id] not in biddable:
+                bid[p.id] = p.get_bid(bid, biddable)
+            p.bidded(bid[p.id])
+            if bid[p.id].is_pass():
+                passed += 1
+            else:
+                # Last not "pass" bid
+                last_bid = bid[p.id]
+                passed = 0
+            # Next player
+            p = self.next_player(p)
+
+        return last_bid
+
+
     def deal(self):
         """
             Handle a whole deal from the distribution
@@ -54,23 +98,18 @@ class Round(object):
             for p in self.players:
                 self.event[EVT_NEW_HAND](p.id, p.get_cards())
 
-        # Annonces
-        trump = "H" #SA
-        #Team that takes the contract
-        taker = self.players[0] 
-        # Value of the contract
-        pt_to_do = 80
-        # Coefficient (coinché/surcoinché ?)
-        coef = 1
-        bid = Bidding(taker, pt_to_do, trump)
-        if EVT_NEW_BID in self.event.keys():
-            self.event[EVT_NEW_BID](bid)
-
-        # Jeu
-        p = self.dealer
+        # Starting player is the one after the dealer
+        p = self.next_player(self.dealer)
         # Updating next dealer for next deal
         self.dealer = self.next_player(self.dealer)
-        
+
+        # Annonces
+        bid = self.handle_biddings()
+        if bid is None:
+            self.end_of_deal(False)
+            return
+
+        # Jeu
         while len(self.players[0].get_cards()) > 0:
             p = self.trick(bid.col, p)
             if EVT_END_OF_TRICK in self.event.keys():
@@ -81,27 +120,39 @@ class Round(object):
         self.end_of_deal()
 
 
-    def end_of_deal(self):
+    def end_of_deal(self, played=True):
         """
             Handler of each end of deal
             In charge of putting back cards into the deck, 
             notify the event manager of the update of score 
+
+            @param played   Boolean to indicate if the deal has 
+                            been played or not (pass * 4)
     
         """
-        # Random if we reconstruct the deck by putting deck 1 on deck 2
-        # or the opposite
-        rdm = randint(0, 1)
-        # Adding one by one the cards of one subdeck eto the deck
-        while len(self.__tricks[rdm]) != 0:
-            trick = self.__tricks[rdm].pop(0)
-            while len(trick[0]) != 0:
-                self.deck.push(trick[0].pop(0))
-        rdm = 1 - rdm
-        # Adding the cards of the other subdeck to the deck
-        while len(self.__tricks[rdm]) != 0:
-            trick = self.__tricks[rdm].pop(0)
-            while len(trick[0]) != 0:
-                self.deck.push(trick[0].pop(0))
+        if played:
+            # Random if we reconstruct the deck by putting deck 1 on deck 2
+            # or the opposite
+            rdm = randint(0, 1)
+            # Adding one by one the cards of one subdeck eto the deck
+            while len(self.__tricks[rdm]) != 0:
+                trick = self.__tricks[rdm].pop(0)
+                while len(trick[0]) != 0:
+                    self.deck.push(trick[0].pop(0))
+            rdm = 1 - rdm
+            # Adding the cards of the other subdeck to the deck
+            while len(self.__tricks[rdm]) != 0:
+                trick = self.__tricks[rdm].pop(0)
+                while len(trick[0]) != 0:
+                    self.deck.push(trick[0].pop(0))
+        else:
+            # Take hands one by one
+            pid = range(4)
+            shuffle(pid)
+            while len(pid) != 0:
+                p = self.players[pid.pop()]
+                while not p.get_hand().is_empty():
+                    self.deck.push(p.get_hand().pop())
 
 
     def trick(self, trump, p):
