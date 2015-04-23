@@ -116,6 +116,14 @@ class UIEngine(Thread, Notify):
         self._table.new_round()
 
 
+    def new_bid(self, bid):
+        """
+            A new bid has been made, need to forward it to the table
+
+        """
+        self._table.new_bid(bid)
+
+
     def new_deal(self):
         """
             Notification for the beginning of a deal 
@@ -155,6 +163,17 @@ class UIEngine(Thread, Notify):
 
         """
         return self._table.get_card(p, playable)
+
+
+    def get_bid(self, p, bid_list):
+        """
+            Wait for the user p to bid 
+            the possible ones given in bid list 
+            @param p            id of the player expected to play
+            @param bid_list     list of possible bids
+
+        """
+        return self._table.get_bid(p, bid_list)
 
 
     def new_hand(self, player, hand):

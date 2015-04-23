@@ -185,8 +185,38 @@ class UITable(Notify):
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self._hands[p].card_played_event.wait(5)
+
         # Finally, the user clicked on a good card
         return self.last_card_played(p)
+
+
+    def get_bid(self, p, bid_list):
+        """
+            Wait for the user p to bid 
+            the possible ones given in bid list 
+            @param p            id of the player expected to play
+            @param bid_list     list of possible bids
+
+        """
+        # The player must be handled by the interface
+        if not p in self._handled_players:
+            raise Exception("Player " + str(p) + " not handled.")
+        # If he is handled, process as normal
+
+        # Forgot the last bid
+        self._bidding.last_bid = None
+        # Wait to have a new bid 
+        # It must be a possible bid
+        while self._bidding.last_bid is None or \
+                not self._bidding.last_bid in bid_list:
+            if not self._bidding.last_bid in bid_list:
+                self._event[CONSOLE]("This bid is incorrect!")
+            # Wait for a click (notified by ui_hand)
+            # Time out of 5 seconds to avoid deadlock
+            self._bidding.need_bid_event.wait(5)
+
+        # Finally, the user bid 
+        return self._bidding.last_bid
 
 
     def new_hand(self, player, hand):
@@ -220,6 +250,14 @@ class UITable(Notify):
 
         """
         # Reset score board
+        pass
+
+
+    def new_bid(self, bid):
+        """
+            A new bid has been made 
+
+        """
         pass
 
 

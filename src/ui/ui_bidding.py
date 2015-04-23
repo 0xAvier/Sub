@@ -20,7 +20,7 @@ class UIBidding(object):
         self._init_buttons()
 
         # Will be used to notify the main thread when waiting for a call 
-        self.need_call_event = Event() 
+        self.need_bid_event = Event() 
 
      
     def display(self): 
@@ -90,3 +90,14 @@ class UIBidding(object):
         # Put the value box on top of the buttons
         self._init_value_box()
         self._init_color_buttons()
+
+
+    def click_bidding(self):
+        """
+            Callback function on bidding click  
+
+        """
+        # Notify the consumer (main thread)
+        self.need_bid_event.set()
+        # Reset the event
+        self.need_bid_event.clear()
