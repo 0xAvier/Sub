@@ -3,6 +3,7 @@ from random import choice
 
 from src.event.event_engine import EVT_UI_GET_CARD, EVT_CARD_PLAYED, EVT_UI_GET_BID, EVT_NEW_BID
 from src.game.hand import Hand
+from src.game.bidding import Bidding
 
 class Player(object):
 
@@ -37,7 +38,7 @@ class Player(object):
         if EVT_UI_GET_BID in self.event.keys():
             return self.event[EVT_UI_GET_BID](self.id, bidded, biddable)
         else:
-            return None 
+            return Bidding(self) 
 
 
     def bidded(self, bid):
