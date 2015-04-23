@@ -180,7 +180,7 @@ class UITable(Notify):
         # It must be a playable card
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
-            if not self.last_card_played(p) in playable:
+            if not self._hands[p].last_card_played is None: 
                 self._event[CONSOLE]("This card is not playable!")
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
