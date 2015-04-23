@@ -3,13 +3,14 @@ from Tkinter import Tk, Frame, Button, LEFT
 from time import sleep
 
 from src.game.game_engine import GameEngine 
+from src.utils.notify import Notify
 
 from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
+from src.ui.ui_bidding import UIBidding
 from src.ui.image_loader import ImageLoader
 
-
-class UITable(object):
+class UITable(Notify):
     """
         Handle all the table parts for the interface.
         Contains hands, central heaps & score board
@@ -24,6 +25,7 @@ class UITable(object):
     POS_TO_INDEX = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
 
     def __init__(self, root):
+        Notify.__init__(self)
         # Memorise the root
         self._root = root  
         # Create a new frame only for controllers
@@ -45,6 +47,8 @@ class UITable(object):
         self._init_hands()
         # Init the central heaps
         self._init_heap()
+        # Init the bidding widget
+        self._init_bidding()
 
 
     def _init_hands(self):
@@ -71,6 +75,17 @@ class UITable(object):
             self._heaps.append(UIHeap(self._frame, nb_position, 
                                                    self.TABLE_WIDTH / 2, \
                                                    self.TABLE_HEIGHT / 2)) 
+
+    def _init_bidding(self):
+        """
+            Initialise the call widget
+
+        """
+        x = 0
+        y = 0
+        size_x = 100
+        size_y = 100
+        self._bidding = UIBidding(self._frame, x, y, size_x, size_y) 
 
 
     def last_card_played(self, p):

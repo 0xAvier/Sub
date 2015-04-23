@@ -200,3 +200,4 @@ class UIEngine(Thread, Notify):
         """
         self._event[evt_id] = method
         self._side_pannel.set_method(evt_id, method)
+        #self._table.set_method(evt_id, method)
