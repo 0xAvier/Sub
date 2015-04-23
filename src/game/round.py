@@ -2,7 +2,7 @@
 
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID
 from src.game.card import Card
 from src.game.score import Score
 from src.game.bidding import Bidding
@@ -55,6 +55,7 @@ class Round(object):
         if EVT_NEW_HAND in self.event.keys():
             for p in self.players:
                 self.event[EVT_NEW_HAND](p.id, p.get_cards())
+
         # Annonces
         trump = "H" #SA
         #Team that takes the contract
@@ -64,6 +65,9 @@ class Round(object):
         # Coefficient (coinché/surcoinché ?)
         coef = 1
         bid = Bidding(taker, pt_to_do, trump)
+        if EVT_NEW_BID in self.event.keys():
+            self.event[EVT_NEW_BID](bid)
+
         # Jeu
         p = self.dealer
         # Updating next dealer for next deal

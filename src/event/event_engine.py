@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+
 # Define global constants to identify events
 EVT_NEW_ROUND = 0
 EVT_NEW_HAND = 1
@@ -8,6 +9,13 @@ EVT_UI_PLAYER_LEFT = 4
 EVT_END_OF_TRICK = 5
 EVT_NEW_DEAL = 6
 CONSOLE = 7
+EVT_NEW_BID = 8
+EVT_COINCHE = 9
+EVT_SURCOINCHE = 10
+EVT_UI_COINCHE = 11
+EVT_UI_SURCOINCHE = 12
+EVT_UI_GET_BID = 13
+
 
 class EventEngine(object):
 
@@ -25,6 +33,8 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
+        self.game.set_method(EVT_NEW_BID, self.new_bid)
+
         self.game.set_method(CONSOLE, self.log)
 
 
@@ -123,4 +133,13 @@ class EventEngine(object):
         for con in self.console:
             con.write(msg)
         print "[log] " + msg
+
+    
+    def new_bid(self, bid):
+        """
+            Notify UIs that a new bid has been announced
+
+        """
+        for ui in self.ui:
+            ui[0].new_bid(bid)
 
