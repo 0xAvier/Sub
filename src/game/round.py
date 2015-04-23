@@ -62,6 +62,7 @@ class Round(object):
         p = self.next_player(self.dealer)
         while passed != 4:
             biddable = self.compute_biddable(p, bid)
+            bid[p.id] = p.get_bid(bid, biddable)
             while bid[p.id] not in biddable:
                 bid[p.id] = p.get_bid(bid, biddable)
             p.bidded(bid[p.id])
