@@ -18,6 +18,7 @@ class Bidding(object):
         self.__taker = taker
         self.__is_coinched = False
         self.__is_surcoinched = False
+        self.__done = False
 
 
     def __getitem__(self, idx):
@@ -64,3 +65,11 @@ class Bidding(object):
 
     def is_coinched(self):
         return self.__is_coinched
+
+
+    def is_done(self, done = None):
+        if done == None:
+            return self.__done
+        else:
+            self.__done = done
+

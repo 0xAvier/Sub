@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL, CONSOLE
+from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL
 from src.game.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
@@ -20,19 +20,15 @@ class GameEngine(object):
         self.players = [Player(p) for p in xrange(self.NB_PLAYER)]
         # Event notication methods
         self.event = dict()
-        # Console log method
-        self.log = lambda a: None
 
     def new_round(self):
-        self.log("New round")
         # If a notification method is defined
         if EVT_NEW_ROUND in self.event.keys():
             # Notify the event manager that a new round has begun
             self.event[EVT_NEW_ROUND]()
 
-        self.rd = Round(self.deck, self.players, self.event, self.log)
+        self.rd = Round(self.deck, self.players, self.event)
         while not self.rd.over():
-            self.log("New deal")
             if EVT_NEW_DEAL in self.event.keys():
                 # Notify the event manager that a new deal has begun
                 self.event[EVT_NEW_DEAL]()
@@ -49,9 +45,6 @@ class GameEngine(object):
             for p in self.players:
                 # Set the method for each player
                 p.set_method(evt_id, method)
-        # Else if it is the console method
-        elif evt_id == CONSOLE:
-            self.log = method
         # Else set it for the Game Engine
         else:
             self.event[evt_id] = method

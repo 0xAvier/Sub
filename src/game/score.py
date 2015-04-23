@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from src.game.bidding import Bidding
+from src.event.event_engine import EVT_DEAL_SCORE, EVT_UPDATE_SCORE
 
 
 class Score(object):
@@ -44,13 +45,11 @@ class Score(object):
             }
 
 
-    def __init__(self, log):
+    def __init__(self, event):
         # score[0] is the score of players 0-2
         # score[1] is the score of players 1-3
         self.__score = [0, 0]
-        # Logger
-        self.log = log
-
+        self.event = event
 
     @staticmethod
     def eval_card(card, trump=None):
@@ -146,19 +145,18 @@ class Score(object):
             if not bid.is_coinched:
                 # Then the defensive team scores its points
                 score_inc[1 - team_taker] = self.around(pts[1 - team_taker])
-            # Log score
-            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
-                                                                            pts[team_taker],
-                                                                            pts[1 - team_taker]))
+                bid.is_done(True)
         else:
             # Contract is not done
             score_inc[1 - team_taker] = bid.coef * bid.val + 160
-            # Log score
-            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + bid.val, 
-                                                                            pts[team_taker],
-                                                                            pts[1 - team_taker]))
+            bid.is_done(False)
+
+        if EVT_DEAL_SCORE in self.event.keys():
+            self.event[EVT_DEAL_SCORE](bid, pts)
+
         for team in xrange(len(self.__score)):
             self.update_score(team, score_inc[team])
-        self.log("Score: (02) {0} - {1} (13)".format(self.__score[0], self.__score[1]))
-        #todo notify event manager
+
+        if EVT_UPDATE_SCORE in self.event.keys():
+            self.event[EVT_UPDATE_SCORE](self.__score)
 

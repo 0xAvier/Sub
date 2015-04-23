@@ -13,7 +13,7 @@ MUST_UNDERCUT = False
 
 class Round(object):
 
-    def __init__(self, deck, players, events, log):
+    def __init__(self, deck, players, events):
         # To be set by the user later
         self.max_pts = 2000
         # Deck to use in this round
@@ -21,14 +21,12 @@ class Round(object):
         # Notification to send to event manager
         self.event = events
         self.players = players
-        self.score = Score(log)
+        self.score = Score(self.event)
         # TO MODIFY
         #self.dealer = choice(self.players)
         self.dealer = players[0]
         # List of played cards by trick and by team
         self.__tricks = [list(), list()]
-        # Logger
-        self.log = log
 
 
     def next_player(self, p):
@@ -75,8 +73,6 @@ class Round(object):
         
         while len(self.players[0].get_cards()) > 0:
             p = self.trick(bid.col, p)
-            # Log trick
-            self.log("-{0}- wins".format(p.id))
             if EVT_END_OF_TRICK in self.event.keys():
                 # Notify the event manager that the trick is over
                 self.event[EVT_END_OF_TRICK](p)
@@ -121,15 +117,12 @@ class Round(object):
             played.append(card)
             # Notify user that its card has been played
             p.played(card)
-            # Log played card
-            self.log("-" + str(p.id) + "- played " + str(card))
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:
                 best_card = card
                 wins = p
             p = self.next_player(p)    
-        self.log("Points: " + str(Score.evaluate(played, trump)))
         self.__tricks[wins.team()].append((played, wins))
         # return the player that wins the trick
         return wins
