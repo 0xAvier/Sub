@@ -24,8 +24,6 @@ class UISidePannel(Notify):
         self._frame = Frame(self._root, width = w, height = h, bd=10)
         # Add some controllers 
         self._init_controllers(self._root, self._frame)
-        # Add a call widget
-        #self._init_call(self._root, self._frame)
         # Add a console
         self._init_console(self._root, self._frame)
         self._frame.pack(side = RIGHT)
