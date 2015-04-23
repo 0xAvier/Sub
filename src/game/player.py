@@ -1,7 +1,7 @@
 
 from random import choice 
 
-from src.event.event_engine import EVT_UI_GET_CARD, EVT_CARD_PLAYED
+from src.event.event_engine import EVT_UI_GET_CARD, EVT_CARD_PLAYED, EVT_UI_GET_BID, EVT_NEW_BID
 from src.game.hand import Hand
 
 class Player(object):
@@ -28,12 +28,23 @@ class Player(object):
 
     def get_card(self, played, playable):
         if EVT_UI_GET_CARD in self.event.keys():
-            c = self.event[EVT_UI_GET_CARD](self.id, playable)
-            return c
+            return self.event[EVT_UI_GET_CARD](self.id, playable)
         else:
             return choice(playable)
 
     
+    def get_bid(self, bidded, biddable):
+        if EVT_UI_GET_BID in self.event.keys():
+            return self.event[EVT_UI_GET_BID](self.id, bidded, biddable)
+        else:
+            return None 
+
+
+    def bidded(self, bid):
+        if EVT_NEW_BID in self.event.keys():
+            self.event[EVT_NEW_BID](bid)
+
+
     def played(self, card):
         """
             Notification to the player that a card has been
@@ -61,3 +72,7 @@ class Player(object):
 
         """
         return self.id % 2
+
+
+    def get_hand(self):
+        return self._hand

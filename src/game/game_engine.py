@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL
+from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL, EVT_NEW_BID
 from src.game.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
@@ -41,7 +41,7 @@ class GameEngine(object):
 
         """
         # If the event is relative to players
-        if evt_id == EVT_CARD_PLAYED:
+        if evt_id == EVT_CARD_PLAYED or evt_id == EVT_NEW_BID:
             for p in self.players:
                 # Set the method for each player
                 p.set_method(evt_id, method)
