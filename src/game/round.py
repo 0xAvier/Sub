@@ -5,6 +5,7 @@ from random import choice, shuffle, randint
 from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK
 from src.game.card import Card
 from src.game.score import Score
+from src.game.bidding import Bidding
 
 
 MUST_UNDERCUT = False
@@ -62,21 +63,21 @@ class Round(object):
         pt_to_do = 80
         # Coefficient (coinché/surcoinché ?)
         coef = 1
-        contract = (trump, pt_to_do, coef, taker)
+        bid = Bidding(taker, pt_to_do, trump)
         # Jeu
         p = self.dealer
         # Updating next dealer for next deal
         self.dealer = self.next_player(self.dealer)
         
         while len(self.players[0].get_cards()) > 0:
-            p = self.trick(contract[0], p)
+            p = self.trick(bid.col, p)
             # Log trick
             self.log("-{0}- wins".format(p.id))
             if EVT_END_OF_TRICK in self.event.keys():
                 # Notify the event manager that the trick is over
                 self.event[EVT_END_OF_TRICK](p)
             
-        self.score.deal_score(self.__tricks, p.team(), contract)
+        self.score.deal_score(self.__tricks, p.team(), bid)
         self.end_of_deal()
 
 

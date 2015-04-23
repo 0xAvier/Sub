@@ -1,5 +1,8 @@
 #-*- coding: utf-8 -*-
 
+from src.game.bidding import Bidding
+
+
 class Score(object):
 
     value = {
@@ -116,17 +119,17 @@ class Score(object):
         return int(round(float(pts) / 10.) * 10)
 
 
-    def deal_score(self, deal, last, (trump, pts_to_do, coef, taker)):
+    def deal_score(self, deal, last, bid):
         """
             @param deal     two lists of tuples (trick, player), where:
                                 - trick is the set of played cards
                                 - player is the winning player of the trick
-            @param contract Tuple of (color of trump, points to do, mult coef, taker ot the contract)
-            @param taker    Team (0 or 1) that is supposed to realise the contract
             @param last     team that won the last trick
+            @param bid      Object Bidding defining the contract to be done
 
         """
-        team_taker = taker.team()
+        trump = bid.col
+        team_taker = bid.taker.team()
         #todo belotte/rebelotte
         pts = [0] * 2
         # Special case : the taker team did win all tricks
@@ -136,22 +139,22 @@ class Score(object):
         else:
             pts = self.deal_points(deal, trump, last)
         score_inc = [0, 0]
-        if pts[team_taker] >= pts_to_do:
+        if pts[team_taker] >= bid.val:
             # Contract is done
-            score_inc[team_taker] = coef * pts_to_do + self.around(pts[team_taker])
+            score_inc[team_taker] = bid.coef * bid.val + self.around(pts[team_taker])
             # If the contract was not "coinché"
-            if coef == 1:
+            if not bid.is_coinched:
                 # Then the defensive team scores its points
                 score_inc[1 - team_taker] = self.around(pts[1 - team_taker])
             # Log score
-            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - pts_to_do, 
+            self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
                                                                             pts[team_taker],
                                                                             pts[1 - team_taker]))
         else:
             # Contract is not done
-            score_inc[1 - team_taker] = coef * pts_to_do + 160
+            score_inc[1 - team_taker] = bid.coef * bid.val + 160
             # Log score
-            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + pts_to_do, 
+            self.log("Contract came to grief by {0} points ({1} - {2})".format(- pts[team_taker] + bid.val, 
                                                                             pts[team_taker],
                                                                             pts[1 - team_taker]))
         for team in xrange(len(self.__score)):
