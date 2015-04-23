@@ -165,15 +165,16 @@ class UIEngine(Thread, Notify):
         return self._table.get_card(p, playable)
 
 
-    def get_bid(self, p, bid_list):
+    def get_bid(self, p, bidded, bid_list):
         """
             Wait for the user p to bid 
             the possible ones given in bid list 
             @param p            id of the player expected to play
+            @param bidded       last 4 bids
             @param bid_list     list of possible bids
 
         """
-        return self._table.get_bid(p, bid_list)
+        return self._table.get_bid(p, bidded, bid_list)
 
 
     def new_hand(self, player, hand):

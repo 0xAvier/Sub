@@ -190,11 +190,12 @@ class UITable(Notify):
         return self.last_card_played(p)
 
 
-    def get_bid(self, p, bid_list):
+    def get_bid(self, p, bidded, bid_list):
         """
             Wait for the user p to bid 
             the possible ones given in bid list 
             @param p            id of the player expected to play
+            @param bidded       last 4 bids
             @param bid_list     list of possible bids
 
         """
@@ -203,13 +204,15 @@ class UITable(Notify):
             raise Exception("Player " + str(p) + " not handled.")
         # If he is handled, process as normal
 
+        # Set the player 
+        self._bidding.player_bidding = p
         # Forgot the last bid
         self._bidding.last_bid = None
         # Wait to have a new bid 
         # It must be a possible bid
         while self._bidding.last_bid is None or \
                 not self._bidding.last_bid in bid_list:
-            if not self._bidding.last_bid in bid_list:
+            if not self._bidding.last_bid is None: 
                 self._event[CONSOLE]("This bid is incorrect!")
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
@@ -234,14 +237,14 @@ class UITable(Notify):
             Notification for the beginning of a deal
 
         """
-        # Bidding phase
-        pass
-
         # New hand for everybody
         for i in xrange(0, GameEngine.NB_PLAYER):
             # Well, in fact only for not handled player
             if not i in self._handled_players:
                 self._hands[i].size = GameEngine.MAX_CARD
+
+        # Bidding phase
+        self._bidding.display()
 
 
     def new_round(self):
@@ -285,6 +288,7 @@ class UITable(Notify):
             self.new_hand(p, new_hand)
         # Place it into the central heap
         self._heaps[p].heap = c 
+
 
     def add_player(self, p):
         """
