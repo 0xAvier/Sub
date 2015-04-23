@@ -63,6 +63,7 @@ class EventEngine(object):
                 self.add_console(c)
         for player in p:
             self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
+            # self.game.players[player].set_method(EVT_UI_GET_BID, ui.get_bid)
 
 
     def add_console(self, console):
