@@ -106,6 +106,7 @@ class Round(object):
 
         # Annonces
         bid = self.handle_biddings()
+        bid = Bidding(p, 80, 'H')
         if bid is None:
             self.end_of_deal(False)
             return
