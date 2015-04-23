@@ -4,7 +4,7 @@ from threading import Thread, Condition, Event
 from time import sleep
 
 from src.game.game_engine import GameEngine 
-from src.event.event_engine import EVT_UI_PLAYER_LEFT 
+from src.event.event_engine import EVT_UI_PLAYER_LEFT, CONSOLE 
 from src.utils.notify import Notify
 
 from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
@@ -54,6 +54,7 @@ class UIEngine(Thread, Notify):
 
         """
         self._table = UITable(self._root)
+        self._table.set_method(CONSOLE, self.add_message) 
 
 
     def _init_side_pannel(self):
@@ -200,4 +201,4 @@ class UIEngine(Thread, Notify):
         """
         self._event[evt_id] = method
         self._side_pannel.set_method(evt_id, method)
-        #self._table.set_method(evt_id, method)
+        self._table.set_method(evt_id, method)

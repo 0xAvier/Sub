@@ -4,6 +4,7 @@ from time import sleep
 
 from src.game.game_engine import GameEngine 
 from src.utils.notify import Notify
+from src.event.event_engine import CONSOLE
 
 from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
@@ -179,6 +180,8 @@ class UITable(Notify):
         # It must be a playable card
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
+            if not self.last_card_played(p) in playable:
+                self._event[CONSOLE]("This card is not playable!")
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self._hands[p].card_played_event.wait(5)

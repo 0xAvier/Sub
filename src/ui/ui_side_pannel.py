@@ -52,7 +52,7 @@ class UISidePannel(Notify):
             Add a message to the UIConsole
 
         """
-        self._console.add_message(msg)
+        self._console.write(msg)
 
 
     def set_method(self, evt_id, method):
