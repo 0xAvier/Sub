@@ -2,7 +2,7 @@
 
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED
 from src.game.card import Card
 from src.game.score import Score
 from src.game.bidding import Bidding
@@ -174,6 +174,9 @@ class Round(object):
             # Notify users that a card has been played
             for player in self.players:
                 player.played(p.id, card)
+            # Notify event manager
+            if EVT_CARD_PLAYED in self.event.keys():
+                self.event[EVT_CARD_PLAYED](p.id, card)
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:
