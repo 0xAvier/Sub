@@ -2,7 +2,7 @@
 
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED
 from src.game.card import Card
 from src.game.score import Score
 from src.game.bidding import Bidding
@@ -89,8 +89,11 @@ class Round(object):
         # Distribution sequence generation
         npr = [2, 3, 3]
         shuffle(npr)
+        cnt = 0
         for n in npr:
             for p in self.players:
+                for i in xrange(n):
+                    cnt += 1
                 p.give_cards([self.deck.pop() for i in xrange(n)])
         # check that all cards have been given
         assert self.deck.empty()
@@ -106,6 +109,7 @@ class Round(object):
 
         # Annonces
         bid = self.handle_biddings()
+        bid = Bidding(p, 80, 'H')
         if bid is None:
             self.end_of_deal(False)
             return
@@ -167,8 +171,12 @@ class Round(object):
                 card = p.get_card(played, playable)
             # Add the card to played cards
             played.append(card)
-            # Notify user that its card has been played
-            p.played(card)
+            # Notify users that a card has been played
+            for player in self.players:
+                player.played(p.id, card)
+            # Notify event manager
+            if EVT_CARD_PLAYED in self.event.keys():
+                self.event[EVT_CARD_PLAYED](p.id, card)
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:

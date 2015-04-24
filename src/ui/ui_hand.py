@@ -47,7 +47,7 @@ class UIHand(object):
         # List of cards in the hand
         self._hand = []
         # Size of the hand
-        self._size = GameEngine.MAX_CARD
+        self._size = 0 
         # Last card clicked in this hand
         # Must be None if no card were clicked during this round
         self.last_card_played = None 
@@ -58,9 +58,9 @@ class UIHand(object):
         self.hidden = True 
 
         # List for recording the images itself
-        self.cards_image = [None] * self._size 
+        self.cards_image = [None] * GameEngine.MAX_CARD
         # Contains the buttons 
-        self._buttons = [None] * self._size 
+        self._buttons = [None] * GameEngine.MAX_CARD
         # Init buttons
         self._init_buttons()
         self._update_buttons_position()
@@ -142,7 +142,7 @@ class UIHand(object):
             Place the buttons to their corresponding locations
 
         """
-        for i in xrange(0, GameEngine.MAX_CARD):
+        for i in xrange(0, self._size):
             self._update_button_position(i)
 
 
@@ -173,12 +173,11 @@ class UIHand(object):
 
         """
         # Update new cards
-        for i in xrange(0, len(self.hand)):
+        for i in xrange(0, self._size):
             self._update_button_image(i, self.hand[i])
         # Hide the remaining buttons
-        for i in xrange(len(self.hand), GameEngine.MAX_CARD):
+        for i in xrange(self._size, GameEngine.MAX_CARD):
             self._buttons[i].place_forget();
-            
 
 
     @property
@@ -197,6 +196,7 @@ class UIHand(object):
 
         """
         self._hand = value
+        self._size = len(self._hand)
         self.update_cards_image()
 
     @property

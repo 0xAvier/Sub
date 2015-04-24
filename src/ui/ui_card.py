@@ -30,15 +30,17 @@ class UICard:
     
 
     @staticmethod
-    def _get_card_index((value, color)):
+    def _get_card_index(card):
         """
             Get the index of the given card
             @param value    value of the given card
             @param color    color of the given card
 
         """
-        return [UICard._index_x_dictionary[value], \
-                UICard._index_y_dictionary[color]]
+        v = card.val
+        c = card.col
+        return [UICard._index_x_dictionary[v], \
+                UICard._index_y_dictionary[c]]
 
 
     @staticmethod

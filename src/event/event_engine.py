@@ -24,15 +24,14 @@ class EventEngine(object):
 
     def __init__(self, game):
         self.game = game
-        # List of UIs to be notified
-        self.ui = list()
+        # List of adapters to be notified
+        self.adapt = list()
         # List of consoles to log messages 
         self.console = list()
         # Define the function of the event manager that the 
         # game engine should call at each new round
         self.game.set_method(EVT_NEW_ROUND, self.new_round)
         self.game.set_method(EVT_NEW_DEAL, self.new_deal)
-        self.game.set_method(EVT_NEW_HAND, self.new_hand)
         self.game.set_method(EVT_CARD_PLAYED, self.card_played)
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
         self.game.set_method(EVT_NEW_BID, self.new_bid)
@@ -41,29 +40,21 @@ class EventEngine(object):
         self.game.set_method(CONSOLE, self.log)
 
 
-    def add_ui(self, ui, p = None):
+    def connect_adapter(self, adapt, p = None):
         """
-            Add a user interface to the list of interfaces
-            to whom events must be notified
-            p is a list of players that play through this interface
+            Connect an adapter to the event manager
+            The adapter should be notified when some events
+            occur during the game (such as card_played)
+
+            @param adapt    adapter to notify
+            @param p        list of players handled by the adapter
 
         """
-        if ui not in [ui[0] for ui in self.ui]:
-            self.ui.append((ui, p))
-            # Players handled by the ui
-            for player in p:
-                ui.add_player(player)
-            # Define the reference player
-            if not p is None:
-                ui.set_reference_player(p[0])
-            # Set the event methods
-            ui.set_method(EVT_UI_PLAYER_LEFT, self.player_left)
+        if adapt not in self.adapt:
+            self.adapt.append(adapt)
             # add consoles if any
-            for c in ui.get_consoles():
+            for c in adapt.get_consoles():
                 self.add_console(c)
-        for player in p:
-            self.game.players[player].set_method(EVT_UI_GET_CARD, ui.get_card)
-            self.game.players[player].set_method(EVT_UI_GET_BID, ui.get_bid)
 
 
     def add_console(self, console):
@@ -81,8 +72,8 @@ class EventEngine(object):
 
         """
         self.log("New round")
-        for ui in self.ui:
-            ui[0].new_round()
+        for adapt in self.adapt:
+            adapt.new_round()
 
 
     def new_deal(self):
@@ -91,8 +82,8 @@ class EventEngine(object):
 
         """
         self.log("New deal")
-        for ui in self.ui:
-            ui[0].new_deal()
+        for adapt in self.adapt:
+            adapt.new_deal()
 
 
     def end_of_trick(self, p):
@@ -103,27 +94,15 @@ class EventEngine(object):
         """
         # Log trick
         self.log("-{0}- wins".format(p.id))
-        for ui in self.ui:
-            ui[0].end_of_trick(p)
-
-
-    def new_hand(self, p, h):
-        """
-            Notify interfaces that a new hand has beend given to player p
-            @param p player concerned by the hand
-            @param h new hand for player p
-
-        """
-        for ui in self.ui:
-            if p in ui[1]:
-                ui[0].new_hand(p, h)
+        for adapt in self.adapt:
+            adapt.end_of_trick(p)
 
 
     def card_played(self, p, c):
         # Log played card
         self.log("-" + str(p) + "- played " + str(c))
-        for ui in self.ui:
-            ui[0].card_played(p, c)
+        for adapt in self.adapt:
+            adapt.card_played(p, c)
 
 
     def player_left(self, p):
@@ -151,8 +130,8 @@ class EventEngine(object):
 
         """
         self.log("[" + str(bid.taker.id) + "] " + str(bid))
-        for ui in self.ui:
-            ui[0].new_bid(bid)
+        for adapt in self.adapt:
+            adapt.new_bid(bid)
 
 
     def deal_score(self, bid, pts):

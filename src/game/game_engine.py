@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
+
 from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL, EVT_NEW_BID
-from src.game.player import Player
+from src.ia.ia_player import IAPlayer
 from src.game.deck import Deck
 from src.game.round import Round
-
+from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter
 
 class GameEngine(object):
 
@@ -17,9 +18,14 @@ class GameEngine(object):
         # Creation of a deck of cards to play
         self.deck = Deck()
         # Creation of a set of players
-        self.players = [Player(p) for p in xrange(self.NB_PLAYER)]
+        self.players = list()
+        for pid in xrange(self.NB_PLAYER):
+            p = IAPlayer(pid)
+            adapt = GameLocalPlayerAdapter(self, p)
+            self.players.append(adapt)
         # Event notication methods
         self.event = dict()
+
 
     def new_round(self):
         # If a notification method is defined
@@ -34,18 +40,21 @@ class GameEngine(object):
                 self.event[EVT_NEW_DEAL]()
             self.rd.deal()
 
+
     def set_method(self, evt_id, method):
         """
             Set a new method to be called on a certain type
             of event
 
         """
-        # If the event is relative to players
-        if evt_id == EVT_CARD_PLAYED or evt_id == EVT_NEW_BID:
-            for p in self.players:
-                # Set the method for each player
-                p.set_method(evt_id, method)
-        # Else set it for the Game Engine
-        else:
-            self.event[evt_id] = method
+        self.event[evt_id] = method
+
+
+    def add_player(self, p):
+        # Check if pid is already used by a 
+        # non-removable player
+        if not self.players[p.id].is_removable():
+            raise IndexError
+        # Otherwise, add player
+        self.players[p.id] = p
 
