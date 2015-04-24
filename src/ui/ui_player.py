@@ -2,6 +2,8 @@
 
 from random import choice, shuffle, randint
 
+from src.game.hand import Hand
+
 class UIPlayer(object):
 
 
@@ -9,18 +11,18 @@ class UIPlayer(object):
         self._ui = ui
         self.event = dict()
         self.id = pid
+        self._hand = Hand()
 
 
     def give_cards(self, cards):
-        hand = self.get_hand()
-        for c in cards:
-            hand.append(c)
-        self._ui._table._hands[self.id].hand = hand
+        self._hand.add(cards)
+        h = self._hand.get_cards()
+        self._ui._table._hands[self.id].hand = h 
 
 
     def get_hand(self):
         # why ?
-        return self._ui._table._hands[self.id]._hand
+        return self._hand  
 
 
     def team(self):
