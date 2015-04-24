@@ -265,6 +265,7 @@ class UITable(Notify):
             A new bid has been made 
 
         """
+        print(bid)
         pass
 
 

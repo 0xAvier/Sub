@@ -36,7 +36,7 @@ class UIPlayer(object):
 
     def get_bid(self, bidded, biddable):
         # For now, return a random bidding
-        return choice(biddable)
+        return self._ui.get_bid(self.id, bidded, biddable)
 
 
     def bidded(self, bid):
