@@ -90,6 +90,7 @@ class UIBidding(object):
                                    # Only justify the selected value
                                    #justify = RIGHT, \
                                    state = 'readonly')
+        self._value_box.bind("<<ComboboxSelected>>", lambda x: self._update_bid_button())
         self._value_box.set(availableValue[0])
         self._value_box.pack(fill = X)
 
@@ -121,7 +122,7 @@ class UIBidding(object):
             Callback function on bidding click  
 
         """
-        c = self._selected_color
+        c = self._selected_colori
         v = int(self._value_box.get())
         self.last_bid = Bidding(self.player_bidding, v, c) 
         # Notify the consumer (main thread)
@@ -131,5 +132,8 @@ class UIBidding(object):
 
 
     def _update_bid_button(self):
-        self._bid_button.config(text = "Bid " + self._selected_value + " " + \
-                                self._selected_color)
+        if self._value_box.get() == "0":
+            self._bid_button.config(text = "Pass")
+        else:
+            self._bid_button.config(text = "Bid " + self._value_box.get() \
+                                + " " + self._selected_color)
