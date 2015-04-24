@@ -28,7 +28,7 @@ class UIBidding(object):
         # Will be used to notify the main thread when waiting for a call 
         self.need_bid_event = Event() 
 
-        self.player_bidding = 0
+        self.pid = 0
         self._last_bid = None 
 
      
@@ -122,9 +122,12 @@ class UIBidding(object):
             Callback function on bidding click  
 
         """
-        c = self._selected_color
-        v = int(self._value_box.get())
-        self._last_bid = Bidding(self.player_bidding, v, c) 
+        if self._value_box.get() == 0:
+            self._last_bid = Bidding(self.pid)
+        else:
+            c = self._selected_color
+            v = int(self._value_box.get())
+            self._last_bid = Bidding(self.pid, v, c) 
         # Notify the consumer (main thread)
         self.need_bid_event.set()
         # Reset the event
