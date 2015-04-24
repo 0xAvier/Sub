@@ -34,10 +34,6 @@ class UIPlayer(object):
         return self._ui.get_card(self.id, playable)
 
 
-    def get_cards(self):
-        return self.get_hand()
-
-
     def get_bid(self, bidded, biddable):
         # For now, return a random bidding
         return choice(biddable)

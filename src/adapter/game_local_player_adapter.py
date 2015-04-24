@@ -54,5 +54,5 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
 
 
     def join(self):
-        return self.game.add_player(self.player)
+        return self.game.add_player(self)
 
