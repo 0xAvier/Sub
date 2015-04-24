@@ -58,7 +58,7 @@ class UIBidding(object):
         # This dictionnary will contains all the color buttons
         self._buttons = dict()
         # Several colors are available
-        colors = Bidding.colors 
+        colors = list(Bidding.colors)
         colors.pop()
         # The buttons need to have a fixed size
         h = 2
@@ -122,7 +122,7 @@ class UIBidding(object):
             Callback function on bidding click  
 
         """
-        c = self._selected_colori
+        c = self._selected_color
         v = int(self._value_box.get())
         self._last_bid = Bidding(self.player_bidding, v, c) 
         # Notify the consumer (main thread)
@@ -141,7 +141,7 @@ class UIBidding(object):
 
     @property
     def last_bid(self):
-        return _last_bid
+        return self._last_bid
 
     @last_bid.setter
     def last_bid(self, value):
