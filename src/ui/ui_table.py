@@ -97,6 +97,7 @@ class UITable(Notify):
         """
         return self._hands[p].last_card_played
 
+
     @property
     def interface_player(self):
         """

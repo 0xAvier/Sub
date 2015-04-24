@@ -21,7 +21,6 @@ class UIPlayer(object):
 
 
     def get_hand(self):
-        # why ?
         return self._hand  
 
 
@@ -30,12 +29,10 @@ class UIPlayer(object):
 
 
     def get_card(self, played, playable):
-        # For now, return a random card
         return self._ui.get_card(self.id, playable)
 
 
     def get_bid(self, bidded, biddable):
-        # For now, return a random bidding
         return self._ui.get_bid(self.id, bidded, biddable)
 
 
