@@ -45,11 +45,13 @@ class Score(object):
             }
 
 
-    def __init__(self, event):
+    def __init__(self, event, team):
         # score[0] is the score of players 0-2
         # score[1] is the score of players 1-3
         self.__score = [0, 0]
         self.event = event
+        # team[i] is the team of player i
+        self.team = team
 
     @staticmethod
     def eval_card(card, trump=None):
@@ -128,7 +130,7 @@ class Score(object):
 
         """
         trump = bid.col
-        team_taker = bid.taker.team()
+        team_taker = self.team[bid.taker]
         #todo belotte/rebelotte
         pts = [0] * 2
         # Special case : the taker team did win all tricks

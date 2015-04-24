@@ -188,6 +188,11 @@ class UIEngine(Thread, Notify):
         self._table.new_hand(player, hand)
 
 
+    def end_bidding(self):
+        print "End of biddings"
+        pass
+
+
     def add_player(self, p):
         """
             Add a player handled by the UI
@@ -211,6 +216,7 @@ class UIEngine(Thread, Notify):
 
         """
         return [self._side_pannel._console]
+
 
     def set_method(self, evt_id, method):
         """

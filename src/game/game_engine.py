@@ -18,14 +18,14 @@ class GameEngine(object):
         # Creation of a deck of cards to play
         self.deck = Deck()
         # Creation of a set of players
-        self.players = list()
+        self.__players = list()
         for pid in xrange(self.NB_PLAYER):
             p = IAPlayer(pid)
             adapt = GameLocalPlayerAdapter(self, p)
-            self.players.append(adapt)
+            self.__players.append(adapt)
         # Event notication methods
         self.event = dict()
-
+        self.__team = [0, 1, 0, 1]
 
     def new_round(self):
         # If a notification method is defined
@@ -33,7 +33,7 @@ class GameEngine(object):
             # Notify the event manager that a new round has begun
             self.event[EVT_NEW_ROUND]()
 
-        self.rd = Round(self.deck, self.players, self.event)
+        self.rd = Round(self.deck, self.__players, self.event, self.__team)
         while not self.rd.over():
             if EVT_NEW_DEAL in self.event.keys():
                 # Notify the event manager that a new deal has begun
@@ -53,8 +53,12 @@ class GameEngine(object):
     def add_player(self, p):
         # Check if pid is already used by a 
         # non-removable player
-        if not self.players[p.id].is_removable():
+        if not self.__players[p.id].is_removable():
             raise IndexError
         # Otherwise, add player
-        self.players[p.id] = p
+        self.__players[p.id] = p
+
+
+    def get_team(self, pid):
+        return self.__team[pid]
 

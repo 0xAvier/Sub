@@ -17,7 +17,7 @@ EVT_UI_SURCOINCHE = 12
 EVT_UI_GET_BID = 13
 EVT_DEAL_SCORE = 14
 EVT_UPDATE_SCORE = 15
-
+EVT_END_BIDDING = 16
 
 class EventEngine(object):
 
@@ -36,6 +36,7 @@ class EventEngine(object):
         self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
         self.game.set_method(EVT_NEW_BID, self.new_bid)
         self.game.set_method(EVT_DEAL_SCORE, self.deal_score)
+        self.game.set_method(EVT_END_BIDDING, self.end_bidding)
 
         self.game.set_method(CONSOLE, self.log)
 
@@ -86,16 +87,16 @@ class EventEngine(object):
             adapt.new_deal()
 
 
-    def end_of_trick(self, p):
+    def end_of_trick(self, pid):
         """
             Notify all interfaces that the current trick is over
             @param p    player that wins the trick
 
         """
         # Log trick
-        self.log("-{0}- wins".format(p.id))
+        self.log("-{0}- wins".format(pid))
         for adapt in self.adapt:
-            adapt.end_of_trick(p)
+            adapt.end_of_trick(pid)
 
 
     def card_played(self, p, c):
@@ -129,13 +130,13 @@ class EventEngine(object):
             Notify UIs that a new bid has been announced
 
         """
-        self.log("[" + str(bid.taker.id) + "] " + str(bid))
+        self.log("[" + str(bid.taker) + "] " + str(bid))
         for adapt in self.adapt:
             adapt.new_bid(bid)
 
 
     def deal_score(self, bid, pts):
-        team_taker = bid.taker.team()
+        team_taker = self.game.get_team(bid.taker)
         if bid.is_done():
             self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
                                                                             pts[team_taker],
@@ -150,4 +151,9 @@ class EventEngine(object):
     def update_score(self, score):
         self.log("Score: (02) {0} - {1} (13)".format(score[0], score[1]))
         # todo notify ui
+
+
+    def end_bidding(self):
+        for adapt in self.adapt:
+            adapt.end_bidding()
 

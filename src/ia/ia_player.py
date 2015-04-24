@@ -2,6 +2,7 @@
 
 from random import choice
 
+from src.game.bidding import Bidding
 from src.game.hand import Hand
 
 class IAPlayer(object):
@@ -16,15 +17,7 @@ class IAPlayer(object):
 
 
     def give_cards(self, cards):
-        self._hand.add(cards)
-
-
-    def get_hand(self):
-        return self._hand
-
-
-    def team(self):
-        return self.id % 2
+        pass
 
 
     def get_card(self, played, playable):
@@ -33,8 +26,8 @@ class IAPlayer(object):
 
 
     def get_bid(self, bidded, biddable):
-        # For now, return a random bidding
-        return choice(biddable)
+        # For now, always pass
+        return Bidding(self.id)
 
 
     def bidded(self, bid):
@@ -44,6 +37,9 @@ class IAPlayer(object):
     def played(self, pid, card):
         pass
 
-
     def is_removable(self):
         return self.__removable
+
+
+    def reset_hand(self):
+        pass

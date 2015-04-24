@@ -31,6 +31,10 @@ class IEventAdapter(object):
         raise NotImplemented
 
 
+    def end_bidding(self):
+        raise NotImplemented
+
+
     def new_hand(self):
         raise NotImplemented
 

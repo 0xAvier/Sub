@@ -31,6 +31,10 @@ class EventUIAdapter(IEventAdapter):
         return self.ui.end_of_trick(p)
 
 
+    def end_bidding(self):
+        return self.ui.end_bidding()
+
+
     def new_hand(self):
         return self.ui.new_hand(p, h)
 

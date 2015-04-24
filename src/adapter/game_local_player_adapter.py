@@ -20,19 +20,6 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
     def give_cards(self, cards):
         return self.player.give_cards(cards)
 
-
-    def get_hand(self):
-        return self.player.get_hand()
-
-
-    def get_cards(self):
-        return self.player.get_hand().get_cards()
-
-
-    def team(self):
-        return self.player.team()
-
-
     def get_card(self, played, playable):
         return self.player.get_card(played, playable)
 

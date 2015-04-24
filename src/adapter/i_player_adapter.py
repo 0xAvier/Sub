@@ -23,31 +23,6 @@ class IPlayerAdapter(object):
         """
         raise NotImplemented
 
-
-    def get_hand(self):
-        """
-            Getter for player's hand
-
-        """
-        raise NotImplemented
-
-    
-    def get_cards(self):
-        """
-            Return the cards possessed by player
-
-        """
-        raise NotImplemented
-
-
-    def team(self):
-        """
-            Return the id of the team of the player
-
-        """
-        raise NotImplemented
-
-
     def get_card(self, played, playable):
         """
             Player must play a card among playable
@@ -97,6 +72,14 @@ class IPlayerAdapter(object):
         """
             Return True iif the player can be replaced by another player
             (e.g. a bot filling empty places while no human player is here)
+
+        """
+        raise NotImplemented
+
+
+    def reset_hand(self):
+        """
+            The hand of the player is reset, because the deal has not been played
 
         """
         raise NotImplemented
