@@ -51,7 +51,7 @@ class UIHeap(object):
                 # Shift it to the left
                 column -= h_shift
             # Don't forget to center it
-        column -= ImageLoader.CARD_WIDTH / 2
+        column -= ImageLoader.CARD_WIDTH / 2.0
         return column 
 
 

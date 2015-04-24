@@ -17,7 +17,7 @@ class UIBidding(object):
         # No resize
         self._frame.pack_propagate(0)
         # Style
-        self._frame.config(borderwidth = 10)
+        self._frame.config(borderwidth = 5)
 
         self._x = x
         self._y = y
@@ -59,6 +59,7 @@ class UIBidding(object):
         self._buttons = dict()
         # Several colors are available
         colors = Bidding.colors 
+        colors.pop()
         # The buttons need to have a fixed size
         h = 2
         w = 2

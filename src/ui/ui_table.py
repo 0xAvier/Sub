@@ -74,18 +74,18 @@ class UITable(Notify):
         for i in self._hands_id_to_position:
             nb_position = UITable.POS_TO_INDEX[i]
             self._heaps.append(UIHeap(self._frame, nb_position, 
-                                                   self.TABLE_WIDTH / 2, \
-                                                   self.TABLE_HEIGHT / 2)) 
+                                                   self.TABLE_WIDTH / 2.0, \
+                                                   self.TABLE_HEIGHT / 2.0)) 
 
     def _init_bidding(self):
         """
             Initialise the call widget
 
         """
-        size_x = 330 
+        size_x = 264 + 8 
         size_y = 100
-        x = (self.TABLE_WIDTH - size_x) / 2
-        y = (self.TABLE_HEIGHT - size_y) / 2
+        x = (self.TABLE_WIDTH - size_x) / 2.0 + 3
+        y = (self.TABLE_HEIGHT - size_y) / 2.0 
         self._bidding = UIBidding(self._frame, x, y, size_x, size_y) 
 
 

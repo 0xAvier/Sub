@@ -17,7 +17,7 @@ class UIHand(object):
     """
 
     # Part of the card that will be visible
-    COVERING = 1.0 / 3 
+    COVERING = 1 / 3.0 
     # hand width in pixel
                  # Number of card that will be covered
                  # Multiplied by the width of a covered card 
@@ -83,7 +83,7 @@ class UIHand(object):
                                     space_taken + missing_offset, 
                                     missing_offset]
         # Add horizontal offset
-        UIHand.first_card_column = [x + UIHand.HAND_OFFSET / 2 \
+        UIHand.first_card_column = [x + UIHand.HAND_OFFSET / 2.0 \
                                             for x in UIHand.first_card_column]
 
 
@@ -95,7 +95,7 @@ class UIHand(object):
         height = UIHand.HAND_HEIGHT
         UIHand.first_card_row = [0, height * 2, height * 4, height * 2] 
         # Add vertical offset
-        UIHand.first_card_row = [x + height / 2 for x in UIHand.first_card_row]
+        UIHand.first_card_row = [x + height / 2.0 for x in UIHand.first_card_row]
 
 
     def click_card(self, index):
