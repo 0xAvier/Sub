@@ -168,8 +168,9 @@ class Round(object):
                 card = p.get_card(played, playable)
             # Add the card to played cards
             played.append(card)
-            # Notify user that its card has been played
-            p.played(card)
+            # Notify users that a card has been played
+            for player in self.players:
+                player.played(p.id, card)
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:
