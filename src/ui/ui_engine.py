@@ -189,8 +189,7 @@ class UIEngine(Thread, Notify):
 
 
     def end_bidding(self):
-        print "End of biddings"
-        pass
+        self._table.end_bidding()
 
 
     def add_player(self, p):

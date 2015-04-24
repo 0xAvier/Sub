@@ -68,7 +68,6 @@ class UIBidding(object):
         self._buttons_frame.pack(in_ = self._frame)
 
         self._selected_color = Bidding.colors[0] 
-        self._selected_value = "0" 
 
 
     def _init_value_box(self):
@@ -79,10 +78,7 @@ class UIBidding(object):
         availableValue = Bidding.values 
         # TODO: display "pass" instead of "0"
         #availableValue[0] = "pass"
-        # The value will be updated by the combobox
-        self._selected_value = "" 
         self._value_box = Combobox(self._frame, \
-                                   textvariable = self._selected_value, \
                                    values = availableValue, \
                                    # TODO
                                    # Only justify the selected value
@@ -120,7 +116,7 @@ class UIBidding(object):
 
         """
         c = self._selected_color
-        v = int(self._selected_value)
+        v = int(self._value_box.get())
         self.last_bid = Bidding(self.player_bidding, v, c) 
         # Notify the consumer (main thread)
         self.need_bid_event.set()

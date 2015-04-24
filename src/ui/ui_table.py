@@ -251,6 +251,10 @@ class UITable(Notify):
         self._bidding.display()
 
 
+    def end_bidding(self):
+        self._bidding.hide()
+
+
     def new_round(self):
         """
             Notification for the beginning of a new round
@@ -265,7 +269,6 @@ class UITable(Notify):
             A new bid has been made 
 
         """
-        print(bid)
         pass
 
 
