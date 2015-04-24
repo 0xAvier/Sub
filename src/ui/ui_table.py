@@ -82,10 +82,10 @@ class UITable(Notify):
             Initialise the call widget
 
         """
-        x = 0
-        y = 0
-        size_x = 100
+        size_x = 330 
         size_y = 100
+        x = (self.TABLE_WIDTH - size_x) / 2
+        y = (self.TABLE_HEIGHT - size_y) / 2
         self._bidding = UIBidding(self._frame, x, y, size_x, size_y) 
 
 

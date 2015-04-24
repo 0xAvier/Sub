@@ -14,6 +14,11 @@ class UIBidding(object):
         self._root = root 
 
         self._frame = Frame(width = size_x, height = size_y) 
+        # No resize
+        self._frame.pack_propagate(0)
+        # Style
+        self._frame.config(borderwidth = 10)
+
         self._x = x
         self._y = y
 
