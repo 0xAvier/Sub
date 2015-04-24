@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 
+from random import choice, shuffle, randint
 
 class UIPlayer(object):
 
@@ -12,7 +13,8 @@ class UIPlayer(object):
 
     def give_cards(self, cards):
         hand = self.get_hand()
-        hand.append(cards)
+        for c in cards:
+            hand.append(c)
         self._ui._table._hands[self.id].hand = hand
 
 
@@ -27,7 +29,11 @@ class UIPlayer(object):
 
     def get_card(self, played, playable):
         # For now, return a random card
-        return self._ui.get_card(self.id, played, playable)
+        return self._ui.get_card(self.id, playable)
+
+
+    def get_cards(self):
+        return self.get_hand()
 
 
     def get_bid(self, bidded, biddable):

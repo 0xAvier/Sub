@@ -92,21 +92,25 @@ class UITable(object):
 
 
     @interface_player.setter
-    def interface_player(self, p):  
+    def interface_player(self, pid):  
         """
             Set the id of the player who managed the interface
+            @param pid  id of the player 
 
         """
+        if not pid in self._handled_players:
+            raise Exception("Player " + str(pid) + " not handled by the ui.")
+
         for i in xrange(0, GameEngine.NB_PLAYER):
             # interface player get the south position
-            self._hands_id_to_position[(p + i) % GameEngine.NB_PLAYER] = \
+            self._hands_id_to_position[(pid + i) % GameEngine.NB_PLAYER] = \
                     ['S', 'W', 'N', 'E'][i]
         # Refresh the position for the player
         for i in xrange(0, GameEngine.NB_PLAYER):
             nb_position = UITable.POS_TO_INDEX[self._hands_id_to_position[i]]
             self._hands[i].position = nb_position 
             self._heaps[i].position = nb_position 
-        self._interface_player = p
+        self._interface_player = pid
 
 
     def reset_last_played(self):

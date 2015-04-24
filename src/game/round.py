@@ -89,8 +89,11 @@ class Round(object):
         # Distribution sequence generation
         npr = [2, 3, 3]
         shuffle(npr)
+        cnt = 0
         for n in npr:
             for p in self.players:
+                for i in xrange(n):
+                    cnt += 1
                 p.give_cards([self.deck.pop() for i in xrange(n)])
         # check that all cards have been given
         assert self.deck.empty()
