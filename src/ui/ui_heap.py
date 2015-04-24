@@ -81,14 +81,28 @@ class UIHeap(object):
             Place the label to its position
 
         """
+        # Need to destroy it to place it on top of others cards
+        self._label.destroy()
+        self._init_label()
+        self._set_image()
         self._label.place(x = self.label_column(), y = self.label_row())
 
 
     def _init_label(self):
         """
             Init the label 
+
         """
         self._label = Label(self.frame)
+
+
+    def _set_image(self):
+        """
+            Set the image using the current image 
+
+        """
+        self._label.configure(image = self._heap_image)
+        
 
 
     def _update_heap_image(self):
@@ -105,8 +119,6 @@ class UIHeap(object):
             new_card = UICard.get_card_image(self.heap)
             # Save it
             self._heap_image = new_card
-            # Configure the label
-            self._label.configure(image = new_card)
             # Replace it
             self._place_label()
 
