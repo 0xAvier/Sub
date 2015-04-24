@@ -270,6 +270,7 @@ class UITable(Notify):
             A new bid has been made 
 
         """
+        # Display the bid beside the player
         pass
 
 

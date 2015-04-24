@@ -29,7 +29,7 @@ class UIBidding(object):
         self.need_bid_event = Event() 
 
         self.player_bidding = 0
-        self.last_bid = None 
+        self._last_bid = None 
 
      
     def display(self): 
@@ -124,7 +124,7 @@ class UIBidding(object):
         """
         c = self._selected_colori
         v = int(self._value_box.get())
-        self.last_bid = Bidding(self.player_bidding, v, c) 
+        self._last_bid = Bidding(self.player_bidding, v, c) 
         # Notify the consumer (main thread)
         self.need_bid_event.set()
         # Reset the event
@@ -137,3 +137,15 @@ class UIBidding(object):
         else:
             self._bid_button.config(text = "Bid " + self._value_box.get() \
                                 + " " + self._selected_color)
+
+
+    @property
+    def last_bid(self):
+        return _last_bid
+
+    @last_bid.setter
+    def last_bid(self, value):
+        if value is None:
+            self._bid_button.config(text = "Pass")
+        else:
+            raise Exception("Should not be called")
