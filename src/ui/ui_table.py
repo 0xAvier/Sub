@@ -3,8 +3,9 @@ from Tkinter import Tk, Frame, Button, LEFT
 from time import sleep
 
 from src.game.game_engine import GameEngine 
+from src.game.bidding import Bidding
 from src.utils.notify import Notify
-from src.event.event_engine import CONSOLE
+from src.event.event_engine import CONSOLE, CONSOLE_RED
 
 from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
@@ -187,7 +188,7 @@ class UITable(Notify):
         while self._hands[p].last_card_played is None or \
                 not self.last_card_played(p) in playable:
             if not self._hands[p].last_card_played is None: 
-                self._event[CONSOLE]("This card is not playable!")
+                self._event[CONSOLE_RED]("This card is not playable!")
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self._hands[p].card_played_event.wait(5)
@@ -213,13 +214,18 @@ class UITable(Notify):
         # Set the player 
         self._bidding.player_bidding = p
         # Forgot the last bid
-        self._bidding.last_bid = None
+        self._bidding.last_bid = None 
         # Wait to have a new bid 
         # It must be a possible bid
+        last_incorrect_bid = None
         while self._bidding.last_bid is None or \
                 not self._bidding.last_bid in bid_list:
-            if not self._bidding.last_bid is None: 
-                self._event[CONSOLE]("This bid is incorrect!")
+            if not self._bidding.last_bid is None and \
+                    last_incorrect_bid != self._bidding.last_bid: 
+                self._event[CONSOLE_RED]("This bid is incorrect!")
+                self._event[CONSOLE_RED](self._bidding._last_bid.val)
+                self._event[CONSOLE_RED](self._bidding._last_bid.col)
+                last_incorrect_bid = self._bidding._last_bid 
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self._bidding.need_bid_event.wait(5)
@@ -309,4 +315,13 @@ class UITable(Notify):
         """
         self._handled_players.append(p)
         self._hands[p].hidden = False 
+
+
+    def set_method(self, evt_id, method):
+        """
+            Overwrite set_method
+
+        """
+        self._event[evt_id] = method
+        self._bidding.set_method(evt_id, method)
 

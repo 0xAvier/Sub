@@ -100,7 +100,12 @@ class Bidding(object):
 
 
     def __cmp__(self, bid):
-        return self.val.__cmp__(bid.val)
+        if self is None:
+            return -1
+        elif bid is None:
+            return self.val
+        else:
+            return self.val.__cmp__(bid.val)
 
 
     def is_pass(self):

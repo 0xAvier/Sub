@@ -1,15 +1,18 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Button, LEFT, BOTTOM, END, X, RIGHT
 from ttk import Combobox 
-
 from threading import Event 
 
+from src.utils.notify import Notify
+from src.event.event_engine import CONSOLE, CONSOLE_RED
 from src.game.bidding import Bidding
 
-class UIBidding(object):
+class UIBidding(Notify):
 
 
     def __init__(self, root, x, y, size_x, size_y):
+        Notify.__init__(self)
+
         # Memorise the frame
         self._root = root 
 
@@ -73,7 +76,7 @@ class UIBidding(object):
         # Pack the dedicated frame into the main frame
         self._buttons_frame.pack(in_ = self._frame)
 
-        self._selected_color = Bidding.colors[0] 
+        self._selected_color = None 
 
 
     def _init_value_box(self):
@@ -113,6 +116,7 @@ class UIBidding(object):
 
 
     def _click_color(self, color):
+        print("Color clicked: " + color)
         self._selected_color = color 
         self._update_bid_button()
 
@@ -122,9 +126,12 @@ class UIBidding(object):
             Callback function on bidding click  
 
         """
-        if self._value_box.get() == 0:
+        if self._bid_button.config('text')[-1] == "Pass":
             self._last_bid = Bidding(self.pid)
         else:
+            if self._selected_color is None:
+                self._event[CONSOLE_RED]("Choose a color!")
+                return
             c = self._selected_color
             v = int(self._value_box.get())
             self._last_bid = Bidding(self.pid, v, c) 
@@ -135,11 +142,17 @@ class UIBidding(object):
 
 
     def _update_bid_button(self):
-        if self._value_box.get() == "0":
+        value = self._value_box.get()
+        color = self._selected_color
+        if value == "0" and color is None:
             self._bid_button.config(text = "Pass")
+        elif value == "0":
+            self._bid_button.config(text = "Bid " + color)
+        elif color is None: 
+            self._bid_button.config(text = "Bid " + value)
         else:
-            self._bid_button.config(text = "Bid " + self._value_box.get() \
-                                + " " + self._selected_color)
+            print(self._selected_color)
+            self._bid_button.config(text = "Bid " + value + " " + color)
 
 
     @property
@@ -150,5 +163,6 @@ class UIBidding(object):
     def last_bid(self, value):
         if value is None:
             self._bid_button.config(text = "Pass")
+            self._last_bid = None 
         else:
             raise Exception("Should not be called")
