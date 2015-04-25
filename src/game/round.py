@@ -122,7 +122,6 @@ class Round(object):
 
         # Annonces
         bid = self.handle_biddings()
-        bid = Bidding(0, 80, 'H')
         # Notify end of biddings
         if EVT_END_BIDDING in self.event.keys():
             self.event[EVT_END_BIDDING]()
