@@ -33,14 +33,28 @@ class UIConsole(IConsole):
         self._console.insert(END, "Initialisation of the log")
 
 
-    def write(self, msg):
+    def write(self, msg, red = False):
         """
             Add a message to the UIConsole
 
         """
+        # Memorize the index of the message beginning
+        msg_index = self._console.index(END)
+
         self._console.insert(END, "\n")
         self._console.insert(END, msg)
         self._console.see(END)
+        
+        # Add a tag wrapping the whole message
+        self._console.tag_add("crt_msg", msg_index, END)
+
+        # If the text has to be display in red...
+        if red:
+            # ... pop a giant blue unicorn ofc
+            self._console.tag_config("crt_msg", foreground = "red") 
+        else:
+            # Otherwise the tag can be removed
+            self._console.tag_remove("crt_msg", msg_index, END)
 
 
     def clear(self):

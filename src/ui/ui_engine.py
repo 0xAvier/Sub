@@ -54,7 +54,8 @@ class UIEngine(Thread, Notify):
 
         """
         self._table = UITable(self._root)
-        self._table.set_method(CONSOLE_RED, lambda msg: self.add_message(msg)) 
+        self._table.set_method(CONSOLE_RED, \
+                               lambda msg, c=True: self.add_message(msg, c)) 
 
 
     def _init_side_pannel(self):
@@ -201,12 +202,12 @@ class UIEngine(Thread, Notify):
         self._table.add_player(p)
 
 
-    def add_message(self, msg):
+    def add_message(self, msg, red = False):
         """
             Add a message to the UIConsole
 
         """
-        self._side_pannel.add_message(msg)
+        self._side_pannel.add_message(msg, red)
 
 
     def get_consoles(self):
