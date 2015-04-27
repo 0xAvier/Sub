@@ -117,8 +117,6 @@ class Round(object):
 
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
-        # Updating next dealer for next deal
-        self.dealer = self.next_player(self.dealer)
 
         # Annonces
         bid = self.handle_biddings()
@@ -128,6 +126,9 @@ class Round(object):
         if bid is None:
             self.end_of_deal(False)
             return
+
+        # Updating next dealer for next deal
+        self.dealer = self.next_player(self.dealer)
 
         # Jeu
         while len(self.__players[0][1].get_cards()) > 0:

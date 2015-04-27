@@ -143,11 +143,11 @@ class Score(object):
         if pts[team_taker] >= bid.val:
             # Contract is done
             score_inc[team_taker] = bid.coef * bid.val + self.around(pts[team_taker])
+            bid.is_done(True)
             # If the contract was not "coinché"
             if not bid.is_coinched:
                 # Then the defensive team scores its points
                 score_inc[1 - team_taker] = self.around(pts[1 - team_taker])
-                bid.is_done(True)
         else:
             # Contract is not done
             score_inc[1 - team_taker] = bid.coef * bid.val + 160
