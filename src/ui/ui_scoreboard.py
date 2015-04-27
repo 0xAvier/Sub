@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Tk, Frame, Label, BOTH 
+from Tkinter import Tk, Frame, Label, BOTH, LEFT 
 
 class UIScoreboard(object):
     """
@@ -22,7 +22,7 @@ class UIScoreboard(object):
         self._frame.place(x = x, y = y)
 
         # Init the label
-        self._label = Label(self._frame, text = "Aze?")
+        self._label = Label(self._frame, text = "", justify = LEFT)
         # Pack it and make it fill the frame
         self._label.pack(fill = BOTH, expand = 1)
 
