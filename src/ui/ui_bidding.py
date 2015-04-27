@@ -37,6 +37,8 @@ class UIBidding(Notify):
 
         # Will be used to notify the main thread when waiting for a call 
         self.need_bid_event = Event() 
+        # Will be used to notify the main thread when waiting for a coinche 
+        self.coinche_event = Event() 
 
         self.pid = 0
         self._last_bid = None 
@@ -159,6 +161,12 @@ class UIBidding(Notify):
         # Reset the event
         self.need_bid_event.clear()
 
+
+    def _click_coinche(self):
+        # Notify the consumer
+        self.coinche_event.set()
+        # Reset the event
+        self.coinche_event.clear()
 
     def _update_bid_button(self):
         value = self._value_box.get()

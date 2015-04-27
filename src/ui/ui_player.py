@@ -37,6 +37,9 @@ class UIPlayer(object):
         return card
 
 
+    def get_coinche(self):
+        return self._ui.get_coinche()
+
     def get_bid(self, bidded, biddable):
         return self._ui.get_bid(self.id, bidded, biddable)
 

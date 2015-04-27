@@ -2,7 +2,7 @@
 from Tkinter import Tk, Frame, Button, LEFT
 from time import sleep
 
-from src.game.game_engine import GameEngine 
+from src.game.game_engine import GameEngine, COINCHE_CODE 
 from src.game.bidding import Bidding
 from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED
@@ -208,6 +208,14 @@ class UITable(Notify):
         # Finally, the user clicked on a good card
         return self.last_card_played(p)
 
+
+    def get_coinche(self):
+        """
+            Wait for the user p to coinche 
+
+        """
+        self._bidding.coinche_event.wait()
+        return COINCHE_CODE
 
     def get_bid(self, p, bidded, bid_list):
         """

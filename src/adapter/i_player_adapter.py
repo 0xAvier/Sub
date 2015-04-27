@@ -34,6 +34,14 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
     
+    def get_coinche(self):
+        """
+            Player must return a coinche code to signal a coinche to the engine
+
+        """
+        raise NotImplemented
+
+
     def get_bid(self, bidded, biddable):
         """
             Player must announce a bid (possibly "Pass") among biddable

@@ -20,9 +20,13 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
     def give_cards(self, cards):
         return self.player.give_cards(cards)
 
+
     def get_card(self, played, playable):
         return self.player.get_card(played, playable)
 
+
+    def get_coinche(self):
+        return self.player.get_coinche()
 
     def get_bid(self, bidded, biddable):
         return self.player.get_bid(bidded, biddable)

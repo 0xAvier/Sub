@@ -166,6 +166,14 @@ class UIEngine(Thread, Notify):
         return self._table.get_card(p, playable)
 
 
+    def get_coinche(self):
+        """
+            Wait for the user to coinche. 
+
+        """
+        return self._table.get_coinche()
+
+
     def get_bid(self, p, bidded, bid_list):
         """
             Wait for the user p to bid 
