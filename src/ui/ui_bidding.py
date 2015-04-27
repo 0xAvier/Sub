@@ -116,7 +116,6 @@ class UIBidding(Notify):
 
 
     def _click_color(self, color):
-        print("Color clicked: " + color)
         self._selected_color = color 
         self._update_bid_button()
 
@@ -151,7 +150,6 @@ class UIBidding(Notify):
         elif color is None: 
             self._bid_button.config(text = "Bid " + value)
         else:
-            print(self._selected_color)
             self._bid_button.config(text = "Bid " + value + " " + color)
 
 
