@@ -42,3 +42,10 @@ class Hand(object):
     def is_empty(self):
         return len(self.__cards) == 0
 
+
+    def clear(self):
+        """
+            Remove all cards from the hand
+
+        """
+        self.__cards = list()
