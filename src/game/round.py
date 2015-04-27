@@ -271,3 +271,9 @@ class Round(object):
                 or self.score.get_score(1) >= self.max_pts 
 
 
+    def coinche(self, pid):
+        print str(pid) + " has coinched"
+
+
+    def belote(self, pid):
+        print str(pid) + " said 'belote'"

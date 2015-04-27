@@ -62,3 +62,12 @@ class GameEngine(object):
     def get_team(self, pid):
         return self.__team[pid]
 
+
+    def coinche(self, pid):
+        self.round.coinche(pid)
+
+
+    def belote(self, pid):
+        self.round.belote(pid)
+
+

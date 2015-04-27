@@ -11,37 +11,12 @@ class IEventAdapter(object):
         pass
 
 
-    def card_played(self, p, c):
-        raise NotImplemented
-
-    
-    def new_bid(self, b):
+    @abstractmethod
+    def coinche(self, pid):
         raise NotImplemented
 
 
-    def new_round(self): 
+    @abstractmethod
+    def belote(self, pid):
         raise NotImplemented
 
-
-    def new_deal(self): 
-        raise NotImplemented
-
-
-    def end_of_trick(self, p): 
-        raise NotImplemented
-
-
-    def end_bidding(self):
-        raise NotImplemented
-
-
-    def new_hand(self):
-        raise NotImplemented
-
-
-    def update_score(self, s): 
-        raise NotImplemented
-
-
-    def get_consoles(self):
-        raise NotImplemented
