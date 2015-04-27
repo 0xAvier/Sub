@@ -88,7 +88,7 @@ class UITable(Notify):
 
         """
         size_x = 264 + 8 
-        size_y = 100
+        size_y = 130
         x = (self.TABLE_WIDTH - size_x) / 2.0 + 3
         y = (self.TABLE_HEIGHT - size_y) / 2.0 
         self._bidding = UIBidding(self._frame, x, y, size_x, size_y) 
@@ -218,6 +218,9 @@ class UITable(Notify):
             @param bid_list     list of possible bids
 
         """
+        # Enable the button bidding pannel 
+        self._bidding.enable()
+
         # The player must be handled by the interface
         if not p in self._handled_players:
             raise Exception("Player " + str(p) + " not handled.")
@@ -239,6 +242,9 @@ class UITable(Notify):
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self._bidding.need_bid_event.wait(5)
+
+        # Disable the button bidding pannel 
+        self._bidding.disable()
 
         # Finally, the user bid 
         return self._bidding.last_bid

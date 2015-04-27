@@ -1,11 +1,17 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Tk, Frame, Button, LEFT, BOTTOM, END, X, RIGHT
+from Tkinter import Tk, Frame, Button, LEFT, BOTTOM, END, X, RIGHT,\
+                    DISABLED, NORMAL 
 from ttk import Combobox 
 from threading import Event 
 
 from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED
 from src.game.bidding import Bidding
+
+class CoincheException(Exception):
+    def __init__(self, pid):
+        self.pid = pid
+
 
 class UIBidding(Notify):
 
@@ -33,7 +39,8 @@ class UIBidding(Notify):
 
         self.pid = 0
         self._last_bid = None 
-
+        
+        self.enable()
      
     def display(self): 
         """
@@ -98,10 +105,22 @@ class UIBidding(Notify):
         self._value_box.pack(fill = X)
 
 
+    @staticmethod
+    def raise_(e):
+        raise e
+
+
     def _init_bid_button(self):
+        # To bid
         self._bid_button = Button(self._frame, text = "Pass", \
                                   command = self._click_bidding)
         self._bid_button.pack(fill = X)
+        # To coinche
+        raise_coinche = lambda: UIBidding.raise_(
+                            UIBidding.CoincheException(self.pid))
+        self._coinche_button = Button(self._frame, text = "Coinche", \
+                        command = raise_coinche) 
+        self._coinche_button.pack(fill = X)
 
 
     def _init_buttons(self):
@@ -157,6 +176,7 @@ class UIBidding(Notify):
     def last_bid(self):
         return self._last_bid
 
+
     @last_bid.setter
     def last_bid(self, value):
         if value is None:
@@ -164,3 +184,19 @@ class UIBidding(Notify):
             self._last_bid = None 
         else:
             raise Exception("Should not be called")
+
+
+    def disable(self):
+        """
+            Disable the bid button
+
+        """
+        self._bid_button.config(state = DISABLED)
+
+
+    def enable(self):
+        """
+            Enable the bid button
+
+        """
+        self._bid_button.config(state = NORMAL)
