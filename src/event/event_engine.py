@@ -151,7 +151,8 @@ class EventEngine(object):
 
     def update_score(self, score):
         self.log("Score: (02) {0} - {1} (13)".format(score[0], score[1]))
-        # todo notify ui
+        for adapt in self.adapt:
+            adapt.update_score(score)
 
 
     def end_bidding(self):

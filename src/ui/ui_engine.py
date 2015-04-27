@@ -218,6 +218,15 @@ class UIEngine(Thread, Notify):
         return [self._side_pannel._console]
 
 
+    def update_score(self, score):
+        """
+            Update the score in ui_table
+            @param score    the new score
+
+        """
+        self._table.update_score(score)
+
+
     def set_method(self, evt_id, method):
         """
             Overwrite set_method

@@ -29,7 +29,12 @@ class UIPlayer(object):
 
 
     def get_card(self, played, playable):
-        return self._ui.get_card(self.id, playable)
+        # Get the card
+        card = self._ui.get_card(self.id, playable)
+        # Update the hand
+        self._hand.remove([card]) 
+        # Return the card
+        return card
 
 
     def get_bid(self, bidded, biddable):

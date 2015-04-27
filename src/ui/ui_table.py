@@ -10,6 +10,7 @@ from src.event.event_engine import CONSOLE, CONSOLE_RED
 from src.ui.ui_hand import UIHand
 from src.ui.ui_heap import UIHeap
 from src.ui.ui_bidding import UIBidding
+from src.ui.ui_scoreboard import UIScoreboard 
 from src.ui.image_loader import ImageLoader
 
 class UITable(Notify):
@@ -51,6 +52,8 @@ class UITable(Notify):
         self._init_heap()
         # Init the bidding widget
         self._init_bidding()
+        # Init the scoreboard widget
+        self._init_scoreboard()
 
 
     def _init_hands(self):
@@ -81,7 +84,7 @@ class UITable(Notify):
 
     def _init_bidding(self):
         """
-            Initialise the call widget
+            Initialise the bidding widget
 
         """
         size_x = 264 + 8 
@@ -89,6 +92,15 @@ class UITable(Notify):
         x = (self.TABLE_WIDTH - size_x) / 2.0 + 3
         y = (self.TABLE_HEIGHT - size_y) / 2.0 
         self._bidding = UIBidding(self._frame, x, y, size_x, size_y) 
+
+
+    def _init_scoreboard(self):
+        """
+            Initialise the scoreboard widget
+
+        """
+        self._scoreboard = UIScoreboard(self._frame, self.TABLE_WIDTH, \
+                                                     self.TABLE_HEIGHT)
 
 
     def last_card_played(self, p):
@@ -267,7 +279,8 @@ class UITable(Notify):
 
         """
         # Reset score board
-        pass
+        self._scoreboard.score_02 = 0 
+        self._scoreboard.score_13 = 0 
 
 
     def new_bid(self, bid):
@@ -313,6 +326,16 @@ class UITable(Notify):
         """
         self._handled_players.append(p)
         self._hands[p].hidden = False 
+
+
+    def update_score(self, score):
+        """
+            Update the score in ui_table
+            @param score    the new score
+
+        """
+        self._scoreboard.score_02 = score[0]
+        self._scoreboard.score_13 = score[1]
 
 
     def set_method(self, evt_id, method):

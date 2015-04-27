@@ -153,6 +153,8 @@ class UIHand(object):
             @param card         card to display
 
         """
+        assert buttonNumber in range(0, GameEngine.MAX_CARD), \
+                "Button number is out of range: " + str(buttonNumber)
         # Get the card mage
         if self.hidden:
             new_card = UICard.get_card_image(Card('7', 'S'))
@@ -195,6 +197,8 @@ class UIHand(object):
             @param value    new hand
 
         """
+        assert len(value) <= GameEngine.MAX_CARD,\
+               "Hand is to big: " + str(len(value))
         self._hand = value
         self._size = len(self._hand)
         self.update_cards_image()
