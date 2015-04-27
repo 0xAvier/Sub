@@ -223,8 +223,6 @@ class UITable(Notify):
             if not self._bidding.last_bid is None and \
                     last_incorrect_bid != self._bidding.last_bid: 
                 self._event[CONSOLE_RED]("This bid is incorrect!")
-                self._event[CONSOLE_RED](self._bidding._last_bid.val)
-                self._event[CONSOLE_RED](self._bidding._last_bid.col)
                 last_incorrect_bid = self._bidding._last_bid 
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
