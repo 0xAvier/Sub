@@ -51,3 +51,8 @@ class UIPlayer(object):
 
     def is_removable(self):
         return false 
+
+
+    def reset_hand(self):
+         # TODO: replace by clear
+        self._hand = Hand()

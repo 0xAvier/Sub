@@ -43,3 +43,6 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
     def join(self):
         return self.game.add_player(self)
 
+    
+    def reset_hand(self):
+        self.player.reset_hand()
