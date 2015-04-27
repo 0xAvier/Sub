@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 class IPlayerAdapter(object):
     """
@@ -16,6 +16,7 @@ class IPlayerAdapter(object):
         pass
 
 
+    @abstractmethod
     def give_cards(self, cards):
         """
             Add some cards to a hand
@@ -23,6 +24,8 @@ class IPlayerAdapter(object):
         """
         raise NotImplemented
 
+
+    @abstractmethod
     def get_card(self, played, playable):
         """
             Player must play a card among playable
@@ -34,6 +37,7 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
     
+    @abstractmethod
     def get_coinche(self):
         """
             Player must return a coinche code to signal a coinche to the engine
@@ -42,6 +46,7 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
 
+    @abstractmethod
     def get_bid(self, bidded, biddable):
         """
             Player must announce a bid (possibly "Pass") among biddable
@@ -54,6 +59,7 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
     
+    @abstractmethod
     def played(self, pid, card):
         """
             Notification to the user that a card has been played
@@ -65,6 +71,7 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
     
+    @abstractmethod
     def bidded(self, bid):
         """
             Notification to the user that a bidding has been announced
@@ -76,6 +83,7 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
     
+    @abstractmethod
     def is_removable(self):
         """
             Return True iif the player can be replaced by another player
@@ -85,9 +93,11 @@ class IPlayerAdapter(object):
         raise NotImplemented
 
 
+    @abstractmethod
     def reset_hand(self):
         """
             The hand of the player is reset, because the deal has not been played
 
         """
         raise NotImplemented
+
