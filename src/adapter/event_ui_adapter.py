@@ -15,7 +15,6 @@ class EventUIAdapter(IEventAdapter):
     
 
     def new_bid(self, b):
-        return
         return self.ui.new_bid(b)
 
 
