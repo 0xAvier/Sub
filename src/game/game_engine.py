@@ -6,6 +6,7 @@ from src.game.deck import Deck
 from src.game.round import Round
 from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter
 
+
 class GameEngine(object):
 
     # Number of players of the game
@@ -61,13 +62,5 @@ class GameEngine(object):
 
     def get_team(self, pid):
         return self.__team[pid]
-
-
-    def coinche(self, pid):
-        self.round.coinche(pid)
-
-
-    def belote(self, pid):
-        self.round.belote(pid)
 
 

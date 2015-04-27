@@ -79,13 +79,13 @@ class Bidding(object):
 
     def coinche(self):
         assert not self.is_coinched() and not self.__is_surcoinched
-        self.coef *= 2
+        self.__coef *= 2
         self__is_coinched = True
 
 
     def __surcoinche__(self):
         assert self.is_coinched() and not self.__is_surcoinched
-        self.coef *= 2
+        self.__coef *= 2
 
 
     def is_coinched(self):

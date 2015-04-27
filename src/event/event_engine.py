@@ -39,6 +39,7 @@ class EventEngine(object):
         self.game.set_method(EVT_DEAL_SCORE, self.deal_score)
         self.game.set_method(EVT_END_BIDDING, self.end_bidding)
         self.game.set_method(EVT_UPDATE_SCORE, self.update_score)
+        self.game.set_method(EVT_COINCHE, self.coinche)
 
         self.game.set_method(CONSOLE, self.log)
 
@@ -160,3 +161,6 @@ class EventEngine(object):
         for adapt in self.adapt:
             adapt.end_bidding()
 
+
+    def coinche(self, pid):
+        self.log("-{0}- has coinched !".format(pid))

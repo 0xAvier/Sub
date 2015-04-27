@@ -2,7 +2,8 @@
 from Tkinter import Tk, Frame, Button, LEFT
 from time import sleep
 
-from src.game.game_engine import GameEngine, COINCHE_CODE 
+from src.game.game_engine import GameEngine
+from src.game.coinche import COINCHE_CODE 
 from src.game.bidding import Bidding
 from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED

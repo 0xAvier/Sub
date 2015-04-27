@@ -1,7 +1,9 @@
 #-*- coding: utf-8 -*-
 
-from random import choice
+from random import choice, randint
+from time import sleep
 
+from src.game.coinche import COINCHE_CODE
 from src.game.bidding import Bidding
 from src.game.hand import Hand
 
@@ -14,6 +16,7 @@ class IAPlayer(object):
         self._hand = Hand()
         self.id = pid
         self.__removable = removable
+        self.__nb_bid = 0
 
 
     def give_cards(self, cards):
@@ -26,8 +29,12 @@ class IAPlayer(object):
 
 
     def get_bid(self, bidded, biddable):
-        # For now, always pass
-        return Bidding(self.id)
+        sleep(randint(1, 3))
+        if self.__nb_bid == 0 and randint(0, 1)  == 1:
+            self.__nb_bid += 1
+            return biddable[1]
+        else:
+            return Bidding(self.id)
 
 
     def bidded(self, bid):
@@ -43,3 +50,8 @@ class IAPlayer(object):
 
     def reset_hand(self):
         pass
+
+
+    def get_coinche(self):
+        sleep(randint(0, 5))
+        return 

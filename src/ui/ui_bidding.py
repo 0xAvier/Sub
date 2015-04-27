@@ -119,10 +119,8 @@ class UIBidding(Notify):
                                   command = self._click_bidding)
         self._bid_button.pack(fill = X)
         # To coinche
-        raise_coinche = lambda: UIBidding.raise_(
-                            UIBidding.CoincheException(self.pid))
         self._coinche_button = Button(self._frame, text = "Coinche", \
-                        command = raise_coinche) 
+                        command = self._click_coinche) 
         self._coinche_button.pack(fill = X)
 
 

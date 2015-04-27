@@ -1,8 +1,12 @@
 #-*- coding: utf-8 -*-
 
+import Queue as queue
+from threading import Thread
+
 from random import choice, shuffle, randint
 
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING
+from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING, EVT_COINCHE
+from src.game.coinche import COINCHE_CODE, CoincheException
 from src.game.card import Card
 from src.game.score import Score
 from src.game.bidding import Bidding
@@ -11,8 +15,11 @@ from src.game.hand import Hand
 
 MUST_UNDERCUT = False
 
+BID_COINCHE = 1
+BID_BIDDING = 2
 
 class Round(object):
+
 
     def __init__(self, deck, players, events, team):
         # To be set by the user later
@@ -51,6 +58,14 @@ class Round(object):
         return biddable
 
 
+    def handle_bid(self, p, bid, biddable, q):
+        q.put((BID_BIDDING, p.get_bid(bid, biddable)))
+
+
+    def handle_coinche(self, p, q):
+        q.put((BID_COINCHE, p.get_coinche(), p.id))
+
+
     def handle_biddings(self):
         """
             Handle the rounds of biddings, from 
@@ -64,33 +79,38 @@ class Round(object):
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
         while passed != 4:
-            try:
-                biddable = self.compute_biddable(p, bid)
-                bid[p[0].id] = p[0].get_bid(bid, biddable)
-                while bid[p[0].id] not in biddable:
-                    bid[p[0].id] = p[0].get_bid(bid, biddable)
-                p[0].bidded(bid[p[0].id])
-                # Notify players
-                for pl in self.__players:
-                    pl[0].bidded(bid[p[0].id])
-                # Notify event manager 
-                if EVT_NEW_BID in self.event.keys():
-                    self.event[EVT_NEW_BID](bid[p[0].id])
-                if bid[p[0].id].is_pass():
-                    passed += 1
-                else:
-                    # Last not "pass" bid
-                    last_bid = bid[p[0].id]
-                    passed = 0
-                # Next player
-                p = self.next_player(p)
-            except Exception:
-                if last_bid is None:
-                    continue
-                else:
-                    last_bid.coinche()
+            biddable = self.compute_biddable(p, bid)
+            q = queue.Queue()
+            bid_thread = Thread(target=self.handle_bid, args=((p[0], bid, biddable, q)))
+            bid_thread.start()
+            bid_coinche = list()
+            for pl, h in self.__players:
+                bid_coinche.append(Thread(target=self.handle_coinche, args=((pl, q))))
+                bid_coinche[-1].start()
+            while True:
+                tmp_bid = q.get()
+                if (tmp_bid[0] == BID_COINCHE and tmp_bid[1] == COINCHE_CODE and 
+                        last_bid is not None and (tmp_bid[2] + last_bid.taker) % 2 == 1):
+                    raise CoincheException(last_bid, tmp_bid[2])
+                elif tmp_bid[0] == BID_BIDDING and tmp_bid[1] in biddable:
                     break
-
+            # TODO: kill threads
+            bid[p[0].id] = tmp_bid[1]
+            p[0].bidded(bid[p[0].id])
+            # Notify players
+            for pl in self.__players:
+                pl[0].bidded(bid[p[0].id])
+            # Notify event manager 
+            if EVT_NEW_BID in self.event.keys():
+                self.event[EVT_NEW_BID](bid[p[0].id])
+            if bid[p[0].id].is_pass():
+                passed += 1
+            else:
+                # Last not "pass" bid
+                last_bid = bid[p[0].id]
+                passed = 0
+            # Next player
+            p = self.next_player(p)
         return last_bid
 
 
@@ -126,7 +146,13 @@ class Round(object):
         p = self.next_player(self.dealer)
 
         # Annonces
-        bid = self.handle_biddings()
+        try:
+            bid = self.handle_biddings()
+        except CoincheException as e:
+            bid = e.bid
+            bid.coinche()
+            if EVT_COINCHE in self.event.keys():
+                self.event[EVT_COINCHE](e.by)
         # Notify end of biddings
         if EVT_END_BIDDING in self.event.keys():
             self.event[EVT_END_BIDDING]()
@@ -278,9 +304,10 @@ class Round(object):
                 or self.score.get_score(1) >= self.max_pts 
 
 
-    def coinche(self, pid):
-        print str(pid) + " has coinched"
 
-
-    def belote(self, pid):
-        print str(pid) + " said 'belote'"
+    def wait_for_coinche(self):
+        mgr = self.WaitCoincheManager()
+        for p, h in self.__players:
+            print "yep"
+            thread = self.WaitCoinche(mgr, p)
+            thread.start()
