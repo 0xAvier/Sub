@@ -38,6 +38,7 @@ class EventEngine(object):
         self.game.set_method(EVT_NEW_BID, self.new_bid)
         self.game.set_method(EVT_DEAL_SCORE, self.deal_score)
         self.game.set_method(EVT_END_BIDDING, self.end_bidding)
+        self.game.set_method(EVT_UPDATE_SCORE, self.update_score)
 
         self.game.set_method(CONSOLE, self.log)
 
