@@ -46,3 +46,12 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
     
     def reset_hand(self):
         self.player.reset_hand()
+
+
+    def coinche(self):
+        self.game.coinche(self.id) 
+
+
+    def belote(self):
+        self.game.belote(self.id) 
+

@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 class IGameAdapter(object):
     """
@@ -16,6 +16,7 @@ class IGameAdapter(object):
         pass
 
 
+    @abstractmethod
     def join(self, player):
         """
             Notify the game that a new player joined the game
@@ -23,4 +24,18 @@ class IGameAdapter(object):
             amovible player, it will raise an exception
 
         """
+        raise NotImplemented
+
+
+    @abstractmethod
+    def coinche(self, player):
+        """
+            Notify the game that player has coinched
+
+        """
+        raise NotImplemented
+
+
+    @abstractmethod
+    def belote(self, player):
         raise NotImplemented

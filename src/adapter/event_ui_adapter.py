@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-
 
-from src.adapter.i_event_adapter import IEventAdapter
+from src.adapter.i_ui_adapter import IUIAdapter
 from src.ui.ui_engine import UIEngine
 
-class EventUIAdapter(IEventAdapter):
+class EventUIAdapter(IUIAdapter):
 
 
     def __init__(self, ui):
