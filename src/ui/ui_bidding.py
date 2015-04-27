@@ -8,12 +8,13 @@ from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED
 from src.game.bidding import Bidding
 
-class CoincheException(Exception):
-    def __init__(self, pid):
-        self.pid = pid
-
 
 class UIBidding(Notify):
+
+
+    class CoincheException(Exception):
+        def __init__(self, pid):
+            self.pid = pid
 
 
     def __init__(self, root, x, y, size_x, size_y):

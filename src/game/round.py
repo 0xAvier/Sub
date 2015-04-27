@@ -64,25 +64,32 @@ class Round(object):
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
         while passed != 4:
-            biddable = self.compute_biddable(p, bid)
-            bid[p[0].id] = p[0].get_bid(bid, biddable)
-            while bid[p[0].id] not in biddable:
+            try:
+                biddable = self.compute_biddable(p, bid)
                 bid[p[0].id] = p[0].get_bid(bid, biddable)
-            p[0].bidded(bid[p[0].id])
-            # Notify players
-            for pl in self.__players:
-                pl[0].bidded(bid[p[0].id])
-            # Notify event manager 
-            if EVT_NEW_BID in self.event.keys():
-                self.event[EVT_NEW_BID](bid[p[0].id])
-            if bid[p[0].id].is_pass():
-                passed += 1
-            else:
-                # Last not "pass" bid
-                last_bid = bid[p[0].id]
-                passed = 0
-            # Next player
-            p = self.next_player(p)
+                while bid[p[0].id] not in biddable:
+                    bid[p[0].id] = p[0].get_bid(bid, biddable)
+                p[0].bidded(bid[p[0].id])
+                # Notify players
+                for pl in self.__players:
+                    pl[0].bidded(bid[p[0].id])
+                # Notify event manager 
+                if EVT_NEW_BID in self.event.keys():
+                    self.event[EVT_NEW_BID](bid[p[0].id])
+                if bid[p[0].id].is_pass():
+                    passed += 1
+                else:
+                    # Last not "pass" bid
+                    last_bid = bid[p[0].id]
+                    passed = 0
+                # Next player
+                p = self.next_player(p)
+            except Exception:
+                if last_bid is None:
+                    continue
+                else:
+                    last_bid.coinche()
+                    break
 
         return last_bid
 
