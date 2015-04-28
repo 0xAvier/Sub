@@ -27,15 +27,3 @@ class IGameAdapter(object):
         raise NotImplemented
 
 
-    @abstractmethod
-    def coinche(self, player):
-        """
-            Notify the game that player has coinched
-
-        """
-        raise NotImplemented
-
-
-    @abstractmethod
-    def belote(self, player):
-        raise NotImplemented
