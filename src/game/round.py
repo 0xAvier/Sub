@@ -235,7 +235,7 @@ class Round(Notify):
             # Handle one trick (ie four cards played)
             p = self.trick(bid.col, p)
             # Notify the event manager that the trick is over
-            self.notify(END_OF_TRICK, p[0].id) 
+            self.notify(EVT_END_OF_TRICK, p[0].id) 
         # Update scores
         self.score.deal_score(self.__tricks, self.team[p[0].id], bid)
         # End of deal
