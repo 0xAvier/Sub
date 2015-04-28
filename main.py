@@ -17,11 +17,12 @@ ui = UIEngine()
 ui_adapt = EventUIAdapter(ui)
 evt.connect_adapter(ui_adapt)
 
-ui.add_player(0)
-ui.set_reference_player(0)
-ui_player = UIPlayer(ui, 0) 
-adapt = GameLocalPlayerAdapter(game, ui_player) 
-adapt.join()
+if False:
+    ui.add_player(0)
+    ui.set_reference_player(0)
+    ui_player = UIPlayer(ui, 0) 
+    adapt = GameLocalPlayerAdapter(game, ui_player) 
+    adapt.join()
 
 game.new_round()
 

@@ -77,7 +77,7 @@ class UITable(Notify):
         # Add a hand for each ids 
         self._heaps = []
         #for i in self._hands_id_to_position:
-        for i in ['W', 'N', 'S', 'E']:
+        for i in ['N', 'E', 'S', 'W']:
             nb_position = UITable.POS_TO_INDEX[i]
             self._heaps.append(UIHeap(self._frame, nb_position, 
                                                    self.TABLE_WIDTH / 2.0, \
