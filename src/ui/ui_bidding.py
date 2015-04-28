@@ -121,7 +121,7 @@ class UIBidding(Notify):
         self._bid_button.pack(fill = X)
         # To coinche
         self._coinche_button = Button(self._frame, text = "Coinche", \
-                        command = self._event[EVT_UI_COINCHE]) 
+                command = lambda: self._event[EVT_UI_COINCHE]()) 
         self._coinche_button.pack(fill = X)
 
 

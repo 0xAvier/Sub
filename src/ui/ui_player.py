@@ -4,7 +4,8 @@ from random import choice, shuffle, randint
 
 from src.utils.notify import Notify
 from src.event.event_engine import EVT_UI_COINCHE 
-from src.game.hand import Hand
+from src.game.hand import Hand 
+from src.game.coinche import COINCHE_CODE
 
 class UIPlayer(Notify):
 
@@ -15,7 +16,6 @@ class UIPlayer(Notify):
         self.event = dict()
         self.id = pid
         self._hand = Hand()
-        self._ui._table._bidding.set_method(EVT_UI_COINCHE, self.coinche()) 
 
 
     def give_cards(self, cards):
@@ -62,3 +62,14 @@ class UIPlayer(Notify):
 
     def reset_hand(self):
         self._hand.clear()
+
+    
+    def set_method(self, evt, method):
+        """
+            Overwriting set_method 
+
+        """
+        self._event[evt] = method
+        if evt == COINCHE_CODE:
+            self.coinche = method
+            self._ui._table._bidding.set_method(EVT_UI_COINCHE, self.coinche) 
