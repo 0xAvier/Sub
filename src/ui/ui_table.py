@@ -281,7 +281,8 @@ class UITable(Notify):
                 self._hands[i].size = GameEngine.MAX_CARD
 
         # Bidding phase
-        self._bidding.display()
+        if len(self._handled_players) > 0:
+            self._bidding.display()
 
 
     def end_bidding(self):
