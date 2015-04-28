@@ -13,6 +13,7 @@ class Notify(object):
         # Event notification methods
         self._event = dict()
 
+
     def set_method(self, evt_id, method):
         """
             Set a new method to be called on a certain type
@@ -22,3 +23,9 @@ class Notify(object):
         """ 
         # Add the event method
         self._event[evt_id] = method
+
+
+    def notify(self, evt, *args):
+        if evt in self._event.keys():
+            self._event[evt](*args)
+
