@@ -18,10 +18,19 @@ MUST_UNDERCUT = False
 BID_COINCHE = 1
 BID_BIDDING = 2
 
+
 class Round(object):
 
 
     def __init__(self, deck, players, events, team):
+        """
+            @param deck     deck object to be used to get cards
+            @param players  list of participating players
+            @param events   list of events (to notify event manager)
+            @param team     list of len(players) int, where team[i]
+                            is the id of the team of player i
+
+        """
         # To be set by the user later
         self.max_pts = 2000
         # Deck to use in this round
@@ -30,8 +39,8 @@ class Round(object):
         self.event = events
         self.__players = [(p, Hand()) for p in players]
         self.score = Score(self.event, [0, 1, 0, 1])
-        # TO MODIFY
-        #self.dealer = choice(self.players)
+        # Dealer of the round
+        # todo: for now, player 0 always starts to deal
         self.dealer = self.__players[0]
         # List of played cards by trick and by team
         self.__tricks = [list(), list()]
@@ -40,21 +49,47 @@ class Round(object):
 
 
     def next_player(self, p):
+        """
+            Compute the player who plays just after p
+            in the game
+
+            @param p    current player
+
+            @ret        player after the current player
+
+        """
         return self.__players[(p[0].id + 1) % len(self.__players)]
 
 
     def compute_biddable(self, p, bidded):
+        """
+            Compute the list of possible biddings for player p
+            given the current state of biddings 
+
+            @param p        player to bid (used to construct bids
+                            with player id)
+            @param bidded   list of the four previous bids
+
+            @ret            list of possible biddings for player p
+
+        """
+        # Add the "pass" bid to biddable
         biddable = [Bidding(p[0].id)]
         # Get max bid so far
         highest_bid = max(bidded)
+        # For each possible value of bidding
         for val in Bidding.values:
+            # If value is lower than current bidding, we ignore it
             if val <= highest_bid.val:
                 continue
+            # Else, for each possible color
             for col in Bidding.colors:
                 # If the player to bid hold the last bidding, he must change color
                 if len([b for b in bidded if b.is_pass()]) == len(bidded) - 1 and col == highest_bid.col:
                     continue
+                # Else, append the bid to possible biddings
                 biddable.append(Bidding(p[0].id, val, col))
+        # Return the list of biddings
         return biddable
 
 
@@ -64,9 +99,17 @@ class Round(object):
             the first one to the final one.
             Return the highest bid.
 
+
+            ret     bid object corresponding to the highest bid
+                    Possibly a "Pass" bidding if all players
+                    have passed
+
         """
+        # Initialize the biddings to "Pass" for each player
         bid = [Bidding(p[0].id) for p in self.__players]
+        # Last bid at this point
         last_bid = None
+        # Number of players that successively passed
         passed = 0
         # Queue to get thread answers
         q = queue.Queue()
@@ -75,35 +118,56 @@ class Round(object):
         bid_coinche = list()
         for pl, h in self.__players:
             bid_coinche.append(Thread(target=pl.get_coinche, args=(q,)))
+            # We set the thread as a daemon in order to be able to terminate
+            # even if it has not returned yet
+            bid_coinche[-1].daemon = True
             bid_coinche[-1].start()
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
+
+        # We stop biddings when the four players have passed succesively
         while passed != 4:
+            # Compute list of possible biddings
             biddable = self.compute_biddable(p, bid)
             # Create a thread to get bid from current player
-            Thread(target=p[0].get_bid, args=((bid, biddable, q))).start()
+            bid_th = Thread(target=p[0].get_bid, args=((bid, biddable, q)))
+            bid_th.daemon = True
+            bid_th.start()
+            # Wait for p to return a bidding, or for any player to coinche
             while True:
+                # Passive wait until a thread has returned
                 tmp_bid = q.get()
+                # If a thread notified a coinche and there was a bidding
+                # from a player of another team than the one that coinched
                 if (tmp_bid[0] == BID_COINCHE
                             and last_bid is not None 
                             and (tmp_bid[1] + last_bid.taker) % 2 == 1):
+                    # We stop biddings right now by throwing an exception
+                    # This exception will be handled by the calling function 
+                    # (ie self.deal)
                     raise CoincheException(last_bid, tmp_bid[1])
+                # Else if a thread notified a valid bid
                 elif tmp_bid[0] == BID_BIDDING and tmp_bid[1] in biddable:
+                    # We stop the wait loop for now
                     break
+
             # TODO: kill threads
+
+            # Get the bid 
             bid[p[0].id] = tmp_bid[1]
-            p[0].bidded(bid[p[0].id])
-            # Notify players
+            # Notify players for the new bid
             for pl in self.__players:
                 pl[0].bidded(bid[p[0].id])
             # Notify event manager 
             if EVT_NEW_BID in self.event.keys():
                 self.event[EVT_NEW_BID](bid[p[0].id])
+            # If bid is "Pass", increment counter
             if bid[p[0].id].is_pass():
                 passed += 1
             else:
                 # Last not "pass" bid
                 last_bid = bid[p[0].id]
+                # Reset pass counter
                 passed = 0
             # Next player
             p = self.next_player(p)
@@ -114,6 +178,7 @@ class Round(object):
         """
             Handle a whole deal from the distribution
             of cards to the last card played
+            Update scores
 
         """
         # Reset deal cards
@@ -296,14 +361,13 @@ class Round(object):
                             return cards
 
     def over(self):
+        """
+            Is the round over ? ie Have one team reached 
+            the number of points needed to win the round ?
+
+            @ret    True iif at least one team reached self.max_pts 
+
+        """
         return self.score.get_score(0) >= self.max_pts \
                 or self.score.get_score(1) >= self.max_pts 
 
-
-
-    def wait_for_coinche(self):
-        mgr = self.WaitCoincheManager()
-        for p, h in self.__players:
-            print "yep"
-            thread = self.WaitCoinche(mgr, p)
-            thread.start()
