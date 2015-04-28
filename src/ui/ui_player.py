@@ -62,6 +62,3 @@ class UIPlayer(Notify):
 
     def reset_hand(self):
         self._hand.clear()
-
-
-    def 
