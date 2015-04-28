@@ -21,8 +21,9 @@ class IAPlayer(object):
 
 
     def set_method(self, evt, method):
-        if evt == "coinche":
+        if evt == COINCHE_CODE:
             self.coinche = method
+
 
     def give_cards(self, cards):
         pass
