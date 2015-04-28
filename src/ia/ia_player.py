@@ -17,7 +17,12 @@ class IAPlayer(object):
         self.id = pid
         self.__removable = removable
         self.__nb_bid = 0
+        self.coinche = None
 
+
+    def set_method(self, evt, method):
+        if evt == "coinche":
+            self.coinche = method
 
     def give_cards(self, cards):
         pass
@@ -38,11 +43,14 @@ class IAPlayer(object):
 
 
     def bidded(self, bid):
-        pass
+        if bid.val >= 100 and self.coinche is not None:
+            print "Je coinche"
+            self.coinche()
 
 
     def played(self, pid, card):
         pass
+
 
     def is_removable(self):
         return self.__removable
@@ -52,6 +60,3 @@ class IAPlayer(object):
         pass
 
 
-    def get_coinche(self):
-        sleep(randint(0, 5))
-        return 

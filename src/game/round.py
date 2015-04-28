@@ -58,14 +58,6 @@ class Round(object):
         return biddable
 
 
-    def handle_bid(self, p, bid, biddable, q):
-        q.put((BID_BIDDING, p.get_bid(bid, biddable)))
-
-
-    def handle_coinche(self, p, q):
-        q.put((BID_COINCHE, p.get_coinche(), p.id))
-
-
     def handle_biddings(self):
         """
             Handle the rounds of biddings, from 
@@ -76,22 +68,26 @@ class Round(object):
         bid = [Bidding(p[0].id) for p in self.__players]
         last_bid = None
         passed = 0
+        # Queue to get thread answers
+        q = queue.Queue()
+        # Create threads to get a coinche from any player
+        # at anytime
+        bid_coinche = list()
+        for pl, h in self.__players:
+            bid_coinche.append(Thread(target=pl.get_coinche, args=(q,)))
+            bid_coinche[-1].start()
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
         while passed != 4:
             biddable = self.compute_biddable(p, bid)
-            q = queue.Queue()
-            bid_thread = Thread(target=self.handle_bid, args=((p[0], bid, biddable, q)))
-            bid_thread.start()
-            bid_coinche = list()
-            for pl, h in self.__players:
-                bid_coinche.append(Thread(target=self.handle_coinche, args=((pl, q))))
-                bid_coinche[-1].start()
+            # Create a thread to get bid from current player
+            Thread(target=p[0].get_bid, args=((bid, biddable, q))).start()
             while True:
                 tmp_bid = q.get()
-                if (tmp_bid[0] == BID_COINCHE and tmp_bid[1] == COINCHE_CODE and 
-                        last_bid is not None and (tmp_bid[2] + last_bid.taker) % 2 == 1):
-                    raise CoincheException(last_bid, tmp_bid[2])
+                if (tmp_bid[0] == BID_COINCHE
+                            and last_bid is not None 
+                            and (tmp_bid[1] + last_bid.taker) % 2 == 1):
+                    raise CoincheException(last_bid, tmp_bid[1])
                 elif tmp_bid[0] == BID_BIDDING and tmp_bid[1] in biddable:
                     break
             # TODO: kill threads

@@ -4,8 +4,8 @@ from abc import ABCMeta, abstractmethod
 
 class IPlayerAdapter(object):
     """
-        Interface that must implement a player object
-        to be correctly interfaced with a game
+        Interface that must implement a player adapter
+        object to be correctly interfaced with a game
 
     """
 
