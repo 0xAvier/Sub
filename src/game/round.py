@@ -227,9 +227,6 @@ class Round(Notify):
             self.end_of_deal(False)
             return
 
-        # Updating next dealer for next deal
-        self.dealer = self.next_player(self.dealer)
-
         # Game
         while len(self.__players[0][1].get_cards()) > 0:
             # Handle one trick (ie four cards played)
@@ -252,6 +249,8 @@ class Round(Notify):
                             been played or not (pass * 4)
     
         """
+        # Updating next dealer for next deal
+        self.dealer = self.next_player(self.dealer)
         if played:
             # Random if we reconstruct the deck by putting deck 1 on deck 2
             # or the opposite

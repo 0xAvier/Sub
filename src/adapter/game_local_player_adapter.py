@@ -32,6 +32,7 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
 
 
     def get_coinche(self, q):
+        self.__coinched = False
         while True:
             if self.__coinched:
                 q.put((BID_COINCHE, self.id))
@@ -45,6 +46,7 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
 
 
     def bidded(self, bid):
+        self.__coinched = False
         return self.player.bidded(bid)
 
 
