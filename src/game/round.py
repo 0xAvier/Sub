@@ -5,6 +5,7 @@ from threading import Thread
 
 from random import choice, shuffle, randint
 
+from src.utils.notify import Notify
 from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING, EVT_COINCHE
 from src.game.coinche import COINCHE_CODE, CoincheException
 from src.game.card import Card
@@ -19,7 +20,7 @@ BID_COINCHE = 1
 BID_BIDDING = 2
 
 
-class Round(object):
+class Round(Notify):
 
 
     def __init__(self, deck, players, events, team):
@@ -31,6 +32,8 @@ class Round(object):
                             is the id of the team of player i
 
         """
+        # Call parent constructor
+        super(Round, self).__init__(events)
         # To be set by the user later
         self.max_pts = 2000
         # Deck to use in this round
@@ -159,8 +162,7 @@ class Round(object):
             for pl in self.__players:
                 pl[0].bidded(bid[p[0].id])
             # Notify event manager 
-            if EVT_NEW_BID in self.event.keys():
-                self.event[EVT_NEW_BID](bid[p[0].id])
+            self.notify(EVT_NEW_BID, bid[p[0].id])
             # If bid is "Pass", increment counter
             if bid[p[0].id].is_pass():
                 passed += 1
@@ -183,55 +185,60 @@ class Round(object):
         """
         # Reset deal cards
         self.__deal_cards = list()
+
+        # Distribution
         # Distribution sequence generation
         npr = [2, 3, 3]
+        # Shuffle the distribution sequence
         shuffle(npr)
-        cnt = 0
+        # For each round of distribution
         for n in npr:
+            # For each player in the game
             for p in self.__players:
-                for i in xrange(n):
-                    cnt += 1
+                # Pop n (2 or 3) cards from the deck
                 cards  = [self.deck.pop() for i in xrange(n)]
                 # Add card to the user's hand
                 p[1].add(cards)
                 # Notify user that he has a new hand
                 p[0].give_cards(cards)
-        # check that all cards have been given
+        # Check that all cards have been given
         assert self.deck.empty()
-        # Notify event manager 
-        if EVT_NEW_HAND in self.event.keys():
-            for p in self.__players:
-                self.event[EVT_NEW_HAND](p[0].id, p[0].get_cards())
 
         # Starting player is the one after the dealer
         p = self.next_player(self.dealer)
 
-        # Annonces
+        # Biddings
         try:
+            # Ask for bids
             bid = self.handle_biddings()
+        # If a player has coinched
         except CoincheException as e:
+            # We get the bid through the exception
             bid = e.bid
+            # We double its value
             bid.coinche()
-            if EVT_COINCHE in self.event.keys():
-                self.event[EVT_COINCHE](e.by)
+            # Nofity event manager
+            self.notify(EVT_COINCHE, e.by)
         # Notify end of biddings
-        if EVT_END_BIDDING in self.event.keys():
-            self.event[EVT_END_BIDDING]()
+        self.notify(EVT_END_BIDDING)
+        # If bid is None, it means that the four players passed
         if bid is None:
+            # So we end the deal without playing cards
             self.end_of_deal(False)
             return
 
         # Updating next dealer for next deal
         self.dealer = self.next_player(self.dealer)
 
-        # Jeu
+        # Game
         while len(self.__players[0][1].get_cards()) > 0:
+            # Handle one trick (ie four cards played)
             p = self.trick(bid.col, p)
-            if EVT_END_OF_TRICK in self.event.keys():
-                # Notify the event manager that the trick is over
-                self.event[EVT_END_OF_TRICK](p[0].id)
-            
+            # Notify the event manager that the trick is over
+            self.notify(END_OF_TRICK, p[0].id) 
+        # Update scores
         self.score.deal_score(self.__tricks, self.team[p[0].id], bid)
+        # End of deal
         self.end_of_deal()
 
 
@@ -261,23 +268,46 @@ class Round(object):
                 while len(trick[0]) != 0:
                     self.deck.push(trick[0].pop(0))
         else:
-            # Take hands one by one
+            # List of players whose hand is to get
             pid = range(4)
+            # Shuffle order of recuperation
             shuffle(pid)
+            # For each player
             while len(pid) != 0:
                 p = self.__players[pid.pop()]
+                # Get its cards one by one 
                 while not p[1].is_empty():
+                    # And put them on the deck
                     self.deck.push(p[1].pop())
+                # Notify the user that its hand has
+                # been reset
                 p[0].reset_hand()
 
 
     def trick(self, trump, p):
+        """
+            Handle one trick, ie four cards played
+            (one by each player)
+
+            @param trump    color of the trump during this deal
+            @param p        player who starts the trick
+
+            @ret            the player that wins the trick
+
+        """
+        # List of cards played
         played = list()
+        # Best card played so far
         best_card = None
+        # Player that wins the trick
         wins = None
+        # For each player
         for i in xrange(len(self.__players)):
+            # Compute the cards that can be played by the player
             playable = self.compute_playable(played, p[1].get_cards(), trump)
+            # Init the played card
             card = None
+            # Get a valid card from the player
             while card is None or not card in playable:
                 card = p[0].get_card(played, playable)
             # Add the card to played cards
@@ -289,12 +319,13 @@ class Round(object):
             for player in self.__players:
                 player[0].played(p[0].id, card)
             # Notify event manager
-            if EVT_CARD_PLAYED in self.event.keys():
-                self.event[EVT_CARD_PLAYED](p[0].id, card)
+            self.notify(EVT_CARD_PLAYED, p[0].id, card)
             # Check if the card is the best played until now
             if best_card is None or Card.highest([card, best_card], 
                     played[0][1], trump) == card:
+                # Update best card
                 best_card = card
+                # Update the winning player
                 wins = p
             p = self.next_player(p)    
         self.__tricks[self.team[wins[0].id]].append((played, wins[0]))
@@ -303,6 +334,19 @@ class Round(object):
 
 
     def compute_playable(self, played, cards, trump):
+        """
+            Compute cards that a given player can play, 
+            among its hand and relatively to cards already
+            played and trump
+
+            @param played   list of cards previously played
+            @param cards    list of cards handed
+            @param trump    color of trump in current game
+
+            @ret            a subset of the list 'cards' corresponding
+                            to cards that can be played
+
+        """
         # If payer is the first to play, he can choose
         # any card in its hand
         if len(played) == 0:

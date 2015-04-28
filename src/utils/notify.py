@@ -9,9 +9,12 @@ class Notify(object):
     __metaclass__ = ABCMeta
 
 
-    def __init__(self):
-        # Event notification methods
-        self._event = dict()
+    def __init__(self, evts = None):
+        if evts is not None:
+            self._event = evts
+        else:
+            # Event notification methods
+            self._event = dict()
 
 
     def set_method(self, evt_id, method):
