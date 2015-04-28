@@ -2,16 +2,20 @@
 
 from random import choice, shuffle, randint
 
+from src.utils.notify import Notify
+from src.event.event_engine import EVT_UI_COINCHE 
 from src.game.hand import Hand
 
-class UIPlayer(object):
+class UIPlayer(Notify):
 
 
     def __init__(self, ui, pid):
+        Notify.__init__(self)
         self._ui = ui
         self.event = dict()
         self.id = pid
         self._hand = Hand()
+        self._ui._table._bidding.set_method(EVT_UI_COINCHE, self.coinche()) 
 
 
     def give_cards(self, cards):
@@ -58,3 +62,6 @@ class UIPlayer(object):
 
     def reset_hand(self):
         self._hand.clear()
+
+
+    def 
