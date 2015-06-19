@@ -2,19 +2,19 @@
 
 ## Main elements
 
-* `Game Engine`: This entity is the main class of the program. It handles the game (its rules, its proceedings, etc.). 
-* `Event Engine`: Gets notifications from the `Game Engine` at each event, and dispatches them to other entities.
-                    *Must be only one `Event Engine` for each `Game Engine`.*
-* `UI Engine` : Manage an interface of any kind (can be a graphical interface, a console interface, etc.). An interface is notified of game events
-                    by the `Event Engine`. *There can be as many interfaces as wanted.*
+* `GameEngine`: This entity is the main class of the program. It handles the game (its rules, its proceedings, etc.). 
+* `EventEngine`: Gets notifications from the `GameEngine` at each event, and dispatches them to other entities.
+                    *Must be only one `EventEngine` for each `GameEngine`.*
+* `UIEngine` : Manage an interface of any kind (can be a graphical interface, a console interface, etc.). An interface is notified of game events
+                    by the `EventEngine`. *There can be as many interfaces as wanted.*
 * `Player` : Represents either a human player or an AI. Players are notified by the game for each game-related event (`card played`, `bidded`, etc.)
-                and will we asked to play cards and to bid. A player can also asynchronously communicate to the `Game Engine` for events like `coinche`.
-                *There may be up to four players per `Game Engine`.*
+                and will be asked to play cards and to bid. A player can also asynchronously communicate to the `GameEngine` for events like `coinche`.
+                *There may be up to four players per `GameEngine`.*
 
 
-## `Game Engine` and `Event Engine`
+## `GameEngine` and `EventEngine`
 
-The `Game Engine` is the first thing that must be instantiated. Then we can create an `Event Engine` and register it to the `Game Engine`:
+The `GameEngine` is the first thing that must be instantiated. Then we can create an `EventEngine` and register it to the `GameEngine`:
 ```
 game = GameEngine()
 evt = EventEngine()
@@ -23,11 +23,54 @@ game.connect_event_manager(evt)
 
 After that, during a game, each event will be notified to the event manager. For instance, at each card which is played, 
 the event `EVT_CARD_PLAYED` will be sent with extra parameters (here the card that has just been played and the owner
-of this card) to the `Event Engine`. The `Event Engine` will then dispatch the event to all `UI Engine` objects that 
+of this card) to the `EventEngine`. The `EventEngine` will then dispatch the event to all `UIEngine` objects that 
 are concerned.
 
-## `Event Engine` and `UI Engine`
+## `EventEngine` and `UIEngine`
 
-## `Game Engine` and `Player`
+## `GameEngine` and `Player`
 
-## `Player` and `UI Engine`
+Once a `GameEngine`object is created, one may want to add players to the game (note that by default, if we start a round 
+with less than four players, the `GameEngine`will automatically create AI players to fill empty seats).
+The `GameEngine` needs to interact (synchronously and asynchronously) with each player (to get a card for instance). 
+To make this communication as generic as possible, and non-depending on the type of player (local or remote player, AI or UI player, etc.), 
+there is an adapter between the `GameEngine` object and each `Player` instance. This is the point of view of the `GameEngine`:
+
+```
+[GameEngine] --> [PlayerAdapter]
+```
+
+Where a `Player Adapter` is specific to the type of the relative `Player`, but must implement `IPlayerAdapter` interface.
+The gain of this layout can be seen by looking at two cases: local player and a remote player.
+
+### Local player
+In this case, the `GameEngine` and the `Player` are running in the same computer, and by the same instance of `Sub`.
+The corresponding adapter is `LocalPlayerAdapter`, and the pattern is like this:
+
+```
+[GameEngine] --> [LocalPlayerAdapter] --> [Player]
+```
+
+Where `Player` can be either a `UIPlayer` or a `AIPlayer`. The code to instantiate this would be:
+```
+game = GameEngine()
+player = AIPlayer(0) 
+padapt = LocalPlayerAdapter(player) 
+game.add_player(padapt)
+```
+
+### Remote player
+In this case, the `GameEngine` and the `Player` are not running on the same computer, so they need to communicate through sockets.
+The corresponding adapter is `RemotePlayerAdapter`, and the pattern is this one:
+
+```
+[GameEngine] --> [RemotePlayerAdapter] --> [Server] ---------> [Client] --> [Player]
+```
+Here again, `Player` can be an instance of `UIPlayer` or `AIPlayer`.
+
+
+### In both cases ...
+As `LocalPlayerAdapter` and `RemotePlayerAdapter` both implement the same interface `IPlayerAdapter`, there is no differenciation
+between those two scenarii from the `GameEngine` point of view.
+
+## `Player` and `UIEngine`
