@@ -1,48 +1,39 @@
 # -*- coding:utf-8 -*-
 
-# Define global constants to identify events
-EVT_NEW_ROUND = 0
-EVT_NEW_HAND = 1
-EVT_UI_GET_CARD = 2
-EVT_CARD_PLAYED = 3
-EVT_UI_PLAYER_LEFT = 4
-EVT_END_OF_TRICK = 5
-EVT_NEW_DEAL = 6
-CONSOLE = 7
-EVT_NEW_BID = 8
-EVT_COINCHE = 9
-EVT_SURCOINCHE = 10
-EVT_UI_COINCHE = 11
-EVT_UI_SURCOINCHE = 12
-EVT_UI_GET_BID = 13
-EVT_DEAL_SCORE = 14
-EVT_UPDATE_SCORE = 15
-EVT_END_BIDDING = 16
-CONSOLE_RED = 17
-EVT_UI_COINCHE = 18
+# Import all event codes 
+from src.event.event_code import *
+
 
 class EventEngine(object):
 
 
-    def __init__(self, game):
-        self.game = game
+    def __init__(self):
         # List of adapters to be notified
-        self.adapt = list()
+        self.__adapt = list()
         # List of consoles to log messages 
-        self.console = list()
-        # Define the function of the event manager that the 
-        # game engine should call at each new round
-        self.game.set_method(EVT_NEW_ROUND, self.new_round)
-        self.game.set_method(EVT_NEW_DEAL, self.new_deal)
-        self.game.set_method(EVT_CARD_PLAYED, self.card_played)
-        self.game.set_method(EVT_END_OF_TRICK, self.end_of_trick)
-        self.game.set_method(EVT_NEW_BID, self.new_bid)
-        self.game.set_method(EVT_DEAL_SCORE, self.deal_score)
-        self.game.set_method(EVT_END_BIDDING, self.end_bidding)
-        self.game.set_method(EVT_UPDATE_SCORE, self.update_score)
-        self.game.set_method(EVT_COINCHE, self.coinche)
+        self.__console = list()
 
-        self.game.set_method(CONSOLE, self.log)
+    def notify(self, EVT_CODE, *args):
+        if EVT_CODE == EVT_NEW_DEAL:
+            self.__new_deal(*args)
+        elif EVT_CODE == EVT_NEW_ROUND:
+            self.__new_round(*args)
+        elif EVT_CODE == EVT_CARD_PLAYED:
+            self.__card_played(*args)
+        elif EVT_CODE == EVT_END_OF_TRICK:
+            self.__end_of_trick(*args)
+        elif EVT_CODE == EVT_NEW_BID:
+            self.__new_bid(*args)
+        elif EVT_CODE == EVT_DEAL_SCORE:
+            self.__deal_score(*args)
+        elif EVT_CODE == EVT_END_BIDDING:
+            self.__end_bidding(*args)
+        elif EVT_CODE == EVT_UPDATE_SCORE:
+            self.__update_score(*args)
+        elif EVT_CODE == EVT_COINCHE:
+            self.__coinche(*args)
+        elif EVT_CODE == CONSOLE:
+            self.log(*args)
 
 
     def connect_adapter(self, adapt, p = None):
@@ -55,8 +46,8 @@ class EventEngine(object):
             @param p        list of players handled by the adapter
 
         """
-        if adapt not in self.adapt:
-            self.adapt.append(adapt)
+        if adapt not in self.__adapt:
+            self.__adapt.append(adapt)
             # add consoles if any
             for c in adapt.get_consoles():
                 self.add_console(c)
@@ -67,56 +58,8 @@ class EventEngine(object):
             Add a console to log information messages
 
         """
-        if console not in self.console:
-            self.console.append(console)
-
-
-    def new_round(self):
-        """
-            Notify all interfaces that a new round has begun
-
-        """
-        self.log("New round")
-        for adapt in self.adapt:
-            adapt.new_round()
-
-
-    def new_deal(self):
-        """
-            Notify all interfaces that a new deal has begun
-
-        """
-        self.log("New deal")
-        for adapt in self.adapt:
-            adapt.new_deal()
-
-
-    def end_of_trick(self, pid):
-        """
-            Notify all interfaces that the current trick is over
-            @param p    player that wins the trick
-
-        """
-        # Log trick
-        self.log("-{0}- wins".format(pid))
-        for adapt in self.adapt:
-            adapt.end_of_trick(pid)
-
-
-    def card_played(self, p, c):
-        # Log played card
-        self.log("-" + str(p) + "- played " + str(c))
-        for adapt in self.adapt:
-            adapt.card_played(p, c)
-
-
-    def player_left(self, p):
-        """
-            Notify game that a player has left the game
-            @param p    played who left
-
-        """
-        pass
+        if console not in self.__console:
+            self.__console.append(console)
 
 
     def log(self, msg):
@@ -124,22 +67,63 @@ class EventEngine(object):
             Display message in all console objects set
 
         """
-        for con in self.console:
+        for con in self.__console:
             con.write(msg)
         print "[log] " + msg
 
+
+    def __new_round(self):
+        """
+            Notify all interfaces that a new round has begun
+
+        """
+        self.log("New round")
+        for adapt in self.__adapt:
+            adapt.new_round()
+
+
+    def __new_deal(self):
+        """
+            Notify all interfaces that a new deal has begun
+
+        """
+        self.log("New deal")
+        for adapt in self.__adapt:
+            adapt.new_deal()
+
+
+    def __end_of_trick(self, pid):
+        """
+            Notify all interfaces that the current trick is over
+            @param p    player that wins the trick
+
+        """
+        # Log trick
+        self.log("-{0}- wins".format(pid))
+        for adapt in self.__adapt:
+            adapt.end_of_trick(pid)
+
+
+    def __card_played(self, p, c):
+        # Log played card
+        self.log("-" + str(p) + "- played " + str(c))
+        for adapt in self.__adapt:
+            adapt.card_played(p, c)
+
+
+
     
-    def new_bid(self, bid):
+    def __new_bid(self, bid):
         """
             Notify UIs that a new bid has been announced
 
         """
         self.log("[" + str(bid.taker) + "] " + str(bid))
-        for adapt in self.adapt:
+        for adapt in self.__adapt:
             adapt.new_bid(bid)
 
 
-    def deal_score(self, bid, pts):
+    def __deal_score(self, bid, pts):
         team_taker = self.game.get_team(bid.taker)
         if bid.is_done():
             self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
@@ -152,16 +136,17 @@ class EventEngine(object):
                                                                             pts[1 - team_taker]))
 
 
-    def update_score(self, score):
+    def __update_score(self, score):
         self.log("Score: (02) {0} - {1} (13)".format(score[0], score[1]))
-        for adapt in self.adapt:
+        for adapt in self.__adapt:
             adapt.update_score(score)
 
 
-    def end_bidding(self):
-        for adapt in self.adapt:
+    def __end_bidding(self):
+        for adapt in self.__adapt:
             adapt.end_bidding()
 
 
-    def coinche(self, pid):
+    def __coinche(self, pid):
         self.log("-{0}- has coinched !".format(pid))
+
