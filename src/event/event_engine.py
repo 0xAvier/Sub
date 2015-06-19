@@ -123,8 +123,7 @@ class EventEngine(object):
             adapt.new_bid(bid)
 
 
-    def __deal_score(self, bid, pts):
-        team_taker = self.game.get_team(bid.taker)
+    def __deal_score(self, bid, pts, team_taker):
         if bid.is_done():
             self.log("Contract is done by {0} points ({1} - {2})".format(pts[team_taker] - bid.val, 
                                                                             pts[team_taker],

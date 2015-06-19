@@ -45,11 +45,11 @@ class Score(object):
             }
 
 
-    def __init__(self, event, team):
+    def __init__(self, notify, team):
         # score[0] is the score of players 0-2
         # score[1] is the score of players 1-3
         self.__score = [0, 0]
-        self.event = event
+        self.notify = notify
         # team[i] is the team of player i
         self.team = team
 
@@ -153,7 +153,7 @@ class Score(object):
             score_inc[1 - team_taker] = bid.coef * bid.val + 160
             bid.is_done(False)
 
-        self.notify(EVT_DEAL_SCORE, bid, pts)
+        self.notify(EVT_DEAL_SCORE, bid, pts, team_taker)
 
         for team in xrange(len(self.__score)):
             self.update_score(team, score_inc[team])
