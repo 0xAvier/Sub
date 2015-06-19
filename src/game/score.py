@@ -153,12 +153,10 @@ class Score(object):
             score_inc[1 - team_taker] = bid.coef * bid.val + 160
             bid.is_done(False)
 
-        if EVT_DEAL_SCORE in self.event.keys():
-            self.event[EVT_DEAL_SCORE](bid, pts)
+        self.notify(EVT_DEAL_SCORE, bid, pts)
 
         for team in xrange(len(self.__score)):
             self.update_score(team, score_inc[team])
 
-        if EVT_UPDATE_SCORE in self.event.keys():
-            self.event[EVT_UPDATE_SCORE](self.__score)
+        self.notify(EVT_UPDATE_SCORE, self.__score)
 

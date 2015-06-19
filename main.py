@@ -13,7 +13,8 @@ from src.ui.ui_player import UIPlayer
 
 
 game = GameEngine()
-evt = EventEngine(game)
+evt = EventEngine()
+game.add_event_manager(evt)
 ui = UIEngine()
 ui_adapt = EventUIAdapter(ui)
 evt.connect_adapter(ui_adapt)

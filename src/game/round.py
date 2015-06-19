@@ -6,7 +6,7 @@ from threading import Thread
 from random import choice, shuffle, randint
 
 from src.utils.notify import Notify
-from src.event.event_engine import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING, EVT_COINCHE
+from src.event.event_code import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING, EVT_COINCHE
 from src.game.coinche import COINCHE_CODE, CoincheException
 from src.game.card import Card
 from src.game.score import Score
@@ -20,28 +20,26 @@ BID_COINCHE = 1
 BID_BIDDING = 2
 
 
-class Round(Notify):
+class Round(object):
 
 
-    def __init__(self, deck, players, events, team):
+    def __init__(self, deck, players, notify, team):
         """
             @param deck     deck object to be used to get cards
             @param players  list of participating players
-            @param events   list of events (to notify event manager)
+            @param notify   function to call at each event (to notify event manager)
             @param team     list of len(players) int, where team[i]
                             is the id of the team of player i
 
         """
-        # Call parent constructor
-        super(Round, self).__init__(events)
         # To be set by the user later
         self.max_pts = 2000
         # Deck to use in this round
         self.deck = deck
-        # Notification to send to event manager
-        self.event = events
+        # Notification function for game events
+        self.notify = notify
         self.__players = [(p, Hand()) for p in players]
-        self.score = Score(self.event, [0, 1, 0, 1])
+        self.score = Score(notify, [0, 1, 0, 1])
         # Dealer of the round
         # todo: for now, player 0 always starts to deal
         self.dealer = self.__players[0]
