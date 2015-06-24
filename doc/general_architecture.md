@@ -1,10 +1,39 @@
 # General architecture of Sub
 
+
+## Source organisation
+
+All source code of this project can be found in `src`. This folder is organised
+as follows:
+* `src/adapter`: All adapters for any element of the project are implemented
+here, including interfaces and concrete implementations of adapters. For
+instance, `src/adapter/i_player_adapter.py` contains the interface that a player
+adapter should implement, and `src/adapter/local_player_adapter.py` implements a
+concrete adapter for a local player.
+* `src/console`: Contains console-relative code, and in particular the
+interaface that a console class must implement.
+* `src/event`: Contains the code relative to the game events, and in particular
+the event manager and the definition of all event codes. More information about
+events [here](event.md).
+* `src/game`: All the game-relative implementation is there. This is the core of
+the project, as it implements the coinche game including the biddings, the
+playing, the score computing, etc. More information about the game
+implementation [here](game.md).
+* `src/ia`: Different implementations of ia players are in this folder. *To be
+clarified.*
+* `src/player`: *To be clarified.* 
+* `src/ui`: This folder contains all classes relative to user interface
+* rendering of the game. It includes the display of the table, the menus, the
+bidding interface, etc. More information about it [here](ui.md).
+* `src/utils`: Several general-purpose implementations. 
+
 ## Main elements
 
-* `GameEngine`: This entity is the main class of the program. It handles the game (its rules, its proceedings, etc.). 
+* `GameEngine`: This entity is the main class of the program. It handles the
+* game (its rules, its proceedings, etc.). Located in `src/game/game_engine.py`. 
 * `EventEngine`: Gets notifications from the `GameEngine` at each event, and dispatches them to other entities.
                     *Must be only one `EventEngine` for each `GameEngine`.*
+                    Located in `src/event/event_engine.py`.
 * `UIEngine` : Manage an interface of any kind (can be a graphical interface, a console interface, etc.). An interface is notified of game events
                     by the `EventEngine`. *There can be as many interfaces as wanted.*
 * `Player` : Represents either a human player or an AI. Players are notified by the game for each game-related event (`card played`, `bidded`, etc.)
