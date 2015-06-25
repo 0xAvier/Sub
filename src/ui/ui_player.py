@@ -1,13 +1,10 @@
 #-*- coding: utf-8 -*-
 
-from random import choice, shuffle, randint
-
 from src.utils.notify import Notify
-from src.event.event_engine import EVT_UI_COINCHE 
 from src.game.hand import Hand 
 from src.game.coinche import COINCHE_CODE
 
-class UIPlayer(Notify):
+class UIPlayer(IPlayer, Notify):
 
 
     def __init__(self, ui, pid):
@@ -20,8 +17,6 @@ class UIPlayer(Notify):
 
     def give_cards(self, cards):
         self._hand.add(cards)
-        h = self._hand.get_cards()
-        self._ui._table._hands[self.id].hand = h 
 
 
     def get_hand(self):
@@ -43,6 +38,7 @@ class UIPlayer(Notify):
 
     def get_coinche(self):
         return self._ui.get_coinche()
+
 
     def get_bid(self, bidded, biddable):
         return self._ui.get_bid(self.id, bidded, biddable)
