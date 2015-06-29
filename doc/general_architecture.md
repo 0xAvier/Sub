@@ -20,17 +20,18 @@ the project, as it implements the coinche game including the biddings, the
 playing, the score computing, etc. More information about the game
 implementation [here](game.md).
 * `src/ia`: Different implementations of ia players are in this folder. *To be
-clarified.*
+clarified. (#TODO)*
 * `src/player`: *To be clarified.* 
 * `src/ui`: This folder contains all classes relative to user interface
 * rendering of the game. It includes the display of the table, the menus, the
 bidding interface, etc. More information about it [here](ui.md).
 * `src/utils`: Several general-purpose implementations. 
 
+
 ## Main elements
 
 * `GameEngine`: This entity is the main class of the program. It handles the
-* game (its rules, its proceedings, etc.). Located in `src/game/game_engine.py`. 
+game (its rules, its proceedings, etc.). Located in `src/game/game_engine.py`. 
 * `EventEngine`: Gets notifications from the `GameEngine` at each event, and dispatches them to other entities.
                     *Must be only one `EventEngine` for each `GameEngine`.*
                     Located in `src/event/event_engine.py`.
@@ -55,7 +56,6 @@ the event `EVT_CARD_PLAYED` will be sent with extra parameters (here the card th
 of this card) to the `EventEngine`. The `EventEngine` will then dispatch the event to all `UIEngine` objects that 
 are concerned.
 
-## `EventEngine` and `UIEngine`
 
 ## `GameEngine` and `Player`
 
@@ -69,7 +69,7 @@ there is an adapter between the `GameEngine` object and each `Player` instance. 
 [GameEngine] --> [PlayerAdapter]
 ```
 
-Where a `Player Adapter` is specific to the type of the relative `Player`, but must implement `IPlayerAdapter` interface.
+Where a `PlayerAdapter` is specific to the type of the relative `Player`, but must implement `IPlayerAdapter` interface.
 The gain of this layout can be seen by looking at two cases: local player and a remote player.
 
 ### Local player
@@ -102,4 +102,42 @@ Here again, `Player` can be an instance of `UIPlayer` or `AIPlayer`.
 As `LocalPlayerAdapter` and `RemotePlayerAdapter` both implement the same interface `IPlayerAdapter`, there is no differenciation
 between those two scenarii from the `GameEngine` point of view.
 
+
+## `EventEngine` and `UIEngine`
+
+Each `UIEngine` that wants to get information in real time about the game must register to `EventEngine`. Because
+the `UIEngine` may be deported (if the game is running on a different computer) and of any kind
+(a graphical display, a web view, ...). the `EventEngine` does not 
+interact directly with a `UIEngine` object, but with an adapter that implements the `IUIAdapter` interface.
+This is the architecture from the `EventEngine` point of view:
+
+```
+[EventEngine] --> [UIAdapter]
+```
+
+Mainly, the `UIAdapter` can either be a `LocalUIAdapter` or a `RemoteUIAdapter`. (However, one can write other 
+`UIAdapter` types, for instance to display game information in a web view.) For a local `UIEngine`, the pattern
+is:
+```
+[EventEngine] --> [LocalUIAdapter] --> [UIEngine]
+```
+
+Registration works as follows:
+```
+evt = EventEngine()
+ui = UIEngine()
+uiadapt = LocalUIAdapter(ui)
+evt.add_ui(uiadapt)
+```
+
+Note that `UIEngine` instances can be added to the `EventEngine` at anytime. Also note that several 
+`UIEngine` instances can be connected simultaneously to the `EventEngine`. For instance, for one `GameEngine`
+and one `EventEngine` instance, we can have a local `UiEngine` which displays the game locally, and a
+remote `UIEngine` which handles a second view of the game on another computer. Remote uis are handled
+exactly in the same way we handle remote players. 
+
+(#TODO remote UI)
+
 ## `Player` and `UIEngine`
+
+(#TODO)
