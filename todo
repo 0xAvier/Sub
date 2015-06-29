@@ -1,0 +1,10 @@
+
+* Create IUIAdapter (between Event & UI engine)
+* Change UIAdapter into LocalUIAdapter
+* Change EventEngine 'connect_adapter' method name to 'add_ui'
+
+* Change console.py to i_console.py (and check that every interface has correct prefix)
+* Add @abstractmethod to every interface
+* move ia to src/player/ia
+* Difference between IPlayerAdapter and IPlayer ?
+
