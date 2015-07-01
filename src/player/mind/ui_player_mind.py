@@ -11,7 +11,6 @@ class UIPlayerMind(Notify):
     def __init__(self, pid, ui):
         Notify.__init__(self)
         self._ui = ui
-        self.event = dict()
         self.id = pid
 
 
