@@ -38,9 +38,9 @@ The general architecture of a `Player` is the following:
 ```
 
 When one instanciates a `Player` object, it has by default no render and the basic IA mind (`BasicIAPlayerMind` in 
-`src/player/mind/ia/`). A `Player` object has to methods to set its reder or mind:
+`src/player/mind/ia/`). A `Player` object has to methods to set its render or mind:
 
-* `Player.set_mind`: this method allows to replace the player mind by any `PlayerMind` object (must implements
+* `Player.set_mind`: this method allows to replace the player mind by any `PlayerMind` object (must implement
 the `IPlayerMind` interface). **A `Player` instance can only have one mind, so this method erases the previous
 mind of the `Player`.**
 * `Player.add_render`: this method allows to add a render object to the `Player`. A `Player` instance can have
@@ -54,9 +54,7 @@ player = Player()
 # Create a GUI to render the player
 ui = UIEngine()                             
 # Create a GUI render for the player
-player_render = UIPlayerRender()            
-# Connect the player render to the GUI
-ui.connect_player_render(player_render)     
+player_render = UIPlayerRender(ui) 
 # Register the render to the player object
 player.add_render(player_render)            
 # Create the IA mind
@@ -71,9 +69,9 @@ The next sections describe in details the two components of a `Player`.
 
 ### `PlayerMind`
 
-* The different minds implemented can be found in `src/player/mind`.
+* The different minds implemented can be found in `src/player/mind`.*
 
-A `PlayerMind` contains all the logicl of a player. There are two main categories of `PlayerMind` implemented:
+A `PlayerMind` contains all the logic of a player. There are two main categories of `PlayerMind` implemented:
 
 * GUI-controlled mind (`UIPlayerMind`): this mind allows one to control the player through the GUI. It allows a
 real (physical) player to be part of a game.
@@ -92,6 +90,7 @@ instance a player being controlled by the user through GUI). Since it is not the
 interface-relative functionnalities, another entity should notify the `UIEngine` of a player's hand. This is the role of 
 the `PlayerRender`: notify the `Player` hand to some interface for display purposes. 
 
+(#TODO tech specs)
 
 ## Write your own IA
 
