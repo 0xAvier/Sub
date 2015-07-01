@@ -11,6 +11,7 @@ class Player(IPlayer):
         self._player_mind = None 
         self._player_renders = [] 
         self._is_removable = is_removable
+        self._hand = Hand()
 
 
     def set_mind(self, mind):
@@ -23,9 +24,13 @@ class Player(IPlayer):
 
     def give_cards(self, cards):
         # Both render and mind 
-        self._player_mind.give_cards(self, cards)
+        self._hand.add(cards)
         for render in self._player_renders:
             render.give_cards(self, cards)
+
+
+    def get_hand(self):
+        return self._hand  
 
 
     def team(self):
@@ -35,7 +40,10 @@ class Player(IPlayer):
 
     def get_card(self, played, playable):
         # Pure mind
-        self._player_mind.get_card(self, played, playable)
+        card = self._player_mind.get_card(self, played, playable)
+        # Update the hand
+        self._hand.remove([card]) 
+        return card
 
 
     def get_coinche(self):
@@ -67,6 +75,5 @@ class Player(IPlayer):
 
 
     def reset_hand(self):
-        # Pure mind
-        self._player_mind.reset_hand()
+        self._hand.clear()
 
