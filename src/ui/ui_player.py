@@ -3,6 +3,7 @@
 from src.utils.notify import Notify
 from src.game.hand import Hand 
 from src.game.coinche import COINCHE_CODE
+from src.player.i_player import IPlayer
 
 class UIPlayer(IPlayer, Notify):
 
