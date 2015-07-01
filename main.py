@@ -11,8 +11,8 @@ from src.adapter.event_ui_adapter import EventUIAdapter
 from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter 
 
 from src.player.player import Player
-from src.ui.ui_player_mind import UIPlayerMind 
-from src.ui.ui_player_render import UIPlayerRender
+from src.player.mind.ui_player_mind import UIPlayerMind 
+from src.player.render.ui_player_render import UIPlayerRender
 
 
 game = GameEngine()
