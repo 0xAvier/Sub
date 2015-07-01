@@ -12,7 +12,6 @@ class Player(IPlayer):
 
     def __init__(self, pid, is_removable = False):
         # TODO id or pid ?
-        self.pid = pid
         self.id = pid
         self._player_mind = None 
         self._player_renders = [] 
