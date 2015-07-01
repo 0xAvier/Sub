@@ -47,14 +47,6 @@ class Player(IPlayer):
             render.give_cards(cards, self._hand)
 
 
-    def get_hand(self):
-        """
-            Return the current player's hand
-
-        """
-        return self._hand  
-
-
     def team(self):
         """
             Return the id of the team of the player
