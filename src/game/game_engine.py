@@ -2,7 +2,7 @@
 
 from src.utils.notify import Notify
 from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL, EVT_NEW_BID
-from src.ia.ia_player import IAPlayer
+from src.player.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
 from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter
@@ -24,7 +24,8 @@ class GameEngine(Notify):
         # Creation of a set of players
         self.__players = list()
         for pid in xrange(self.NB_PLAYER):
-            p = IAPlayer(pid)
+            # This player is removable
+            p = Player(pid, True)
             adapt = GameLocalPlayerAdapter(self, p)
             self.__players.append(adapt)
         self.__team = [0, 1, 0, 1]

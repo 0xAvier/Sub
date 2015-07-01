@@ -2,8 +2,12 @@
 
 from src.player.i_player import IPlayer
 from src.game.hand import Hand 
+from src.utils.notify import Notify
 
-class Player(IPlayer):
+from src.player.mind.ia.basic_ia_player_mind import BasicIAPlayerMind
+
+
+class Player(IPlayer, Notify):
     """
         TODO
 
@@ -11,9 +15,11 @@ class Player(IPlayer):
 
 
     def __init__(self, pid, is_removable = False):
-        # TODO id or pid ?
+        Notify.__init__(self)
         self.id = pid
-        self._player_mind = None 
+        # Default mind is a basic (who said stupid?) IA
+        self._player_mind = BasicIAPlayerMind(pid) 
+
         self._player_renders = [] 
         self._is_removable = is_removable
         self._hand = Hand()
