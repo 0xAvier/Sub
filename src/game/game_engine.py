@@ -55,3 +55,7 @@ class GameEngine(Notify):
     def get_team(self, pid):
         return self.__team[pid]
 
+
+    def get_players(self):
+        return self.__players
+
