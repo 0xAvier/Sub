@@ -21,7 +21,7 @@ playing, the score computing, etc. More information about the game
 implementation [here](game.md).
 * `src/ia`: Different implementations of ia players are in this folder. *To be
 clarified. (#TODO)*
-* `src/player`: *To be clarified.* 
+* `src/player`: *To be clarified. (#TODO)* 
 * `src/ui`: This folder contains all classes relative to user interface
 rendering of the game. It includes the display of the table, the menus, the
 bidding interface, etc. More information about it [here](ui.md).
