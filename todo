@@ -1,4 +1,6 @@
 
+* Change way players connect to game engine /!\ IMPORTANT (cf general_archi doc)
+
 * Create IUIAdapter (between Event & UI engine)
 * Change UIAdapter into LocalUIAdapter
 * Change EventEngine 'connect_adapter' method name to 'add_ui'
@@ -7,4 +9,14 @@
 * Add @abstractmethod to every interface
 * move ia to src/player/ia
 * Difference between IPlayerAdapter and IPlayer ?
+
+* is_removable in kwargs to be expressive
+* rename GameLocalPlayerAdapter to LocalPlayerAdapter (and then change the doc !)
+* change the routine of creation of players in GE ?
+
+* Expliciter les import dans la doc
+
+* Gestion des pid par les joueurs, vraiment ? à réfléchir 
+* Si oui, ajout d'une méthode GameEngine.get_available_pid + la documenter dans game/removable players
+
 
