@@ -23,7 +23,7 @@ implementation [here](game.md).
 clarified. (#TODO)*
 * `src/player`: *To be clarified.* 
 * `src/ui`: This folder contains all classes relative to user interface
-* rendering of the game. It includes the display of the table, the menus, the
+rendering of the game. It includes the display of the table, the menus, the
 bidding interface, etc. More information about it [here](ui.md).
 * `src/utils`: Several general-purpose implementations. 
 
