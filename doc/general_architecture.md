@@ -32,7 +32,7 @@ bidding interface, etc. More information about it [here](ui.md).
 
 * `GameEngine`: This entity is the main class of the program. It handles the
 game (its rules, its proceedings, etc.). Located in `src/game/game_engine.py`. 
-* `EventEngine`: Gets notifications from the `GameEngine` at each event, and dispatches them to other entities.
+* `EventEngine`: Gets notifications from the `GameEngine` at each event, and dispatches them to other entities *To be clarified*. (#TODO)
                     *Must be only one `EventEngine` for each `GameEngine`.*
                     Located in `src/event/event_engine.py`.
 * `UIEngine` : Manage an interface of any kind (can be a graphical interface, a console interface, etc.). An interface is notified of game events
