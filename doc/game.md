@@ -87,7 +87,7 @@ Note that during a game, the deck of cards is **never** shuffled.
 ## Communication with players
 
 The `GameEngine` has two main ways to communicate with its players: a synchronous
-way (by calling `Player` methods), and a synchronous way for the coinche.
+way (by calling `Player` methods), and an asynchronous way for the coinche.
 
 ### Synchronous communication
 
