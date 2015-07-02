@@ -11,7 +11,7 @@ instance, `src/adapter/i_player_adapter.py` contains the interface that a player
 adapter should implement, and `src/adapter/local_player_adapter.py` implements a
 concrete adapter for a local player.
 * `src/console`: Contains console-relative code, and in particular the
-interaface that a console class must implement.
+interface that a console class must implement.
 * `src/event`: Contains the code relative to the game events, and in particular
 the event manager and the definition of all event codes. More information about
 events [here](event.md).
