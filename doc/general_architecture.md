@@ -132,7 +132,7 @@ evt.add_ui(uiadapt)
 
 Note that `UIEngine` instances can be added to the `EventEngine` at anytime. Also note that several 
 `UIEngine` instances can be connected simultaneously to the `EventEngine`. For instance, for one `GameEngine`
-and one `EventEngine` instance, we can have a local `UiEngine` which displays the game locally, and a
+and one `EventEngine` instance, we can have a local `UIEngine` which displays the game locally, and a
 remote `UIEngine` which handles a second view of the game on another computer. Remote uis are handled
 exactly in the same way we handle remote players. 
 
