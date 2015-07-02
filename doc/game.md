@@ -61,7 +61,7 @@ When the method `add_player` is called, the `GameEngine` will check if the
 player with the id `pid` is removable or not. If not, the new player will not
 be able to join the game. Otherwise, the current player will be evicted and replaced
 by the new player. In our example, because the new player has the flag `is_removable` 
-to `False`, it will ne be possible for another player to join the game with 
+to `False`, it will not be possible for another player to join the game with 
 the same pid.
 
 
