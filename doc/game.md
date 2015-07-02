@@ -74,7 +74,7 @@ In particular:
 1. The distribution of cards is performed according to the rules. A sequence 
 of distribution is randomly choosen among [2, 3, 3], [3, 2, 2] and [3, 3, 2].
 Then the players are given cards according to this sequence. For instance, if
-the sequence [2, 3, 3] has been choosen, Each player is given 2 cards, then 3 cards
+the sequence [2, 3, 3] has been choosen, each player is given 2 cards, then 3 cards
 and then 3 other cards. At each point, the cards given are the one at the top of the deck. 
 1. After each trick, the four cards that has been played are put on the top of the
 deck of the team that won it.
