@@ -83,7 +83,7 @@ The corresponding adapter is `LocalPlayerAdapter`, and the pattern is like this:
 Where `Player` can be either a `UIPlayer` or a `AIPlayer`. The code to instantiate this would be:
 ```
 game = GameEngine()
-player = AIPlayer(0) 
+player = AIPlayer(0) # 0 is the player ID 
 padapt = LocalPlayerAdapter(player) 
 game.add_player(padapt)
 ```
