@@ -22,12 +22,6 @@ ui = UIEngine()
 ui_adapt = EventUIAdapter(ui)
 evt.connect_adapter(ui_adapt)
 
-# Enable the view of all hands
-for player in game.get_players():
-    ui.add_player(player.id)
-    # Player.player cause we need to access to add_render
-    # Ugly?
-    player.player.add_render(UIPlayerRender(player.id, ui)) 
 
 if len(sys.argv) > 1 and sys.argv[1] == "-p":
     ui.add_player(0)
