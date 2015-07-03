@@ -29,8 +29,8 @@ if len(sys.argv) > 1 and sys.argv[1] == "-p":
     ui_player = Player(0) 
     ui_player.add_render(UIPlayerRender(0, ui)) 
     ui_player.set_mind(UIPlayerMind(0, ui) )
-    adapt = GameLocalPlayerAdapter(game, ui_player) 
-    adapt.join()
+    adapt = GameLocalPlayerAdapter(ui_player) 
+    game.add_player(adapt)
 
 game.new_round()
 
