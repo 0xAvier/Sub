@@ -167,6 +167,7 @@ class UIBidding(Notify):
         # Reset the event
         self.coinche_event.clear()
 
+
     def _update_bid_button(self):
         value = self._value_box.get()
         color = self._selected_color

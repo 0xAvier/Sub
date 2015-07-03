@@ -22,7 +22,7 @@ class BasicIAPlayerMind(Notify):
 
 
     def get_card(self, played, playable):
-        sleep(randint(1, 3))
+        sleep(randint(1, 2))
         # For now, return a random card
         return choice(playable)
 

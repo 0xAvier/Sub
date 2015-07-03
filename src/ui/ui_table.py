@@ -218,6 +218,7 @@ class UITable(Notify):
         self._bidding.coinche_event.wait()
         return COINCHE_CODE
 
+
     def get_bid(self, p, bidded, bid_list):
         """
             Wait for the user p to bid 
