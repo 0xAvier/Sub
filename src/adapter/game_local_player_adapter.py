@@ -8,7 +8,7 @@ from src.game.coinche import COINCHE_CODE
 from src.game.round import BID_COINCHE, BID_BIDDING
 
 
-class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
+class GameLocalPlayerAdapter(IPlayerAdapter):
 
 
     def __init__(self, player):

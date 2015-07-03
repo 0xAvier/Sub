@@ -33,7 +33,7 @@ class GameEngine(object):
         for pid in xrange(self.NB_PLAYER):
             # This player is removable
             p = Player(pid, True)
-            adapt = GameLocalPlayerAdapter(self, p)
+            adapt = GameLocalPlayerAdapter(p)
             self.__players.append(adapt)
         self.__team = [0, 1, 0, 1]
         # Function to notify for each new event
