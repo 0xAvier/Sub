@@ -14,6 +14,30 @@ from src.player.player import Player
 from src.player.mind.ui_player_mind import UIPlayerMind 
 from src.player.render.ui_player_render import UIPlayerRender
 
+def add_human_player(game, ui):
+    ui.add_player(0)
+    ui.set_reference_player(0)
+    ui_player = Player(0) 
+    ui_player.add_render(UIPlayerRender(0, ui)) 
+    ui_player.set_mind(UIPlayerMind(0, ui) )
+    adapt = GameLocalPlayerAdapter(ui_player) 
+    game.add_player(adapt)
+
+
+def enable_view_all_hand(game, ui):
+    players = [None]*5
+    adapts = [None]*5
+    for pid in xrange(0, 4):
+        try:
+            ui.add_player(pid)
+            players[pid] = Player(pid)
+            players[pid].add_render(UIPlayerRender(pid, ui)) 
+            adapts[pid] = GameLocalPlayerAdapter(players[pid]) 
+            game.add_player(adapts[pid])
+        except IndexError:
+            # This seat is already taken, too bad
+            pass
+
 
 game = GameEngine()
 evt = EventEngine()
@@ -22,15 +46,11 @@ ui = UIEngine()
 ui_adapt = EventUIAdapter(ui)
 evt.connect_adapter(ui_adapt)
 
-
 if len(sys.argv) > 1 and sys.argv[1] == "-p":
-    ui.add_player(0)
-    ui.set_reference_player(0)
-    ui_player = Player(0) 
-    ui_player.add_render(UIPlayerRender(0, ui)) 
-    ui_player.set_mind(UIPlayerMind(0, ui) )
-    adapt = GameLocalPlayerAdapter(ui_player) 
-    game.add_player(adapt)
+    add_human_player(game, ui)
+
+if len(sys.argv) > 2 and sys.argv[2] == "--cheat":
+    enable_view_all_hand(game, ui)
 
 game.new_round()
 

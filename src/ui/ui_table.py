@@ -334,14 +334,17 @@ class UITable(Notify):
         self._heaps[p].heap = c 
 
 
-    def add_player(self, p):
+    def add_player(self, pid):
         """
             Add a player handled by the UI
             @param p    player handled  
 
         """
-        self._handled_players.append(p)
-        self._hands[p].hidden = False 
+        # Check if pid is already handle 
+        if pid in self._handled_players:
+            raise IndexError
+        self._handled_players.append(pid)
+        self._hands[pid].hidden = False 
 
 
     def update_score(self, score):
