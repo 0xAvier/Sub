@@ -11,13 +11,17 @@ from src.adapter.event_ui_adapter import EventUIAdapter
 from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter 
 from src.ui.ui_player import UIPlayer
 
-
 game = GameEngine()
 evt = EventEngine()
 game.add_event_manager(evt)
+
 ui = UIEngine()
 ui_adapt = EventUIAdapter(ui)
 evt.connect_adapter(ui_adapt)
+
+#ui_2 = UIEngine()
+#ui_adapt_2 = EventUIAdapter(ui_2)
+#evt.connect_adapter(ui_adapt_2)
 
 if len(sys.argv) > 1 and sys.argv[1] == "-p":
     ui.add_player(0)

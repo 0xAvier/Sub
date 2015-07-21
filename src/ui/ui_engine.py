@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Tkinter import Tk, Frame, Button, RIGHT
+from Tkinter import Tk, Frame, Button, RIGHT, Toplevel
 from threading import Thread, Condition, Event
 from time import sleep
 
@@ -17,8 +17,10 @@ class UIEngine(Thread, Notify):
 
     """
 
+    interface_id = -1
 
     def __init__(self):
+        UIEngine.interface_id += 1
         Notify.__init__(self)
         Thread.__init__(self)
         # This condition will notify the main thread when init is over
@@ -36,7 +38,10 @@ class UIEngine(Thread, Notify):
 
         """
         # Create the instance
-        self._root = Tk()
+        if UIEngine.interface_id == 0:
+            self._root = Tk() 
+        else:
+            self._root = Toplevel() 
         # Resize the window
         # compute h according to the table
         h = UITable.TABLE_HEIGHT
@@ -96,7 +101,8 @@ class UIEngine(Thread, Notify):
         # Release the condition, now useless
         self._wait_init_event.clear()
         # Enter the infinite loop, see you lata
-        self._root.mainloop()
+        if UIEngine.interface_id == 0: 
+            self._root.mainloop()
 
     
     def set_reference_player(self, p):

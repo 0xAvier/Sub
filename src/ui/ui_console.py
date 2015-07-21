@@ -14,8 +14,8 @@ class UIConsole(IConsole):
         # Memorise the root
         self._root = root
         # Create a dedicated frame
-        self._frame = Frame()
-        self._frame.pack(in_=frame, side = TOP)
+        self._frame = Frame(frame)
+        self._frame.pack(side = TOP)
         
         # Add a text widget
         self._console = Text(self._frame, height = 100)
