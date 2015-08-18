@@ -121,14 +121,77 @@ the return value is not valid, the `GameEngine` will call this method.
 
 #### Informative methods
 
-* `played(self, pid, card)`:
-* `give_cards(self, cards)`:  
-* `reset_hand(self)`:
-* `bidded(self, bid)`
+* `played(self, pid, card)`: Notification from the `GameEngine` to the `Player`
+each time a card is played. `pid` is the id of the player who has played, and `card` 
+is the card object which was played.
+* `bidded(self, bid)`: Notification from the `GameEngine` to the `Player`
+each time a bid is performed. `bid` is the bid object containing all needed information, 
+such as the player that did bid (`bid.taker`), the value and color of the bid (resp. 
+`bid.val` and `bid.col`). This notification allows any player to coinche "on the fly"
+any bid at any time (see next sections for asynchronous coinche).
+* `give_cards(self, cards)`: Notify the `Player` that he has been given new cards. 
+This method is called during the distribution of cards at the beginning of each deal.
+* `reset_hand(self)`: Notify the `Player` that his hand has been reset, i.e. the cards
+he was holding have been trashed. This method is called if, after a new deal distribution, 
+no player is bidding, and therefore the deal will not be played and a new distribution 
+of cards will occur. 
 
 ### Asynchronous communication
 
+Some actions performed by a `Player` during a game must be asynchronous. 
+For now, the only case is the "Coinche" action, but there might be more 
+in the future. These asynchronous communications increase the complexity
+of the implementation ; for this reason we try to reduce them to the strict
+minimum required to have a functional game.
+
+#### General implementation
+An asynchronous communication of a given type is obtained with a dedicated
+thread for each player:
+
+```
+# Queue to get thread answers
+q = queue.Queue()
+# Iteration on players
+for pl in Players:
+    # Creation of the thread
+    th = Thread(target=pl.get_async, args=(q,))
+    # We set the thread as a daemon in order to be able to terminate
+    # even if it has not returned yet
+    th.daemon = True
+    # Start the thread
+    th.start()
+
+```
+
+This calls the method `get_async` from each player, and any return value would be added in the queue `q`.
+The next two sections explain respectively how to check the return values for the `GameEngine` and how to 
+return a value from the `Player` point of view.
+
+#### From the `GameEngine` point of view
+Getting return values in the `GameEngine` is quite simple: as any return value would end in the queue `q`, 
+checking the length of the queue will give the number of asynchronous values returned. Another 
+possibility is to wait for any thread to return some value, with: 
+
+```
+q.get()
+
+```
+
+This is no longer asynchronous from the `GameEngine` point of view, because the execution will be paused
+until a value is returned by one of the threads, but as we will see in the section Coinche, this solution
+fits with our problem of asynchronous coinche during the bids. 
+
+#### From the `Player` point of view
+In order to make the implementation of a player easier, the asynchronous return of a method called in
+a thread (in our example, `get_async`) is handled by the adapter. 
+
+
 #### Coinche
+To recall, the "Coinche" is an action that can occur
+during the biddings. If a given player A bids something that a player from 
+the other team B thinks is overestimated, B can "Coinche" (even if B is 
+not the next player to bid). This stops the bidding and double the points 
+of the contract for this deal. More information is given [here](coinche_rules.md).
 
 
 ## `Round`
