@@ -19,4 +19,8 @@
 * Gestion des pid par les joueurs, vraiment ? à réfléchir 
 * Si oui, ajout d'une méthode GameEngine.get_available_pid + la documenter dans game/removable players
 
+* REMOVE game.get_players !!
+
+* self._coinched doit être dans la classe Player (l'adapteur doit donc vérifier slf._player._coinched et non plus
+self._coinched) => and then change the implementation code example in game.md/ASYNC
 
