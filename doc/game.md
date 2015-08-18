@@ -160,7 +160,6 @@ for pl in Players:
     th.daemon = True
     # Start the thread
     th.start()
-
 ```
 
 This calls the method `get_async` from each player, and any return value would be added in the queue `q`.
@@ -174,24 +173,48 @@ possibility is to wait for any thread to return some value, with:
 
 ```
 q.get()
-
 ```
 
 This is no longer asynchronous from the `GameEngine` point of view, because the execution will be paused
-until a value is returned by one of the threads, but as we will see in the section Coinche, this solution
-fits with our problem of asynchronous coinche during the bids. 
+until a value is returned by one of the threads. However, each `Player` object can still return a value asynchronously, 
+and as we will see in the section Coinche, this solution fits with our problem of asynchronous coinche during the bids. 
 
-#### From the `Player` point of view
-In order to make the implementation of a player easier, the asynchronous return of a method called in
-a thread (in our example, `get_async`) is handled by the adapter. 
+#### From the `Player` point of view: the coinche
 
-
-#### Coinche
-To recall, the "Coinche" is an action that can occur
+To recall, the coinche is an action that can occur
 during the biddings. If a given player A bids something that a player from 
-the other team B thinks is overestimated, B can "Coinche" (even if B is 
+the other team B thinks is overestimated, B can coinche (even if B is 
 not the next player to bid). This stops the bidding and double the points 
-of the contract for this deal. More information is given [here](coinche_rules.md).
+of the contract for this deal. More information is given [here](coinche_rules.md). 
+
+__In a `Player`__ - The implementation choices we made were aimed to make the asynchronous coinche 
+as simple as possible in a `Player` class. A `Player` object has an attribute named `self._coinched`, 
+which is initially set to `False` at the beginning of each deal. 
+__In order to trigger an asynchronous coinche during the bids, a `Player` sets its flag `self._coinched`
+to `True`.__ The rest of the work is handled by the `PlayerAdapter`. Note that this should only be done 
+once during a given deal. Any further change of this flag will be logically ignored.  
+
+__In the `PlayerAdapter`__ - As described in previous sections, the `GameEngine` creates a thread 
+for each `Player` at the beginning of the bids of each deal. In this case, the method called by such a 
+thread is `IPlayerAdapter.get_coinche`. This method will check the flag `_checked` from the `Player` object
+each *n* milliseconds. If the flag has not been set to `True`, it will do nothing. 
+Otherwise, it will put the code `BID_COINCHE` (plus the id of the `Player` performing the coinche)
+in the queue created by the `GameEngine`, and return. This way, 
+the `GameEngine` will detect that a new value has been added to the queue and take the coinche into account. 
+For more details, here is the implementation of the method `get_coinche` for the `LocalPlayerAdapter`:
+
+// TODO fit the doc
+
+```
+def get_coinche(self, q):
+    self.__coinched = False
+    while True:
+        if self.__coinched:
+            q.put((BID_COINCHE, self.id))
+            self.__coinched = False
+        sleep(1)
+```
+
 
 
 ## `Round`
