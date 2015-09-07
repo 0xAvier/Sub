@@ -69,7 +69,6 @@ class EventEngine(object):
         """
         for con in self.__console:
             con.write(msg)
-        print "[log] " + msg
 
 
     def __new_round(self):
