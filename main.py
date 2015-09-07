@@ -8,20 +8,21 @@ from src.game.game_engine import GameEngine
 from src.event.event_engine import EventEngine
 from src.adapter.event_ui_adapter import EventUIAdapter
 
-from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter 
+from src.adapter.local_player_adapter import LocalPlayerAdapter 
 
 from src.player.player import Player
 from src.player.mind.ui_player_mind import UIPlayerMind 
 from src.player.render.ui_player_render import UIPlayerRender
 
+
 def add_human_player(game, ui):
+    player = Player(0)
+    player.add_render(UIPlayerRender(0, ui)) 
+    player.set_mind(UIPlayerMind(0, ui) )
     ui.add_player(0)
     ui.set_reference_player(0)
-    ui_player = Player(0) 
-    ui_player.add_render(UIPlayerRender(0, ui)) 
-    ui_player.set_mind(UIPlayerMind(0, ui) )
-    adapt = GameLocalPlayerAdapter(ui_player) 
-    game.add_player(adapt)
+    padapt = LocalPlayerAdapter(player) 
+    game.add_player(padapt)
 
 
 def enable_view_all_hand(game, ui):
