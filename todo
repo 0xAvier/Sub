@@ -1,17 +1,17 @@
 
-* Change way players connect to game engine /!\ IMPORTANT (cf general_archi doc)
+* [ok] Change way players connect to game engine /!\ IMPORTANT (cf general_archi doc)
 
 * Create IUIAdapter (between Event & UI engine)
 * Change UIAdapter into LocalUIAdapter
 * Change EventEngine 'connect_adapter' method name to 'add_ui'
 
-* Change console.py to i_console.py (and check that every interface has correct prefix)
-* Add @abstractmethod to every interface
+* [ok] Change console.py to i_console.py (and check that every interface has correct prefix)
+* [ok] Add @abstractmethod to every interface
 * move ia to src/player/ia
 * Difference between IPlayerAdapter and IPlayer ?
 
 * is_removable in kwargs to be expressive
-* rename GameLocalPlayerAdapter to LocalPlayerAdapter (and then change the doc !)
+* [ko] rename GameLocalPlayerAdapter to LocalPlayerAdapter (and then change the doc !) => RESTE À CHANGER LA DOC
 * change the routine of creation of players in GE ?
 
 * Expliciter les import dans la doc
@@ -23,4 +23,3 @@
 
 * self._coinched doit être dans la classe Player (l'adapteur doit donc vérifier slf._player._coinched et non plus
 self._coinched) => and then change the implementation code example in game.md/ASYNC
-

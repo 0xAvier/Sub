@@ -1,7 +1,5 @@
 # Architecture of the game
 
-(Work in progress)
-
 The `GameEngine` and its entities are the main core of the application. It is 
 in charge of:
 
@@ -203,8 +201,6 @@ in the queue created by the `GameEngine`, and return. This way,
 the `GameEngine` will detect that a new value has been added to the queue and take the coinche into account. 
 For more details, here is the implementation of the method `get_coinche` for the `LocalPlayerAdapter`:
 
-// TODO fit the doc
-
 ```
 def get_coinche(self, q):
     self.__coinched = False
@@ -214,16 +210,4 @@ def get_coinche(self, q):
             self.__coinched = False
         sleep(1)
 ```
-
-
-
-## `Round`
-
-### Bidding
-
-### Deal
-
-### Trick
-
-## Score
 
