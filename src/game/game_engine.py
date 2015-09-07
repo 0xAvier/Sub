@@ -5,7 +5,7 @@ from src.event.event_engine import EVT_NEW_ROUND, EVT_CARD_PLAYED, EVT_NEW_DEAL,
 from src.player.player import Player
 from src.game.deck import Deck
 from src.game.round import Round
-from src.adapter.game_local_player_adapter import GameLocalPlayerAdapter
+from src.adapter.local_player_adapter import LocalPlayerAdapter
 
 
 class GameEngine(object):
@@ -33,8 +33,8 @@ class GameEngine(object):
         for pid in xrange(self.NB_PLAYER):
             # This player is removable
             p = Player(pid, True)
-            adapt = GameLocalPlayerAdapter(p)
-            self.__players.append(adapt)
+            padapt = LocalPlayerAdapter(p)
+            self.__players.append(padapt)
         self.__team = [0, 1, 0, 1]
         # Function to notify for each new event
         self.evt_notify = None

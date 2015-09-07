@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Text, TOP, LEFT, RIGHT, END, Scrollbar, Y
 
-from src.console.console import IConsole
+from src.console.i_console import IConsole
 
 class UIConsole(IConsole):
     """
