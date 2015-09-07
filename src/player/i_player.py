@@ -1,56 +1,60 @@
-#-*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from abc import ABCMeta, abstractmethod
 
-class IUIAdapter(object):
+class IPlayer(object):
+    """
+       Interface for a player 
+    """
 
     __metaclass__ = ABCMeta
 
 
+    @abstractmethod
     def __init__(self):
-        pass
-
-    
-    @abstractmethod
-    def card_played(self, p, c):
-        raise NotImplemented
-
-    
-    @abstractmethod
-    def new_bid(self, b):
         raise NotImplemented
 
 
     @abstractmethod
-    def new_round(self): 
+    def give_cards(self, cards):
         raise NotImplemented
 
 
     @abstractmethod
-    def new_deal(self): 
+    def team(self):
         raise NotImplemented
 
 
     @abstractmethod
-    def end_of_trick(self, p): 
+    def get_card(self, played, playable):
         raise NotImplemented
 
 
     @abstractmethod
-    def end_bidding(self):
+    def get_coinche(self):
         raise NotImplemented
 
 
     @abstractmethod
-    def new_hand(self):
+    def get_bid(self, bidded, biddable):
         raise NotImplemented
 
 
     @abstractmethod
-    def update_score(self, s): 
+    def bidded(self, bid):
         raise NotImplemented
 
 
     @abstractmethod
-    def get_consoles(self):
+    def played(self, pid, card):
+        raise NotImplemented
+
+
+    @abstractmethod
+    def is_removable(self):
+        raise NotImplemented
+
+
+    @abstractmethod
+    def reset_hand(self):
         raise NotImplemented

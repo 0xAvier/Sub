@@ -310,7 +310,6 @@ class Round(object):
             # Add the card to played cards
             played.append(card)
             # Remove it from player's hand
-            print card
             p[1].remove([card])
             # Notify users that a card has been played
             for player in self.__players:

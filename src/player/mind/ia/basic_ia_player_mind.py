@@ -2,34 +2,27 @@
 
 from random import choice, randint
 from time import sleep
+from src.game.bidding import Bidding
+from src.utils.notify import Notify
 
 from src.game.coinche import COINCHE_CODE
-from src.game.bidding import Bidding
-from src.game.hand import Hand
-
-class IAPlayer(object):
 
 
-    def __init__(self, pid, removable=True):
-        self.nick = ""
-        self.event = dict()
-        self._hand = Hand()
+class BasicIAPlayerMind(Notify):
+    """
+        TODO
+
+    """
+
+    def __init__(self, pid):
+        Notify.__init__(self)
         self.id = pid
-        self.__removable = removable
         self.__nb_bid = 0
         self.coinche = None
 
 
-    def set_method(self, evt, method):
-        if evt == COINCHE_CODE:
-            self.coinche = method
-
-
-    def give_cards(self, cards):
-        pass
-
-
     def get_card(self, played, playable):
+        sleep(randint(1, 2))
         # For now, return a random card
         return choice(playable)
 
@@ -45,7 +38,6 @@ class IAPlayer(object):
 
     def bidded(self, bid):
         if bid.val >= 100 and self.coinche is not None:
-            print "Je coinche"
             self.coinche()
 
 
@@ -53,11 +45,7 @@ class IAPlayer(object):
         pass
 
 
-    def is_removable(self):
-        return self.__removable
-
-
-    def reset_hand(self):
-        pass
-
+    def set_method(self, evt, method):
+        if evt == COINCHE_CODE:
+            self.coinche = method
 

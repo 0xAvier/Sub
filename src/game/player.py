@@ -74,6 +74,3 @@ class Player(object):
         """
         return self.id % 2
 
-
-    def get_hand(self):
-        return self._hand

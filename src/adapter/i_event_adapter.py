@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 class IEventAdapter(object):
 

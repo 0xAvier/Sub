@@ -8,11 +8,10 @@ from src.game.coinche import COINCHE_CODE
 from src.game.round import BID_COINCHE, BID_BIDDING
 
 
-class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
+class LocalPlayerAdapter(IPlayerAdapter):
 
 
-    def __init__(self, game, player):
-        self.game = game
+    def __init__(self, player):
         self.player = player
         self.player.set_method(COINCHE_CODE, self.coinche)
         self.__coinched = False
@@ -56,10 +55,6 @@ class GameLocalPlayerAdapter(IGameAdapter, IPlayerAdapter):
 
     def is_removable(self):
         return self.player.is_removable()
-
-
-    def join(self):
-        return self.game.add_player(self)
 
     
     def reset_hand(self):

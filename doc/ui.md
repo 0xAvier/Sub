@@ -15,7 +15,7 @@ multiple graphical interface
 ### Constructor
 
 architecture (main, side pannel)
-gestion des joueurs (cachés / pas cachés, joueur principale)
+gestion des joueurs (cach?s / pas cach?s, joueur principale)
 To create a new user interface
 
 #### Game purpose methods
