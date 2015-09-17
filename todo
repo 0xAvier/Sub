@@ -1,9 +1,9 @@
 
 * [ok] Change way players connect to game engine /!\ IMPORTANT (cf general_archi doc)
 
-* Create IUIAdapter (between Event & UI engine)
+* [ok] Create IUIAdapter (between Event & UI engine)
 * [ok] Change (Event)UIAdapter into LocalUIAdapter
-* Change EventEngine 'connect_adapter' method name to 'add_ui'
+* [ok] Change EventEngine 'connect_adapter' method name to 'add_ui'
 
 * [ok] Change console.py to i_console.py (and check that every interface has correct prefix)
 * [ok] Add @abstractmethod to every interface

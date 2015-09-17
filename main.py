@@ -45,7 +45,7 @@ game.add_event_manager(evt)
 
 ui = UIEngine()
 ui_adapt = LocalUIAdapter(ui)
-evt.connect_adapter(ui_adapt)
+evt.add_ui(ui_adapt)
 
 #ui_2 = UIEngine()
 #ui_adapt_2 = EventUIAdapter(ui_2)

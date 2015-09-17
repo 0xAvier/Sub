@@ -36,7 +36,7 @@ class EventEngine(object):
             self.log(*args)
 
 
-    def connect_adapter(self, adapt, p = None):
+    def add_ui(self, adapt, p = None):
         """
             Connect an adapter to the event manager
             The adapter should be notified when some events
