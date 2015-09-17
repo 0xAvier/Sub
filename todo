@@ -7,7 +7,7 @@
 
 * [ok] Change console.py to i_console.py (and check that every interface has correct prefix)
 * [ok] Add @abstractmethod to every interface
-* move ia to src/player/ia
+* [ok] move ia to src/player/ia
 * Difference between IPlayerAdapter and IPlayer ?
 
 * is_removable in kwargs to be expressive
