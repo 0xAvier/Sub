@@ -6,7 +6,7 @@ import time, sys
 from src.ui.ui_engine import UIEngine 
 from src.game.game_engine import GameEngine
 from src.event.event_engine import EventEngine
-from src.adapter.event_ui_adapter import EventUIAdapter
+from src.adapter.local_ui_adapter import LocalUIAdapter
 
 from src.adapter.local_player_adapter import LocalPlayerAdapter 
 
@@ -44,7 +44,7 @@ evt = EventEngine()
 game.add_event_manager(evt)
 
 ui = UIEngine()
-ui_adapt = EventUIAdapter(ui)
+ui_adapt = LocalUIAdapter(ui)
 evt.connect_adapter(ui_adapt)
 
 #ui_2 = UIEngine()

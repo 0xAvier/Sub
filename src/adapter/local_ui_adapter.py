@@ -3,7 +3,7 @@
 from src.adapter.i_ui_adapter import IUIAdapter
 from src.ui.ui_engine import UIEngine
 
-class EventUIAdapter(IUIAdapter):
+class LocalUIAdapter(IUIAdapter):
 
 
     def __init__(self, ui):
