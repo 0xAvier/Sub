@@ -21,7 +21,13 @@ BID_BIDDING = 2
 
 
 class Round(object):
+    """
+        This class handles a whole round of the game, from the beginning
+        until one of the teams reach the number of points required to win 
+        the round. 
+        Each round is decomposed in deals, and each deal is decomposed in tricks. 
 
+    """
 
     def __init__(self, deck, players, notify, team):
         """
@@ -403,7 +409,7 @@ class Round(object):
 
     def over(self):
         """
-            Is the round over ? ie Have one team reached 
+            Is the round over ? ie Has one team reached 
             the number of points needed to win the round ?
 
             @ret    True iif at least one team reached self.max_pts 

@@ -38,7 +38,7 @@ The general architecture of a `Player` is the following:
 ```
 
 When one instanciates a `Player` object, it has by default no render and the basic IA mind (`BasicIAPlayerMind` in 
-`src/player/mind/ia/`). A `Player` object has to methods to set its render or mind:
+`src/player/mind/ia/`). A `Player` object has two methods to set its render or mind:
 
 * `Player.set_mind`: this method allows to replace the player mind by any `PlayerMind` object (must implement
 the `IPlayerMind` interface). **A `Player` instance can only have one mind, so this method erases the previous
@@ -61,7 +61,6 @@ player.add_render(player_render)
 ia = GodIAPlayerMind()                      
 # Replace the player mind
 player.set_mind(ia)                         
-
 ```
 
 The next sections describe in details the two components of a `Player`.
@@ -69,7 +68,7 @@ The next sections describe in details the two components of a `Player`.
 
 ### `PlayerMind`
 
-* The different minds implemented can be found in `src/player/mind`.*
+*The different minds implemented can be found in `src/player/mind`.*
 
 A `PlayerMind` contains all the logic of a player. There are two main categories of `PlayerMind` implemented:
 
