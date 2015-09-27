@@ -8,6 +8,7 @@ from src.game.bidding import Bidding
 from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED
 
+from src.ui.ui_positioning import UIPositioning
 from src.ui.table.general.ui_heap import UIHeap
 from src.ui.table.general.ui_scoreboard import UIScoreboard 
 from src.ui.table.player.ui_bidding import UIBidding
@@ -22,9 +23,9 @@ class UITable(Notify):
     """
 
     # Width of the table
-    TABLE_WIDTH = UIHand.HAND_WIDTH * 3 + UIHand.HAND_OFFSET * 3
+    TABLE_WIDTH = UIPositioning.HAND_WIDTH * 3 + UIPositioning.HAND_OFFSET * 3
     # Height of the table
-    TABLE_HEIGHT = UIHand.HAND_HEIGHT * 6 
+    TABLE_HEIGHT = UIPositioning.HAND_HEIGHT * 6 
     # Translate a position index to a number
     POS_TO_INDEX = {'N': 0, 'E': 1, 'S': 2, 'W': 3}
 

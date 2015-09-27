@@ -7,7 +7,7 @@ from src.game.card import Card
 
 from src.ui.utils.ui_card import UICard
 from src.ui.utils.image_loader import ImageLoader  
-
+from src.ui.ui_positioning import UIPositioning
 
 class UIHand(object):
     """
@@ -15,28 +15,6 @@ class UIHand(object):
        Contains as few logic as possible
 
     """
-
-    # Part of the card that will be visible
-    COVERING = 1 / 3.0 
-    # hand width in pixel
-                 # Number of card that will be covered
-                 # Multiplied by the width of a covered card 
-                 # Plus an unconvered card
-    HAND_WIDTH = (GameEngine.MAX_CARD - 1) * \
-                 (ImageLoader.CARD_WIDTH * COVERING) + \
-                 ImageLoader.CARD_WIDTH 
-
-    # hand height in pixel
-    HAND_HEIGHT = ImageLoader.CARD_HEIGHT
-    # Offset between two hands (horizontally)
-    HAND_OFFSET = 50
-    # Width in pixel between two cards
-    CARD_SHIFTING = ImageLoader.CARD_WIDTH * COVERING
-
-    # Table for hands position
-    first_card_column = [None] * GameEngine.NB_PLAYER
-    first_card_row = [None] * GameEngine.NB_PLAYER
-
 
     def __init__(self, frame, position):
         # Memorise the frame
@@ -75,16 +53,16 @@ class UIHand(object):
         nb_cards_missing = GameEngine.MAX_CARD - len(self._hand)
         missing_offset = nb_cards_missing / 2.0 * ImageLoader.CARD_WIDTH 
         # don't forget covering
-        missing_offset *= UIHand.COVERING
+        missing_offset *= UIPositioning.COVERING
         # magical formula
-        space_taken = UIHand.HAND_WIDTH + UIHand.HAND_OFFSET
-        UIHand.first_card_column = [space_taken + missing_offset, 
+        space_taken = UIPositioning.HAND_WIDTH + UIPositioning.HAND_OFFSET
+        UIPositioning.first_card_column = [space_taken + missing_offset, 
                                     space_taken * 2 + missing_offset, 
                                     space_taken + missing_offset, 
                                     missing_offset]
         # Add horizontal offset
-        UIHand.first_card_column = [x + UIHand.HAND_OFFSET / 2.0 \
-                                            for x in UIHand.first_card_column]
+        UIPositioning.first_card_column = [x + UIPositioning.HAND_OFFSET / 2.0 \
+                                            for x in UIPositioning.first_card_column]
 
 
     def _update_first_card_row(self):
@@ -92,10 +70,10 @@ class UIHand(object):
             Define the row of the first card for each hand
 
         """
-        height = UIHand.HAND_HEIGHT
-        UIHand.first_card_row = [0, height * 2, height * 4, height * 2] 
+        height = UIPositioning.HAND_HEIGHT
+        UIPositioning.first_card_row = [0, height * 2, height * 4, height * 2] 
         # Add vertical offset
-        UIHand.first_card_row = [x + height / 2.0 for x in UIHand.first_card_row]
+        UIPositioning.first_card_row = [x + height / 2.0 for x in UIPositioning.first_card_row]
 
 
     def click_card(self, index):
@@ -132,8 +110,8 @@ class UIHand(object):
         self._update_first_card_column()
         self._update_first_card_row()
         # Place the button
-        x = self.first_card_column[self.position] + i * UIHand.CARD_SHIFTING
-        y = self.first_card_row[self.position]
+        x = UIPositioning.first_card_column[self.position] + i * UIPositioning.CARD_SHIFTING
+        y = UIPositioning.first_card_row[self.position]
         self._buttons[i].place(x = x, y = y)
 
 

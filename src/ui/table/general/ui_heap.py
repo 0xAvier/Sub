@@ -5,8 +5,7 @@ from src.game.card import Card
 
 from src.ui.utils.image_loader import ImageLoader  
 from src.ui.utils.ui_card import UICard
-from src.ui.table.player.ui_hand import UIHand
-
+from src.ui.ui_positioning import UIPositioning
 
 class UIHeap(object):
     """
@@ -60,7 +59,7 @@ class UIHeap(object):
             Return the row (pixel) of the heap according to its player position
 
         """
-        row = UIHand.first_card_row[self.position] 
+        row = UIPositioning.first_card_row[self.position] 
         vert_shift = 15 
         if self.position == 0:
             # Shift it down
