@@ -3,9 +3,9 @@ from Tkinter import Label
 
 from src.game.card import Card
 
-from src.ui.image_loader import ImageLoader  
-from src.ui.ui_card import UICard
-from src.ui.ui_hand import UIHand
+from src.ui.utils.image_loader import ImageLoader  
+from src.ui.utils.ui_card import UICard
+from src.ui.table.player.ui_hand import UIHand
 
 
 class UIHeap(object):

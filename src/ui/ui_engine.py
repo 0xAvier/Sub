@@ -7,9 +7,9 @@ from src.game.game_engine import GameEngine
 from src.event.event_engine import EVT_UI_PLAYER_LEFT, CONSOLE, CONSOLE_RED 
 from src.utils.notify import Notify
 
-from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
-from src.ui.ui_table import UITable 
-from src.ui.ui_side_pannel import UISidePannel
+from src.ui.side_pannel.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
+from src.ui.table.ui_table import UITable 
+from src.ui.side_pannel.ui_side_pannel import UISidePannel
 
 class UIEngine(Thread, Notify):
     """

@@ -1,12 +1,12 @@
 # -*- coding:utf-8 -*-
 from Tkinter import Tk, Frame, Button, RIGHT
 
-from src.ui.ui_table import UITable 
+from src.ui.table.ui_table import UITable 
 from src.utils.notify import Notify
 from src.event.event_engine import EVT_UI_PLAYER_LEFT 
 
-from src.ui.ui_console import UIConsole
-from src.ui.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
+from src.ui.side_pannel.ui_console import UIConsole
+from src.ui.side_pannel.ui_controllers import UIControllers, EVT_CONTROL_QUIT 
 
 class UISidePannel(Notify):
     """

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from image_loader import ImageLoader
+from src.ui.utils.image_loader import ImageLoader
 
 class UICard:
     """

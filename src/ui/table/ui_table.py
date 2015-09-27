@@ -8,11 +8,11 @@ from src.game.bidding import Bidding
 from src.utils.notify import Notify
 from src.event.event_engine import CONSOLE, CONSOLE_RED
 
-from src.ui.ui_hand import UIHand
-from src.ui.ui_heap import UIHeap
-from src.ui.ui_bidding import UIBidding
-from src.ui.ui_scoreboard import UIScoreboard 
-from src.ui.image_loader import ImageLoader
+from src.ui.table.general.ui_heap import UIHeap
+from src.ui.table.general.ui_scoreboard import UIScoreboard 
+from src.ui.table.player.ui_bidding import UIBidding
+from src.ui.table.player.ui_hand import UIHand
+from src.ui.utils.image_loader import ImageLoader
 
 class UITable(Notify):
     """

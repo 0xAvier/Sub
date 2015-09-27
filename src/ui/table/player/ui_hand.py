@@ -5,8 +5,8 @@ from threading import Event
 from src.game.game_engine import GameEngine
 from src.game.card import Card 
 
-from src.ui.ui_card import UICard
-from src.ui.image_loader import ImageLoader  
+from src.ui.utils.ui_card import UICard
+from src.ui.utils.image_loader import ImageLoader  
 
 
 class UIHand(object):
