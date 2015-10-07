@@ -8,6 +8,8 @@ from src.game.card import Card
 from src.ui.utils.ui_card import UICard
 from src.ui.utils.image_loader import ImageLoader  
 from src.ui.ui_positioning import UIPositioning
+from src.ui.table.player.ui_belote import UIBelote
+
 
 class UIHand(object):
     """
@@ -20,7 +22,7 @@ class UIHand(object):
         # Memorise the frame
         self._frame = frame
 
-        self.position = position
+        self._position = position
 
         # List of cards in the hand
         self._hand = []
@@ -34,6 +36,7 @@ class UIHand(object):
 
         # Indicates wheter the hand is displayed or not
         self.hidden = True 
+        self._human_hand = False
 
         # List for recording the images itself
         self.cards_image = [None] * GameEngine.MAX_CARD
@@ -42,6 +45,10 @@ class UIHand(object):
         # Init buttons
         self._init_buttons()
         self._update_buttons_position()
+        self._update_first_card_column()
+        self._update_first_card_row()
+        # Init belote
+        self._init_belote()
 
 
     def _update_first_card_column(self):
@@ -56,6 +63,10 @@ class UIHand(object):
         missing_offset *= UIPositioning.COVERING
         # magical formula
         space_taken = UIPositioning.HAND_WIDTH + UIPositioning.HAND_OFFSET
+        UIPositioning.initial_first_card_column = [space_taken, 
+                                    space_taken * 2, 
+                                    space_taken, 
+                                    0]
         UIPositioning.first_card_column = [space_taken + missing_offset, 
                                     space_taken * 2 + missing_offset, 
                                     space_taken + missing_offset, 
@@ -63,6 +74,8 @@ class UIHand(object):
         # Add horizontal offset
         UIPositioning.first_card_column = [x + UIPositioning.HAND_OFFSET / 2.0 \
                                             for x in UIPositioning.first_card_column]
+        UIPositioning.initial_first_card_column = [x + UIPositioning.HAND_OFFSET / 2.0 \
+                                            for x in UIPositioning.initial_first_card_column]
 
 
     def _update_first_card_row(self):
@@ -90,6 +103,31 @@ class UIHand(object):
         self.card_played_event.clear()
 
 
+    def get_card(self, playable):
+        """
+            Wait for the player to choose a card between
+            the possible ones given in playable
+            @param playable     list of cards that can be played
+
+        """
+        # Forgot the last_card_played
+        self.last_card_played = None
+        # Wait to have a new card
+        # It must be a playable card
+        while self.last_card_played is None or \
+                not self.last_card_played in playable:
+            if not self.last_card_played is None: 
+                self._event[CONSOLE_RED]("This card is not playable!")
+            # Wait for a click (notified by ui_hand)
+            # Time out of 5 seconds to avoid deadlock
+            self.card_played_event.wait(5)
+
+        belote = self._belote.clicked
+        self._belote.clicked = False
+        # Finally, the user clicked on a good card
+        return (belote, self.last_card_played)
+
+
     def _init_buttons(self):
         """
             Init the buttons that will be used to modelise the cards
@@ -99,6 +137,27 @@ class UIHand(object):
             # Define the button
             self._buttons[i] = Button(self._frame, image = self.cards_image[i],
                                       command=lambda i=i: self.click_card(i))
+
+    
+    def _compute_belote_position(self):
+        """
+
+        """
+        x = UIPositioning.initial_first_card_column[self._position] 
+        y = UIPositioning.first_card_row[self._position]
+        y += ImageLoader.CARD_HEIGHT + 10 
+        return round(x), round(y) 
+
+
+    def _init_belote(self):
+        """
+            Init the belote for human player
+    
+        """
+        size_x, size_y = UIPositioning.HAND_WIDTH, 30
+        x, y = self._compute_belote_position()
+        self._belote = UIBelote(self._frame, x, y, size_x, size_y)        
+
 
     def _update_button_position(self, i):
         """
@@ -110,8 +169,8 @@ class UIHand(object):
         self._update_first_card_column()
         self._update_first_card_row()
         # Place the button
-        x = UIPositioning.first_card_column[self.position] + i * UIPositioning.CARD_SHIFTING
-        y = UIPositioning.first_card_row[self.position]
+        x = UIPositioning.first_card_column[self._position] + i * UIPositioning.CARD_SHIFTING
+        y = UIPositioning.first_card_row[self._position]
         self._buttons[i].place(x = x, y = y)
 
 
@@ -159,6 +218,11 @@ class UIHand(object):
         for i in xrange(self._size, GameEngine.MAX_CARD):
             self._buttons[i].place_forget();
 
+    
+    def end_of_trick(self):
+        self.last_card_played = None
+        self._belote.clicked = False
+
 
     @property
     def hand(self):
@@ -181,6 +245,7 @@ class UIHand(object):
         self._size = len(self._hand)
         self.update_cards_image()
 
+
     @property
     def size(self):
         """
@@ -188,6 +253,7 @@ class UIHand(object):
         
         """
         return self._size
+
 
     @size.setter
     def size(self, value):
@@ -199,3 +265,39 @@ class UIHand(object):
         self._size = value
         self._hand = [None] * self._size
         self.update_cards_image()
+
+
+    @property
+    def human_hand(self):
+        """
+
+        """
+        return self._human_hand
+
+
+    @human_hand.setter
+    def human_hand(self, is_human):
+        """
+
+        """
+        self._human_hand = is_human 
+        self.hidden = not is_human 
+        if is_human:
+            self._belote.display()
+        else:
+            self._belote.hide()
+
+    
+    @property
+    def position(self):
+        return self._position
+
+
+    @position.setter
+    def position(self, p):
+        self._position = p
+        if self._human_hand:
+            x, y = self._compute_belote_position()
+            self._belote.set_position(x, y)
+            self._belote.display()
+

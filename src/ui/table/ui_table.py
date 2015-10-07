@@ -126,7 +126,7 @@ class UITable(Notify):
     @interface_player.setter
     def interface_player(self, pid):  
         """
-            Set the id of the player who managed the interface
+            Set the id of the player who manages the interface
             @param pid  id of the player 
 
         """
@@ -143,18 +143,6 @@ class UITable(Notify):
             self._hands[i].position = nb_position 
             self._heaps[i].position = nb_position 
         self._interface_player = pid
-
-
-    def reset_last_played(self):
-        """
-            last_played are the last card played during this trick by the
-            players
-            Reset it to None to notify that the players haven't played during
-            this trick
-
-        """
-        for h in self._hands:
-            h.last_card_played = None
 
 
     def reset_heap(self):
@@ -179,7 +167,8 @@ class UITable(Notify):
         # Reset the heap 
         self.reset_heap()
         # Reset last_played for all hands
-        self.reset_last_played()
+        for h in self._hands:
+            h.end_of_trick()
 
 
     def get_card(self, p, playable):
@@ -195,20 +184,7 @@ class UITable(Notify):
             raise Exception("Player " + str(p) + " not handled.")
         # If he is handled, process as normal
 
-        # Forgot the last_card_played
-        self._hands[p].last_card_played = None
-        # Wait to have a new card
-        # It must be a playable card
-        while self._hands[p].last_card_played is None or \
-                not self.last_card_played(p) in playable:
-            if not self._hands[p].last_card_played is None: 
-                self._event[CONSOLE_RED]("This card is not playable!")
-            # Wait for a click (notified by ui_hand)
-            # Time out of 5 seconds to avoid deadlock
-            self._hands[p].card_played_event.wait(5)
-
-        # Finally, the user clicked on a good card
-        return self.last_card_played(p)
+        return self._hands[p].get_card(playable)
 
 
     def get_coinche(self):
@@ -346,7 +322,7 @@ class UITable(Notify):
         if pid in self._handled_players:
             raise IndexError
         self._handled_players.append(pid)
-        self._hands[pid].hidden = False 
+        self._hands[pid].human_hand = True 
 
 
     def update_score(self, score):

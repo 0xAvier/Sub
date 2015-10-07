@@ -306,7 +306,8 @@ class Round(object):
             card = None
             # Get a valid card from the player
             while card is None or not card in playable:
-                card = p[0].get_card(played, playable)
+                # Take belote into account
+                card = p[0].get_card(played, playable)[1]
             # Add the card to played cards
             played.append(card)
             # Remove it from player's hand

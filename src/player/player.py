@@ -68,10 +68,10 @@ class Player(IPlayer, Notify):
 
         """
         # Get a card from the Mind
-        card = self._player_mind.get_card(played, playable)
+        played = self._player_mind.get_card(played, playable)
         # Update the hand
-        self._hand.remove([card]) 
-        return card
+        self._hand.remove([played[1]]) 
+        return played 
 
 
     def get_coinche(self):
