@@ -14,6 +14,8 @@ from src.player.player import Player
 from src.player.mind.ui_player_mind import UIPlayerMind 
 from src.player.render.ui_player_render import UIPlayerRender
 
+# Import tests
+from test.belote import test_belote
 
 def add_human_player(game, ui):
     player = Player(0)
@@ -38,6 +40,14 @@ def enable_view_all_hand(game, ui):
         except IndexError:
             # This seat is already taken, too bad
             pass
+
+# IF TESTING
+if len(sys.argv) > 1 and (sys.argv[1] == "-t" or sys.argv[1] == "--test"):
+    # Test belote
+    test_belote()
+
+
+    exit()
 
 game = GameEngine()
 evt = EventEngine()
