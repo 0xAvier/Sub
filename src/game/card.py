@@ -121,3 +121,48 @@ class Card(object):
                     high = c
             return high
 
+
+    @staticmethod
+    def belote_is_valid(hand, card, trump):
+        """
+            Check if the belote is valid, regarding the 
+            card being played and the cards that the player 
+            holds in his hand.
+
+            @param hand         cards hold in the player's hand
+            @param card         card being played
+            @param trump        color of the trump
+
+            @ret                True iif the belote is valid
+
+        """
+        # First condition: the card being played must be either a king or a queen
+        # of the trump color 
+        if (card.val != 'K' and card.val != 'Q') or card.col != trump:
+            return False
+        # Second condition: the other card must be hold by the player
+        if card.val == 'Q':
+            return Card('K', card.col) in hand
+        else:
+            return Card('Q', card.col) in hand
+
+
+    @staticmethod
+    def rebelote_is_valid(card, trump):
+        """
+            Check if the rebelote is valid, assuming that 
+            the belote was. 
+
+            @param card         card being played
+            @param trump        color of the trump
+
+            @ret                True iif the belote is valid
+
+        """
+        # First condition: the card being played must be either a king or a queen
+        # of the trump color 
+        if (card.val != 'K' and card.val != 'Q') or card.col != trump:
+            return False
+        else: 
+            return True
+

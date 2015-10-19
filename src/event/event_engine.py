@@ -32,6 +32,12 @@ class EventEngine(object):
             self.__update_score(*args)
         elif EVT_CODE == EVT_COINCHE:
             self.__coinche(*args)
+        elif EVT_CODE == EVT_BELOTE:
+            self.__belote(*args)
+        elif EVT_CODE == EVT_REBELOTE:
+            self.__rebelote(*args)
+        elif EVT_CODE == EVT_BELOTE_INVALID:
+            self.__belote_invalid(*args)
         elif EVT_CODE == CONSOLE:
             self.log(*args)
 
@@ -120,6 +126,36 @@ class EventEngine(object):
         self.log("[" + str(bid.taker) + "] " + str(bid))
         for adapt in self.__adapt:
             adapt.new_bid(bid)
+
+
+    def __belote(self, pid):
+        """
+            Notify all interfaces that a player said "belote"
+            @param pid      id of the player 
+
+        """
+        # TODO notify interfaces
+        self.log("[{0}] Belote".format(pid))
+
+
+    def __rebelote(self, pid):
+        """
+            Notify all interfaces that a player said "rebelote"
+            @param pid      id of the player 
+
+        """
+        # TODO notify interfaces
+        self.log("[{0}] Rebelote".format(pid))
+
+
+    def __belote_invalid(self, pid):
+        """
+            Notify all interfaces that a player tried an invalid "belote"
+            @param pid      id of the player 
+
+        """
+        # TODO notify interfaces
+        self.log("[{0}] Invalid belote".format(pid))
 
 
     def __deal_score(self, bid, pts, team_taker):

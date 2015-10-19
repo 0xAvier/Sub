@@ -68,10 +68,10 @@ class Player(IPlayer, Notify):
 
         """
         # Get a card from the Mind
-        played = self._player_mind.get_card(played, playable)
+        (card, belote) = self._player_mind.get_card(played, playable)
         # Update the hand
-        self._hand.remove([played[1]]) 
-        return played 
+        self._hand.remove([card]) 
+        return (card, belote)
 
 
     def get_coinche(self):
@@ -133,3 +133,4 @@ class Player(IPlayer, Notify):
         self._player_mind.set_method(evt, method)
         for render in self._player_renders:
             render.set_method(evt, method)
+

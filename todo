@@ -24,8 +24,10 @@
 * self._coinched doit être dans la classe Player (l'adapteur doit donc vérifier slf._player._coinched et non plus
 self._coinched) => and then change the implementation code example in game.md/ASYNC
 
-* Segmenter Round en Roud + Deal + Trick (+ Bid ?)
+* Segmenter Round en Round + Deal + Trick (+ Bid ?)
 
 * Écrire les interfaces PlayerMind et PlayerRender
 * Enlever les "Notify" (changement de 'paradigme', aussi pompeuse cette expression soit-elle)
 * remove adapter branch
+
+* Prendre en compte la belote dans le score

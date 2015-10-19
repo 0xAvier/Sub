@@ -24,7 +24,7 @@ class BasicIAPlayerMind(Notify):
     def get_card(self, played, playable):
         sleep(randint(1, 2))
         # For now, return a random card
-        return (False, choice(playable))
+        return (choice(playable), False)
 
 
     def get_bid(self, bidded, biddable):

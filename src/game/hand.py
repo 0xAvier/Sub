@@ -49,3 +49,11 @@ class Hand(object):
 
         """
         self.__cards = list()
+
+
+    def __iter__(self):
+        return iter(self.__cards)
+
+
+    def next(self):
+        return self.__cards.next()

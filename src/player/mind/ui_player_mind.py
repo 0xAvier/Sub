@@ -15,10 +15,14 @@ class UIPlayerMind(Notify):
 
 
     def get_card(self, played, playable):
-        # Get the card
-        card = self._ui.get_card(self.id, playable)
-        # Return the card
-        return card
+        """
+            @ret        a tuple (card, belote) where card is the 
+                        card played by the player, and belote is a
+                        boolean which indicates a belote (True) or 
+                        not (False).
+
+        """
+        return self._ui.get_card(self.id, playable)
 
 
     def get_coinche(self):

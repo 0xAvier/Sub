@@ -125,7 +125,7 @@ class UIHand(object):
         belote = self._belote.clicked
         self._belote.clicked = False
         # Finally, the user clicked on a good card
-        return (belote, self.last_card_played)
+        return (self.last_card_played, belote)
 
 
     def _init_buttons(self):
