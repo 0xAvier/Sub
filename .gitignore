@@ -47,3 +47,5 @@ Temporary Items
 src/ui/TODO
 *.swp
 *.swo
+tags 
+TODO_x
