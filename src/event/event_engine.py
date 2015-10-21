@@ -36,7 +36,7 @@ class EventEngine(object):
             self.__belote(*args)
         elif EVT_CODE == EVT_REBELOTE:
             self.__rebelote(*args)
-        elif EVT_CODE == EVT_BELOTE_INVALID:
+        elif EVT_CODE == EVT_INVALID_BELOTE:
             self.__belote_invalid(*args)
         elif EVT_CODE == CONSOLE:
             self.log(*args)

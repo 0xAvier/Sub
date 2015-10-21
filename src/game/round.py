@@ -7,12 +7,14 @@ from random import choice, shuffle, randint
 
 from src.utils.notify import Notify
 from src.event.event_code import EVT_NEW_HAND, EVT_END_OF_TRICK, EVT_NEW_BID, EVT_CARD_PLAYED, EVT_END_BIDDING, EVT_COINCHE, \
-        EVT_BELOTE, EVT_REBELOTE, EVT_BELOTE_INVALID
+        EVT_BELOTE, EVT_REBELOTE, EVT_INVALID_BELOTE
 from src.game.coinche import COINCHE_CODE, CoincheException
 from src.game.card import Card
 from src.game.score import Score
 from src.game.bidding import Bidding
 from src.game.hand import Hand
+from src.game.belote import Belote
+from src.game.belote_code import BLT_BELOTE, BLT_REBELOTE, BLT_INVALID_BELOTE
 
 
 MUST_UNDERCUT = False
@@ -54,12 +56,8 @@ class Round(object):
         self.__tricks = [list(), list()]
         # List of team for each player
         self.team = team
-        # Indicator for belote
-        # 0: no belote
-        # 1: belote
-        # 2: rebelote
-        # This variable is reset to 0 at each deal
-        self.__belote = 0
+        # Belote engine
+        self.belote = Belote()
 
 
     def next_player(self, p):
@@ -197,7 +195,7 @@ class Round(object):
         # Reset deal cards
         self.__deal_cards = list()
         # Reset belote
-        self.__belote = 0
+        self.belote.reset()
 
         # Distribution
         # Distribution sequence generation
@@ -324,14 +322,15 @@ class Round(object):
                 card, belote = p[0].get_card(played, playable)
             # Check belote
             if belote:
-                if self.__belote == 0 and Card.belote_is_valid(playable, card, trump):
-                    self.__belote = 1
+                # belote.check returns a code that we must translate
+                # into an event code
+                blt_code = self.belote.check(p, card, trump)
+                if blt_code == BLT_BELOTE:
                     self.notify(EVT_BELOTE, p[0].id)
-                elif self.__belote == 1 and Card.rebelote_is_valid(card, trump):
-                    self.__belote = 2
+                elif blt_code == BLT_REBELOTE:
                     self.notify(EVT_REBELOTE, p[0].id)
                 else:
-                    self.notify(EVT_BELOTE_INVALID, p[0].id)
+                    self.notify(EVT_INVALID_BELOTE, p[0].id)
 
             # Add the card to played cards
             played.append(card)

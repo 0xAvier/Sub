@@ -15,7 +15,7 @@ from src.player.mind.ui_player_mind import UIPlayerMind
 from src.player.render.ui_player_render import UIPlayerRender
 
 # Import tests
-from test.belote import test_belote
+from test.belote import test_belote, test_rebelote
 
 def add_human_player(game, ui):
     player = Player(0)
@@ -45,6 +45,7 @@ def enable_view_all_hand(game, ui):
 if len(sys.argv) > 1 and (sys.argv[1] == "-t" or sys.argv[1] == "--test"):
     # Test belote
     test_belote()
+    test_rebelote()
 
 
     exit()
