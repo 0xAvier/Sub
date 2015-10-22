@@ -1,11 +1,13 @@
 #-*- coding: utf-8 -*-
 
 from src.utils.notify import Notify
+from src.player.mind.i_player_mind import IPlayerMind
 from src.game.hand import Hand 
 from src.game.coinche import COINCHE_CODE
 from src.event.event_engine import EVT_UI_COINCHE 
 
-class UIPlayerMind(Notify):
+
+class UIPlayerMind(Notify, IPlayerMind):
 
 
     def __init__(self, pid, ui):

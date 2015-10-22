@@ -1,10 +1,12 @@
 #-*- coding: utf-8 -*-
 
+from src.player.render.i_player_render import IPlayerRender
 from src.utils.notify import Notify
 from src.game.coinche import COINCHE_CODE
 from src.event.event_engine import EVT_UI_COINCHE 
 
-class UIPlayerRender(Notify):
+
+class UIPlayerRender(Notify, IPlayerRender):
     """
         TODO
     """
