@@ -31,3 +31,6 @@ self._coinched) => and then change the implementation code example in game.md/AS
 * remove adapter branch
 
 * Prendre en compte la belote dans le score
+* Receive belote event
+* Implement re-belote (GUI
+
