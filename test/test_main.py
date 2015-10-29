@@ -1,13 +1,13 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-from test.belote import test_belote, test_rebelote
+from test.game.belote import main_belote_test 
+from test.game.card.main import main_card_test 
 
 
 def run_tests():
-    # Test belote
-    test_belote()
-    test_rebelote()
+    main_belote_test()
+    main_card_test() 
 
 
     exit()

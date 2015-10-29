@@ -118,3 +118,8 @@ def test_rebelote():
     assert(not belote.rebelote_is_valid(Card('Q', 'S'), 'D'))
     assert(not belote.rebelote_is_valid(Card('Q', 'D'), 'S'))
 
+
+def main_belote_test():
+    test_belote()
+    test_rebelote()
+
