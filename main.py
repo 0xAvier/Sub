@@ -1,72 +1,34 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
-import time, sys
-
-from src.ui.ui_engine import UIEngine 
-from src.game.game_engine import GameEngine
-from src.event.event_engine import EventEngine
-from src.adapter.local_ui_adapter import LocalUIAdapter
-
-from src.adapter.local_player_adapter import LocalPlayerAdapter 
-
-from src.player.player import Player
-from src.player.mind.ui_player_mind import UIPlayerMind 
-from src.player.render.ui_player_render import UIPlayerRender
+import argparse
 
 # Import tests
-from test.belote import test_belote, test_rebelote
+from test.test_main import run_tests
 
-def add_human_player(game, ui):
-    player = Player(0)
-    player.add_render(UIPlayerRender(0, ui)) 
-    player.set_mind(UIPlayerMind(0, ui) )
-    ui.add_player(0)
-    ui.set_reference_player(0)
-    padapt = LocalPlayerAdapter(player) 
-    game.add_player(padapt)
+# Import game
+from src.game_main import launch_game
 
+parser = argparse.ArgumentParser()
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-t", "--test", action="store_true")
+group.add_argument("-p", "--play", action="store_true")
+group.add_argument("-w", "--watch", action="store_true")
+group.add_argument("-f", "--full_test", action="store_true")
+parser.add_argument("-c", "--cheat", action="store_true")
 
-def enable_view_all_hand(game, ui):
-    players = [None]*5
-    adapts = [None]*5
-    for pid in xrange(0, 4):
-        try:
-            ui.add_player(pid)
-            players[pid] = Player(pid)
-            players[pid].add_render(UIPlayerRender(pid, ui)) 
-            adapts[pid] = GameLocalPlayerAdapter(players[pid]) 
-            game.add_player(adapts[pid])
-        except IndexError:
-            # This seat is already taken, too bad
-            pass
+args = parser.parse_args()
 
-# IF TESTING
-if len(sys.argv) > 1 and (sys.argv[1] == "-t" or sys.argv[1] == "--test"):
-    # Test belote
-    test_belote()
-    test_rebelote()
+if args.play:
+    launch_game(play= True, cheat= args.cheat)
+elif args.watch:
+    launch_game(play= False, cheat= args.cheat)
+elif args.test:
+    run_tests()
+elif args.full_test:
+    print "Not implemented yet."
+    print "Try again in 2016."
+else:
+    launch_game(play= False, cheat= args.cheat)
 
-
-    exit()
-
-game = GameEngine()
-evt = EventEngine()
-game.add_event_manager(evt)
-
-ui = UIEngine()
-ui_adapt = LocalUIAdapter(ui)
-evt.add_ui(ui_adapt)
-
-#ui_2 = UIEngine()
-#ui_adapt_2 = EventUIAdapter(ui_2)
-#evt.connect_adapter(ui_adapt_2)
-
-if len(sys.argv) > 1 and sys.argv[1] == "-p":
-    add_human_player(game, ui)
-
-if len(sys.argv) > 2 and sys.argv[2] == "--cheat":
-    enable_view_all_hand(game, ui)
-
-game.new_round()
 
