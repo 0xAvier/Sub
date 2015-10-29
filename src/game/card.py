@@ -1,6 +1,8 @@
+#!/usr/bin/python
+#-*- coding: utf-8 -*-
+
 
 class Card(object):
-
     """
         Represent a card object, that can be seen 
         as a tuple (value, color)
