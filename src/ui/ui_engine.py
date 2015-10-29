@@ -241,6 +241,19 @@ class UIEngine(Thread, Notify):
         self._table.update_score(score)
 
 
+    def belote(self, pid):
+        """
+
+        """
+        self._table.belote(pid)
+
+    def rebelote(self, pid):
+        """
+
+        """
+        self._table.rebelote(pid)
+         
+
     def set_method(self, evt_id, method):
         """
             Overwrite set_method

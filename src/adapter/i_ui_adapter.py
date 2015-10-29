@@ -54,3 +54,13 @@ class IUIAdapter(object):
     @abstractmethod
     def get_consoles(self):
         raise NotImplemented
+
+
+    @abstractmethod
+    def belote(self, pid):
+        raise NotImplemented
+
+
+    @abstractmethod
+    def rebelote(self, pid):
+        raise NotImplemented

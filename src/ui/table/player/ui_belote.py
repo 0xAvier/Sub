@@ -106,6 +106,25 @@ class UIBelote(Notify):
         """
         self._button.config(state = NORMAL)
 
+    
+    def belote_ack(self):
+        """
+
+        """
+        self._button.config(text = "Rebelote")
+    
+
+    def rebelote_ack(self):
+        """
+
+        """
+        self.disable()
+
+
+    def re_init(self):
+        self._button.clicked = False
+        self._button.config(text = "Belote")
+
 
     @property
     def clicked(self):

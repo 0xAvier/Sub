@@ -44,3 +44,12 @@ class LocalUIAdapter(IUIAdapter):
     
     def get_consoles(self):
         return self.ui.get_consoles()
+
+
+    def belote(self, pid):
+        return self.ui.belote(pid)
+
+
+    def rebelote(self, pid):
+        return self.ui.rebelote(pid)
+

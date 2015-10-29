@@ -134,8 +134,9 @@ class EventEngine(object):
             @param pid      id of the player 
 
         """
-        # TODO notify interfaces
         self.log("[{0}] Belote".format(pid))
+        for adapt in self.__adapt:
+            adapt.belote(pid)
 
 
     def __rebelote(self, pid):
@@ -144,8 +145,9 @@ class EventEngine(object):
             @param pid      id of the player 
 
         """
-        # TODO notify interfaces
         self.log("[{0}] Rebelote".format(pid))
+        for adapt in self.__adapt:
+            adapt.rebelote(pid)
 
 
     def __belote_invalid(self, pid):

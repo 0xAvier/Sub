@@ -335,6 +335,24 @@ class UITable(Notify):
         self._scoreboard.score_13 = score[1]
 
 
+    def belote(self, pid):
+        """
+
+        """
+        if pid in self._handled_players:
+            self._hands[pid].belote_ack()
+        self._event[CONSOLE_RED]("[pid] Belote")
+
+
+    def rebelote(self, pid):
+        """
+
+        """
+        if pid in self._handled_players:
+            self._hands[pid].rebelote_ack()
+        self._event[CONSOLE_RED]("[pid] Rebelote")
+
+
     def set_method(self, evt_id, method):
         """
             Overwrite set_method

@@ -117,7 +117,9 @@ class UIHand(object):
         while self.last_card_played is None or \
                 not self.last_card_played in playable:
             if not self.last_card_played is None: 
-                self._event[CONSOLE_RED]("This card is not playable!")
+                print "[UI] This card is not playable!" #TODO
+                #self._event[CONSOLE_RED]("This card is not playable!")
+
             # Wait for a click (notified by ui_hand)
             # Time out of 5 seconds to avoid deadlock
             self.card_played_event.wait(5)
@@ -221,7 +223,15 @@ class UIHand(object):
     
     def end_of_trick(self):
         self.last_card_played = None
-        self._belote.clicked = False
+        self._belote.re_init()
+
+
+    def belote_ack(self):
+        self._belote.belote_ack()
+
+
+    def rebelote_ack(self):
+        self._belote.rebelote_ack()
 
 
     @property
@@ -231,6 +241,7 @@ class UIHand(object):
 
         """
         return self._hand
+
 
     @hand.setter
     def hand(self, value):
