@@ -1,0 +1,13 @@
+#-*- coding: utf-8 -*-
+
+ACK = "17576"
+SOCK_DISCONNECT = "0099"
+
+# Player relative codes start with 01
+SOCK_GIVE_CARDS = "0100"
+SOCK_GET_CARDS = "0101"
+SOCK_GET_BID = "0102"
+SOCK_BIDDED = "0103"
+SOCK_PLAYED = "0104"
+SOCK_RESET_HAND = "0105"
+
