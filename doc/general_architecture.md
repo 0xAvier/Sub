@@ -56,7 +56,6 @@ the event `EVT_CARD_PLAYED` will be sent with extra parameters (here the card th
 of this card) to the `EventEngine`. The `EventEngine` will then dispatch the event to all `UIEngine` objects that 
 are concerned.
 
-
 ## `GameEngine` and `Player`
 
 Once a `GameEngine`object is created, one may want to add players to the game (note that by default, if we start a round 
